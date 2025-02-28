@@ -1,0 +1,141 @@
+/* Ogólny wygląd strony */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2rem;
+    color: #444;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.controls {
+    margin-bottom: 30px;
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 300px;
+}
+
+label {
+    font-size: 1rem;
+    color: #333;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Klawisze pianina */
+.piano {
+    display: flex;
+    gap: 0;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.key {
+    width: 50px;
+    height: 200px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 200px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s;
+    border-radius: 5px;
+}
+
+.key.white {
+    background-color: white;
+    border: 2px solid #333;
+    color: #333;
+}
+
+.key.black {
+    width: 40px;
+    height: 150px;
+    background-color: black;
+    border: 2px solid #333;
+    color: white;
+    position: relative;
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+.key.active {
+    background-color: #e0e0e0;
+    transform: scale(0.95);
+}
+
+.key:active {
+    background-color: #bbb;
+}
+
+.volume-control, .recording-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#timer {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ff0000;
+    margin-top: 10px;
+}
+
+/* Styl responsywny */
+@media (max-width: 600px) {
+    .controls {
+        width: 90%;
+    }
+
+    .key {
+        width: 50px;
+        height: 200px;
+        font-size: 18px;
+    }
+
+    .key.black {
+        width: 40px;
+        height: 150px;
+    }
+}
