@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pianino</title>
+    <link rel="stylesheet" href="piano.css">
+</head>
+<body>
+    <h1>Interaktywne Pianino 🎹</h1>
+
+    <div class="controls">
+        <label for="instrumentSelect">Wybierz instrument:</label>
+        <select id="instrumentSelect">
+            <option value="sine">🎹 Pianino</option>
+            <option value="square">🎸 Gitara</option>
+            <option value="sawtooth">🎻 Skrzypce</option>
+            <option value="custom">🎤 Własne</option>
+        </select>
+
+        <div class="volume-control">
+            <label for="volumeControl">Głośność:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
+        </div>
+
+        <div class="recording-time">
+            <label for="recordingTime">Czas nagrywania:</label>
+            <input type="number" id="recordingTime" min="2" max="8" value="2">
+            <span>sekund</span>
+        </div>
+
+        <button id="recordButton">🎤 Nagraj dźwięk</button>
+        <div id="timer">Pozostały czas: 2s</div> <!-- Zegar odliczający czas -->
+    </div>
+
+    <div class="piano">
+        <!-- Klawisze pianina -->
+        <div class="key white" data-key="1">1</div>
+        <div class="key black" data-key="2">2</div>
+        <div class="key white" data-key="3">3</div>
+        <div class="key black" data-key="4">4</div>
+        <div class="key white" data-key="5">5</div>
+        <div class="key black" data-key="6">6</div>
+        <div class="key white" data-key="7">7</div>
+        <div class="key black" data-key="8">8</div>
+        <div class="key white" data-key="9">9</div>
+        <div class="key black" data-key="0">0</div>
+
+        <div class="key white" data-key="q">Q</div>
+        <div class="key black" data-key="w">W</div>
+        <div class="key white" data-key="e">E</div>
+        <div class="key black" data-key="r">R</div>
+        <div class="key white" data-key="t">T</div>
+        <div class="key black" data-key="y">Y</div>
+        <div class="key white" data-key="u">U</div>
+        <div class="key black" data-key="i">I</div>
+        <div class="key white" data-key="o">O</div>
+        <div class="key black" data-key="p">P</div>
+
+        <div class="key white" data-key="a">A</div>
+        <div class="key black" data-key="s">S</div>
+        <div class="key white" data-key="d">D</div>
+        <div class="key black" data-key="f">F</div>
+        <div class="key white" data-key="g">G</div>
+        <div class="key black" data-key="h">H</div>
+        <div class="key white" data-key="j">J</div>
+        <div class="key black" data-key="k">K</div>
+        <div class="key white" data-key="l">L</div>
+
+        <div class="key black" data-key="z">Z</div>
+        <div class="key white" data-key="x">X</div>
+    </div>
+
+    <script src="piano.js"></script>
+</body>
+</html>
