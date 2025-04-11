@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Bilety na wymianę książek</title>
+  <title>Galeria Zdjęć</title>
   <style>
     body {
       font-family: sans-serif;
@@ -64,18 +64,17 @@
   </style>
 </head>
 <body>
-  <h1>Bilety na wymianę książek</h1>
+  <h1>📸 Galeria Zdjęć</h1>
   <div id="gallery" class="gallery"></div>
   <button id="downloadAll" class="download-all">📥 Pobierz wszystko</button>
 
   <script>
-    const images = [
-      "obraz1.png",
-      "obraz2.png",
-      "obraz3.png"
-      "obraz4.png"
-      // dodaj więcej nazw plików tu
-    ];
+    const imageCount = 4;
+    const images = [];
+
+    for (let i = 1; i <= imageCount; i++) {
+      images.push(`obraz${i}.png`);
+    }
 
     const gallery = document.getElementById("gallery");
 
