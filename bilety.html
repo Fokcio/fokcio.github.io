@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Galeria Zdjęć</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    .image-container {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 200px;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+
+    .download-button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .download-all {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .download-all:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>📸 Galeria Zdjęć</h1>
+  <div id="gallery" class="gallery"></div>
+  <button id="downloadAll" class="download-all">📥 Pobierz wszystko</button>
+
+  <script>
+    const images = [
+      "obraz1.jpg",
+      "obraz2.jpg",
+      "obraz3.jpg"
+      // dodaj więcej nazw plików tu
+    ];
+
+    const gallery = document.getElementById("gallery");
+
+    images.forEach((filename) => {
+      const container = document.createElement("div");
+      container.className = "image-container";
+
+      const img = document.createElement("img");
+      img.src = `zdjęcia/${filename}`;
+      img.alt = filename;
+
+      const btn = document.createElement("a");
+      btn.href = `zdjęcia/${filename}`;
+      btn.download = filename;
+      btn.textContent = "Pobierz";
+      btn.className = "download-button";
+
+      container.appendChild(img);
+      container.appendChild(btn);
+      gallery.appendChild(container);
+    });
+
+    document.getElementById("downloadAll").addEventListener("click", () => {
+      images.forEach((filename) => {
+        const link = document.createElement("a");
+        link.href = `zdjęcia/${filename}`;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    });
+  </script>
+</body>
+</html>
