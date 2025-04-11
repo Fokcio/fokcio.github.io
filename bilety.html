@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Galeria Zdjęć</title>
+  <title>Bilety na wymianę książek</title>
   <style>
     body {
       font-family: sans-serif;
@@ -64,15 +64,16 @@
   </style>
 </head>
 <body>
-  <h1>📸 Galeria Zdjęć</h1>
+  <h1>Bilety na wymianę książek</h1>
   <div id="gallery" class="gallery"></div>
   <button id="downloadAll" class="download-all">📥 Pobierz wszystko</button>
 
   <script>
     const images = [
-      "obraz1.jpg",
-      "obraz2.jpg",
-      "obraz3.jpg"
+      "obraz1.png",
+      "obraz2.png",
+      "obraz3.png"
+      "obraz4.png"
       // dodaj więcej nazw plików tu
     ];
 
@@ -83,11 +84,11 @@
       container.className = "image-container";
 
       const img = document.createElement("img");
-      img.src = `zdjęcia/${filename}`;
+      img.src = `images/${filename}`;
       img.alt = filename;
 
       const btn = document.createElement("a");
-      btn.href = `zdjęcia/${filename}`;
+      btn.href = `images/${filename}`;
       btn.download = filename;
       btn.textContent = "Pobierz";
       btn.className = "download-button";
@@ -100,7 +101,7 @@
     document.getElementById("downloadAll").addEventListener("click", () => {
       images.forEach((filename) => {
         const link = document.createElement("a");
-        link.href = `zdjęcia/${filename}`;
+        link.href = `images/${filename}`;
         link.download = filename;
         document.body.appendChild(link);
         link.click();
