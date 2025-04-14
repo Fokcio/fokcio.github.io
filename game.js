@@ -1,48 +1,112 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic-Tac-Toe</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #gameContainer { text-align: center; padding: 20px; }
-        .hidden { display: none; }
-        .board { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 5px; margin: 0 auto; }
-        .cell { width: 100px; height: 100px; text-align: center; line-height: 100px; font-size: 2em; border: 1px solid #000; cursor: pointer; }
-        input, button { margin: 10px; padding: 10px; }
-    </style>
-</head>
-<body>
+let socket;
+let currentPlayer = 'X'; // Startowy gracz
+let gameBoard = ['', '', '', '', '', '', '', '', ''];
+let username = '';
 
-<div id="gameContainer">
-    <h1>Tic-Tac-Toe</h1>
-    <div id="usernameInput">
-        <input type="text" id="username" placeholder="Podaj nazwę" />
-        <button id="startBtn">Rozpocznij grę</button>
-    </div>
-    
-    <div id="modeSelect" class="hidden">
-        <button id="botModeBtn">Tryb z botem</button>
-        <button id="multiplayerModeBtn">Tryb wieloosobowy</button>
-    </div>
+// Przycisk startowy
+document.getElementById('startBtn').addEventListener('click', () => {
+    username = document.getElementById('username').value;
+    if (!username) {
+        alert('Proszę podać nazwę!');
+        return;
+    }
+    document.getElementById('usernameInput').classList.add('hidden');
+    document.getElementById('modeSelect').classList.remove('hidden');
+});
 
-    <div id="multiplayerOptions" class="hidden">
-        <button id="createLobbyBtn">Stwórz lobby</button>
-        <button id="joinLobbyBtn">Dołącz do lobby</button>
-        <input type="text" id="lobbyCode" placeholder="Wpisz kod lobby" class="hidden" />
-    </div>
-    
-    <div id="gameBoard" class="hidden">
-        <div id="ticTacToeBoard" class="board">
-            <!-- Dynamically created game cells -->
-        </div>
-        <p id="currentPlayer">Aktualny gracz: <span id="playerTurn"></span></p>
-    </div>
-</div>
+// Tryb z botem
+document.getElementById('botModeBtn').addEventListener('click', () => {
+    startGame('bot');
+});
 
-<script src="https://cdn.jsdelivr.net/npm/socket.io-client/dist/socket.io.min.js"></script>
-<script src="game.js"></script>
+// Tryb multiplayer
+document.getElementById('multiplayerModeBtn').addEventListener('click', () => {
+    document.getElementById('modeSelect').classList.add('hidden');
+    document.getElementById('multiplayerOptions').classList.remove('hidden');
+});
 
-</body>
-</html>
+// Tworzenie lobby
+document.getElementById('createLobbyBtn').addEventListener('click', () => {
+    socket = io.connect('https://twoj-serwer.glitch.me'); // Połącz z serwerem Glitch
+    socket.emit('createLobby', username);
+    socket.on('lobbyCreated', (lobbyCode) => {
+        alert(`Stworzyłeś lobby. Kod: ${lobbyCode}`);
+    });
+});
+
+// Dołączanie do lobby
+document.getElementById('joinLobbyBtn').addEventListener('click', () => {
+    const code = document.getElementById('lobbyCode').value;
+    if (!code) {
+        alert('Wpisz kod lobby');
+        return;
+    }
+    socket.emit('joinLobby', { code, username });
+});
+
+// Inicjowanie planszy
+function initBoard() {
+    gameBoard = ['', '', '', '', '', '', '', '', ''];
+    const board = document.getElementById('ticTacToeBoard');
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.addEventListener('click', () => makeMove(i));
+        board.appendChild(cell);
+    }
+    document.getElementById('gameBoard').classList.remove('hidden');
+    document.getElementById('playerTurn').textContent = currentPlayer;
+}
+
+// Funkcja do wykonywania ruchu
+function makeMove(index) {
+    if (gameBoard[index]) return; // Jeśli komórka już jest zajęta, nie wykonuj ruchu
+    gameBoard[index] = currentPlayer;
+    renderBoard();
+    checkWinner();
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    document.getElementById('playerTurn').textContent = currentPlayer;
+}
+
+// Renderowanie planszy
+function renderBoard() {
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((cell, index) => {
+        cell.textContent = gameBoard[index];
+    });
+}
+
+// Sprawdzanie zwycięzcy
+function checkWinner() {
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+
+    for (const [a, b, c] of winningCombinations) {
+        if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+            alert(`${gameBoard[a]} Wygrał!`);
+            return;
+        }
+    }
+
+    if (!gameBoard.includes('')) {
+        alert('Remis!');
+    }
+}
+
+// Inicjacja gry z botem
+function startGame(mode) {
+    document.getElementById('modeSelect').classList.add('hidden');
+    initBoard();
+    if (mode === 'bot') {
+        // Tu możesz dodać logikę dla bota
+    }
+}
