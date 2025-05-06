@@ -56,6 +56,12 @@
             opacity: 1;
             transition: opacity 0.5s;
         }
+
+        #napis {
+             transition: opacity 0.5s;
+               opacity: 1;
+        }           
+
     </style>
     <title>Fokcio</title>
 
@@ -63,7 +69,7 @@
 
 <body>
     <main>
-        <div id="napis"></div>
+        <div id="napis" class="show"></div>
     </main>
 
     <buttons>
@@ -111,8 +117,9 @@
 
             setTimeout(() => {
                 napisElement.innerText = napisy[indexNapisu];
-                napisElement.classList.remove("fade");
-                napisElement.classList.add("show");
+                napisElement.classList.remove("show", "fade");
+                napisElement.classList.add("fade");
+
 
                 indexNapisu++;
                 if (indexNapisu >= napisy.length) indexNapisu = 0;
