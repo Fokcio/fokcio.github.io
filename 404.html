@@ -59,15 +59,6 @@
             position: absolute;
             width: 120px;
             height: 80px;
-            animation: fly 5s infinite linear;
-        }
-
-        @keyframes fly {
-            0% { top: 0; left: 0; }
-            25% { top: 0; right: 0; }
-            50% { bottom: 0; right: 0; }
-            75% { bottom: 0; left: 0; }
-            100% { top: 0; left: 0; }
         }
 
     </style>
@@ -88,6 +79,8 @@
         let inputSequence = '';
         const targetSequence = 'C1VC1';
         const dvdLogo = document.getElementById('dvd-logo');
+        let logoSpeedX = 2; // Szybkość poruszania w poziomie
+        let logoSpeedY = 2; // Szybkość poruszania w pionie
 
         // Nasłuchuj na klawiaturze
         document.addEventListener('keydown', function(event) {
@@ -95,14 +88,44 @@
 
             // Sprawdź, czy wpisano poprawną sekwencję
             if (inputSequence.endsWith(targetSequence)) {
-                // Start animacji DVD logo
-                dvdLogo.style.animation = 'fly 5s infinite linear';
+                // Uruchom animację logo
+                startDVDAnimation();
             }
+
             // Resetowanie po kilku sekundach, jeśli sekwencja nie jest pełna
             if (inputSequence.length > targetSequence.length) {
                 inputSequence = inputSequence.slice(1);
             }
         });
+
+        function startDVDAnimation() {
+            // Sprawdzanie, czy logo nadal nie porusza się
+            let left = 0;
+            let top = 0;
+
+            function moveLogo() {
+                // Zmieniamy pozycję logo
+                left += logoSpeedX;
+                top += logoSpeedY;
+
+                // Odbicie logo od krawędzi
+                if (left + dvdLogo.width >= window.innerWidth || left <= 0) {
+                    logoSpeedX = -logoSpeedX; // Zmiana kierunku poziomego
+                }
+
+                if (top + dvdLogo.height >= window.innerHeight || top <= 0) {
+                    logoSpeedY = -logoSpeedY; // Zmiana kierunku pionowego
+                }
+
+                // Ustawienie pozycji logo
+                dvdLogo.style.left = left + 'px';
+                dvdLogo.style.top = top + 'px';
+
+                requestAnimationFrame(moveLogo); // Kolejne klatki animacji
+            }
+
+            moveLogo(); // Rozpocznij animację
+        }
     </script>
 </body>
 </html>
