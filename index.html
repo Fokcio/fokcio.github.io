@@ -188,23 +188,19 @@
 
         // Iterujemy po każdym elemencie
         elements.forEach(element => {
-            // Sprawdzamy tekst elementu
             const text = element.textContent.trim();
-
-            // Ustalamy odpowiednią ścieżkę w zależności od tekstu
             let redirectTo = '';
-            
-            } if (text === 'Bio') {
+
+            if (text === 'Bio') {
                 redirectTo = '/bio';
             } else if (text === 'Filmiki') {
                 redirectTo = '/video';
             }
 
-            // Jeśli znaleźliśmy odpowiednią ścieżkę, dodajemy event listener
             if (redirectTo) {
                 element.addEventListener('click', (event) => {
-                    event.preventDefault(); // Zapobiegamy domyślnemu zachowaniu (dla linków)
-                    window.location.href = redirectTo; // Przekierowujemy na odpowiednią stronę
+                    event.preventDefault();
+                    window.location.href = redirectTo;
                 });
             }
         });
