@@ -79,8 +79,10 @@
         let inputSequence = '';
         const targetSequence = 'C1VC1';
         const dvdLogo = document.getElementById('dvd-logo');
-        let logoSpeedX = 2; // Szybkość poruszania w poziomie
-        let logoSpeedY = 2; // Szybkość poruszania w pionie
+        let logoSpeedX = 2; // Szybkość w poziomie
+        let logoSpeedY = 2; // Szybkość w pionie
+        let left = 0;
+        let top = 0;
 
         // Nasłuchuj na klawiaturze
         document.addEventListener('keydown', function(event) {
@@ -88,7 +90,7 @@
 
             // Sprawdź, czy wpisano poprawną sekwencję
             if (inputSequence.endsWith(targetSequence)) {
-                // Uruchom animację logo
+                // Uruchom animację DVD logo
                 startDVDAnimation();
             }
 
@@ -99,10 +101,6 @@
         });
 
         function startDVDAnimation() {
-            // Sprawdzanie, czy logo nadal nie porusza się
-            let left = 0;
-            let top = 0;
-
             function moveLogo() {
                 // Zmieniamy pozycję logo
                 left += logoSpeedX;
