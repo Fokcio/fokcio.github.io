@@ -15,6 +15,33 @@
     filter: blur(2px);
 }
 
+#videoList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.video-item {
+    display: inline-block;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    background-color: black;
+    border-radius: 10px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+
+.video-item:hover {
+    transform: scale(1.05);
+    background-color: #6b03fc;
+}
 
     </style>
 
@@ -22,7 +49,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filmiki</title>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
 
 </head>
 <body>
