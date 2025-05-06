@@ -1,23 +1,220 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fokcio | Home</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script defer src="js/script.js"></script>
-</head>
-<body>
-    <div class="main-container">
-        <header>
-            <h1>Wybierz stronę</h1>
-        </header>
 
-        <div class="buttons-container">
-            <a href="bio" class="main-button">Moje bio</a>
-            <a href="video" class="main-button">Filmy</a>
-            <a href="piano" class="main-button">Pianino</a>
-        </div>
-    </div>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Cal Sans', sans-serif;
+            background-color: black;
+            flex-direction: column;
+            /* Ustawienie kierunku osi na pionowy */
+        }
+
+        main {
+            border: 3px solid rgb(119, 0, 255);
+            padding: 10px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+            color: blueviolet;
+            text-align: center;
+            /* Ustawienie tekstu na środku */
+            margin-bottom: 20px;
+            /* Odstęp od przycisku */
+        }
+
+        div {
+            font-size: 50px;
+            filter: blur(2px);
+        }
+
+        button {
+            font-family: 'Cal Sans', sans-serif;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: blueviolet;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #8c1bff;
+            /* Jaśniejszy fiolet przy najechaniu */
+        }
+
+        .fade {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .show {
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+    </style>
+    <title>Fokcio</title>
+
+</head>
+
+<body>
+    <main>
+        <div id="napis"></div>
+    </main>
+
+    <buttons>
+        <button>Bio</button>
+        <button>Pianino</button>
+        <button>Filmiki</button>
+    </buttons>
+
+    <script>
+        // Napisy zmieniające się na środeczku
+        let napisy = [
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Dalej to czytasz?",
+            "Czekasz na easteregga?",
+            "umm rozumiem...",
+            "lubisz jumpscare?",
+            "tak? to kliknij kolejno klawisze gha231"
+        ];
+
+        let napisElement = document.getElementById("napis");
+        let indexNapisu = 0;
+
+        function zmienNapis() {
+            napisElement.classList.remove("show");
+            napisElement.classList.add("fade");
+
+            setTimeout(() => {
+                napisElement.innerText = napisy[indexNapisu];
+                napisElement.classList.remove("fade");
+                napisElement.classList.add("show");
+
+                indexNapisu++;
+                if (indexNapisu >= napisy.length) indexNapisu = 0;
+            }, 500); // poczekaj na zanik zanim zmienisz tekst
+        }
+
+        setInterval(zmienNapis, 2500);
+        zmienNapis(); // uruchom od razu na start
+
+        // Sekwencja klawiszy, która musi zostać wciśnięta
+        const sekwencja = ['g', 'h', 'a', '2', '3', '1'];
+        let aktualnaSekwencja = [];
+
+        // Nasłuchuj na zdarzenia klawiatury
+        document.addEventListener('keydown', function (e) {
+            const key = e.key.toLowerCase(); // Pobieranie klawisza (z małej litery)
+
+            // Sprawdzamy, czy klawisz jest częścią wymaganej sekwencji
+            if (sekwencja.includes(key)) {
+                aktualnaSekwencja.push(key);
+
+                // Sprawdź, czy cała sekwencja została poprawnie wciśnięta
+                if (aktualnaSekwencja.toString() === sekwencja.toString()) {
+                    // Jeśli sekwencja jest poprawna - przekierowujemy na stronę jumpscare
+                    window.location.href = "/jumpscare.html"; // Przekierowanie na stronę /jumpscare
+                    aktualnaSekwencja = []; // Resetujemy sekwencję
+                }
+            } else {
+                // Jeśli klawisz jest niepoprawny - resetujemy sekwencję
+                aktualnaSekwencja = [];
+            }
+        });
+
+        // Animacja tytułu
+        let tytuly = ["Fokcio", "Fokci", "Fokc", "Fok", "Fo", "F", "Fo", "Fok", "Fokc", "Fokci", "Fokcio"];
+        let index = 0;
+        let titleInterval;
+        let pageVisibility = true;
+
+        function startTitleAnimation() {
+            titleInterval = setInterval(() => {
+                if (pageVisibility) {
+                    document.title = tytuly[index];
+                    index++;
+                    if (index >= tytuly.length) {
+                        index = 0;
+                    }
+                }
+            }, 500); // Zmieniaj tytuł co 500ms
+        }
+
+        function stopTitleAnimation() {
+            clearInterval(titleInterval); // Zatrzymaj animację tytułu, ale nie zatrzymuj jej do końca
+        }
+
+        // Nasłuchuj na zmianę widoczności strony
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                // Jeśli strona staje się niewidoczna (przełączono kartę)
+                pageVisibility = false;
+                document.title = 'Ej no, wracaj tu, obiad czeka';
+            } else {
+                // Strona staje się widoczna
+                pageVisibility = true;
+            }
+        });
+
+        // Uruchom animację tytułu na początku
+        startTitleAnimation();
+
+        // Wyszukujemy wszystkie przyciski na stronie (lub linki)
+        const elements = document.querySelectorAll('button, a');
+
+        // Iterujemy po każdym elemencie
+        elements.forEach(element => {
+            // Sprawdzamy tekst elementu
+            const text = element.textContent.trim();
+
+            // Ustalamy odpowiednią ścieżkę w zależności od tekstu
+            let redirectTo = '';
+
+            if (text === 'Pianino') {
+                redirectTo = '/piano';
+            } else if (text === 'Bio') {
+                redirectTo = '/bio';
+            } else if (text === 'Filmiki') {
+                redirectTo = '/video';
+            }
+
+            // Jeśli znaleźliśmy odpowiednią ścieżkę, dodajemy event listener
+            if (redirectTo) {
+                element.addEventListener('click', (event) => {
+                    event.preventDefault(); // Zapobiegamy domyślnemu zachowaniu (dla linków)
+                    window.location.href = redirectTo; // Przekierowujemy na odpowiednią stronę
+                });
+            }
+        });
+
+    </script>
+
 </body>
+
 </html>
