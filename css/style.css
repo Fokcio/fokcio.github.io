@@ -1,6 +1,6 @@
 /* 🔹 Ogólne style */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Cal Sans', sans-serif; /* Zmieniono na Cal Sans */
     background-color: #1f1f1f; /* Ciemny motyw */
     color: white;
     margin: 0;
@@ -72,22 +72,6 @@ footer {
 .video-item:hover {
     transform: scale(1.05);
     background-color: #6b03fc;
-}
-
-/* 🔹 Powrót na stronę główną */
-.back-button {
-    font-family: 'Cal Sans', sans-serif;
-    padding: 10px 20px;
-    font-size: 20px;
-    background-color: blueviolet;
-    color: rgb(0, 0, 0);
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.back-button:hover {
-    transform: scale(1.1);
-    background-color: #8c1bff;
 }
 
 /* 🔹 BIO */
@@ -165,20 +149,4 @@ footer {
 
 .bio-container ul li a:hover {
     color: #8c1bff;
-}
-
-/* 🔹 Przycisk powrotu */
-.main-button-back {
-    font-family: 'Cal Sans', sans-serif;
-    padding: 10px 20px;
-    font-size: 20px;
-    background-color: blueviolet;
-    color: rgb(0, 0, 0);
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.main-button-back:hover {
-    transform: scale(1.1);
-    background-color: #8c1bff; /* Jaśniejszy fiolet */
 }
