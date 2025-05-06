@@ -1,18 +1,67 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Nie znaleziono</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Cal Sans', sans-serif;
+            background-color: black;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        main {
+            border: 3px solid rgb(119, 0, 255);
+            padding: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+            color: blueviolet;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .blur-text {
+            font-size: 50px;
+            filter: blur(2px);
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-family: 'Cal Sans', sans-serif;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: blueviolet;
+            color: black;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            border-radius: 8px;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #8c1bff;
+        }
+
+        img {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <main>
+        <div class="blur-text">Błąd 404</div>
         <h1>Nie znaleziono strony</h1>
         <img src="https://http.cat/404" alt="Error 404">
         <br>
-        <a href="index.html">Powrót do strony głównej</a>
-    </div>
+        <button onclick="window.location.href='https://fokcio.github.io'">Powrót do strony głównej</button>
+    </main>
 </body>
 </html>
