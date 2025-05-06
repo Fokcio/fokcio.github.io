@@ -15,6 +15,7 @@
             background-color: black;
             flex-direction: column;
             margin: 0;
+            overflow: hidden;
         }
 
         main {
@@ -53,6 +54,22 @@
             max-width: 300px;
             margin-bottom: 20px;
         }
+
+        #dvd-logo {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            animation: fly 5s infinite linear;
+        }
+
+        @keyframes fly {
+            0% { top: 0; left: 0; }
+            25% { top: 0; right: 0; }
+            50% { bottom: 0; right: 0; }
+            75% { bottom: 0; left: 0; }
+            100% { top: 0; left: 0; }
+        }
+
     </style>
 </head>
 <body>
@@ -63,5 +80,29 @@
         <br>
         <button onclick="window.location.href='https://fokcio.github.io'">Powrót do strony głównej</button>
     </main>
+
+    <!-- DVD Logo -->
+    <img id="dvd-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/DVD_logo.svg/1280px-DVD_logo.svg.png" alt="DVD Logo" />
+
+    <script>
+        let inputSequence = '';
+        const targetSequence = 'C1VC1';
+        const dvdLogo = document.getElementById('dvd-logo');
+
+        // Nasłuchuj na klawiaturze
+        document.addEventListener('keydown', function(event) {
+            inputSequence += event.key;
+
+            // Sprawdź, czy wpisano poprawną sekwencję
+            if (inputSequence.endsWith(targetSequence)) {
+                // Start animacji DVD logo
+                dvdLogo.style.animation = 'fly 5s infinite linear';
+            }
+            // Resetowanie po kilku sekundach, jeśli sekwencja nie jest pełna
+            if (inputSequence.length > targetSequence.length) {
+                inputSequence = inputSequence.slice(1);
+            }
+        });
+    </script>
 </body>
 </html>
