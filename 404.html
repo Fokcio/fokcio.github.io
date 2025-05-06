@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Fioletowy Ekran</title>
+  <title>404 - Nie znaleziono</title>
   <style>
     :root {
       --width: 250px;
@@ -16,6 +16,46 @@
       background-color: black;
       margin: 0;
       overflow: hidden;
+      font-family: 'Cal Sans', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      flex-direction: column;
+    }
+
+    main {
+      border: 3px solid var(--bg-color);
+      padding: 20px;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+      color: var(--bg-color);
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .blur-text {
+      font-size: 50px;
+      filter: blur(2px);
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: 'Cal Sans', sans-serif;
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: var(--bg-color);
+      color: black;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      border-radius: 8px;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background-color: #6a0dad; /* Jaśniejszy fiolet przy najechaniu */
     }
 
     .ball {
@@ -56,6 +96,16 @@
   </style>
 </head>
 <body>
+  <main>
+    <div class="blur-text">Błąd 404</div>
+    <h1>Nie znaleziono strony</h1>
+    <img src="https://http.cat/404" alt="Error 404">
+    <br>
+    <button onclick="window.location.href='index.html'">Powrót do strony głównej</button>
+  </main>
+  
+  <!-- Fioletowa piłka z animacją -->
   <div class="ball"></div>
+
 </body>
 </html>
