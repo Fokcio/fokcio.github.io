@@ -4,27 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>DVD Screensaver</title>
+  <title>Fioletowy Ekran</title>
   <style>
     :root {
       --width: 250px;
       --height: calc(var(--width) / 2);
+      --bg-color: #8c1bff; /* Fioletowy kolor */
     }
 
     body {
       background-color: black;
-      margin: 0; /* Aby usunąć marginesy w domyślnym układzie */
-      overflow: hidden; /* Zapobiega przewijaniu strony */
+      margin: 0;
+      overflow: hidden;
     }
 
     .ball {
       width: var(--width);
       height: var(--height);
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/DVD_logo.svg/1280px-DVD_logo.svg.png'); /* Obrazek z internetu */
-      background-size: contain;
-      background-repeat: no-repeat;
+      background-color: var(--bg-color); /* Fioletowe tło */
       position: absolute;
-
+      border-radius: 10px; /* Zaokrąglone rogi dla efektu */
       animation: toRight linear 6.8s infinite alternate, bounce linear 17s infinite alternate;
     }
 
@@ -33,13 +32,13 @@
         top: 0;
       }
       48% {
-        /* Na tym etapie logo jest w środku animacji */
+        /* Na tym etapie element jest w środku animacji */
       }
       50% {
         top: calc(100% - var(--height)); /* Odbicie od dołu */
       }
       52% {
-        /* Na tym etapie logo wraca w górę */
+        /* Element wraca w górę */
       }
       100% {
         top: 0; /* Odbicie od góry */
