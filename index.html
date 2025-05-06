@@ -68,7 +68,6 @@
 
     <buttons>
         <button>Bio</button>
-        <button>Pianino</button>
         <button>Filmiki</button>
     </buttons>
 
@@ -100,8 +99,7 @@
             "Dalej to czytasz?",
             "Czekasz na easteregga?",
             "umm rozumiem...",
-            "lubisz jumpscare?",
-            "tak? to kliknij kolejno klawisze gha231"
+            "proszę tylko abyś nie klikał C1VC1 na 404"
         ];
 
         let napisElement = document.getElementById("napis");
@@ -195,10 +193,8 @@
 
             // Ustalamy odpowiednią ścieżkę w zależności od tekstu
             let redirectTo = '';
-
-            if (text === 'Pianino') {
-                redirectTo = '/piano';
-            } else if (text === 'Bio') {
+            
+            } if (text === 'Bio') {
                 redirectTo = '/bio';
             } else if (text === 'Filmiki') {
                 redirectTo = '/video';
