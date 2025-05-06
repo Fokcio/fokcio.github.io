@@ -37,31 +37,6 @@ p {
     padding: 20px;
 }
 
-/* 🔹 Kontener przycisków */
-.buttons-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
-    gap: 30px;
-}
-
-/* 🔹 Przycisk */
-.main-button {
-    background-color: #6b03fc; /* Fioletowy */
-    color: white;
-    font-size: 1.5em;
-    padding: 15px 30px;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-/* 🔹 Efekt przycisku po najechaniu */
-.main-button:hover {
-    transform: scale(1.1);
-    background-color: #8c1bff; /* Jaśniejszy fiolet przy najechaniu */
-}
-
 /* 🔹 Stopka */
 footer {
     margin-top: 50px;
@@ -101,15 +76,13 @@ footer {
 
 /* 🔹 Powrót na stronę główną */
 .back-button {
-    display: inline-block;
-    margin-top: 20px;
+    font-family: 'Cal Sans', sans-serif;
     padding: 10px 20px;
-    background-color: #6b03fc;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 1.2em;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    font-size: 20px;
+    background-color: blueviolet;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .back-button:hover {
@@ -196,14 +169,13 @@ footer {
 
 /* 🔹 Przycisk powrotu */
 .main-button-back {
-    background-color: #6b03fc; /* Fioletowy */
-    color: white;
-    font-size: 1.5em;
-    padding: 15px 30px;
-    text-decoration: none;
-    border-radius: 8px;
-    margin-top: 20px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    font-family: 'Cal Sans', sans-serif;
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: blueviolet;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .main-button-back:hover {
