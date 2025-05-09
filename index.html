@@ -3,7 +3,29 @@
 
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <div id="gifOverlay">
+        <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
+    </div>
     <style>
+        #gifOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            display: none;
+        }
+
+        #gifOverlay img {
+            max-width: 80%;
+            height: auto;
+        }
+
         body {
             display: flex;
             justify-content: center;
@@ -117,7 +139,7 @@
 
     <div id="karuzela">
         <button id="prev">&#8592;</button>
-        <img id="obrazek" src="images/obrazek1.jpg" alt="Karuzela" />
+        <img id="obrazek" src="images/gra1.png" alt="Karuzela" />
         <button id="next">&#8594;</button>
     </div>
 
@@ -130,22 +152,10 @@
             "To jest moja strona :D",
             "Cześć, Jestem Fokcio",
             "To jest moja strona :D",
-            "Cześć, Jestem Fokcio",
-            "To jest moja strona :D",
-            "Cześć, Jestem Fokcio",
-            "To jest moja strona :D",
-            "Cześć, Jestem Fokcio",
-            "To jest moja strona :D",
-            "Cześć, Jestem Fokcio",
-            "To jest moja strona :D",
-            "Cześć, Jestem Fokcio",
-            "To jest moja strona :D",
-            "Cześć, Jestem Fokcio",
-            "To jest moja strona :D",
             "Dalej to czytasz?",
             "Czekasz na easteregga?",
             "umm rozumiem...",
-            "proszę tylko abyś nie klikał C1VC1 na 404"
+            "przełącz aplikację lub kartę i wróć tutaj"
         ];
 
         let napisElement = document.getElementById("napis");
@@ -169,7 +179,7 @@
         zmienNapis();
 
         // Sekwencja klawiszy
-        const sekwencja = ['g', 'h', 'a', '2', '3', '1'];
+        const sekwencja = ['k', 'o', 't', 'e', 'l'];
         let aktualnaSekwencja = [];
 
         document.addEventListener('keydown', function (e) {
@@ -177,7 +187,16 @@
             if (sekwencja.includes(key)) {
                 aktualnaSekwencja.push(key);
                 if (aktualnaSekwencja.toString() === sekwencja.toString()) {
-                    window.location.href = "/jumpscare.html";
+                    const newGif = gif.cloneNode();
+                    gif.replaceWith(newGif);
+
+                    // Pokaż GIF
+                    gifOverlay.style.display = 'flex';
+
+                    // Schowaj po określonym czasie
+                    setTimeout(() => {
+                        gifOverlay.style.display = 'none';
+                    }, 2120); // <- dopasuj do długości gifa
                     aktualnaSekwencja = [];
                 }
             } else {
@@ -201,12 +220,13 @@
                     }
                 }
             }, 500);
+
         }
 
         document.addEventListener('visibilitychange', function () {
             if (document.hidden) {
                 pageVisibility = false;
-                document.title = 'Ej no, wracaj tu, obiad czeka';
+                document.title = 'Wróć do kotka :D';
             } else {
                 pageVisibility = true;
             }
@@ -266,18 +286,42 @@
         // Pokaż pierwszy obrazek od razu
         pokazObrazek(aktualnyObrazek);
 
+        let hasInteracted = false; // zapamiętuje, że użytkownik opuścił i wrócił
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+                hasInteracted = true;
+            }
+
+            if (document.visibilityState === "visible" && hasInteracted) {
+                const gifOverlay = document.getElementById('gifOverlay');
+                const gif = document.getElementById('funGif');
+
+                // Resetuj GIF
+                const newGif = gif.cloneNode();
+                gif.replaceWith(newGif);
+
+                // Pokaż GIF
+                gifOverlay.style.display = 'flex';
+
+                // Schowaj po określonym czasie
+                setTimeout(() => {
+                    gifOverlay.style.display = 'none';
+                }, 2120); // <- dopasuj do długości gifa
+            }
+        });
+
         // Kliknięcie w obrazek przenosi na odpowiednią stronę
-obrazekElement.addEventListener('click', () => {
-    const nazwaPliku = obrazki[aktualnyObrazek]; // np. "images/gra1.png"
+        obrazekElement.addEventListener('click', () => {
+            const nazwaPliku = obrazki[aktualnyObrazek]; // np. "images/gra1.png"
 
-    if (nazwaPliku.includes("gra1.png")) {
-        window.location.href = "/PilkaNaRownowazni"; // przekieruj na wybraną podstronę
-    }
+            if (nazwaPliku.includes("gra1.png")) {
+                window.location.href = "/PilkaNaRownowazni"; // przekieruj na wybraną podstronę
+            }
 
-    // jeśli dodasz więcej obrazków, możesz rozwinąć warunki np.:
-    // else if (nazwaPliku.includes("gra2")) { window.location.href = "/gra2"; }
-});
-
+            // jeśli dodasz więcej obrazków, możesz rozwinąć warunki np.:
+            // else if (nazwaPliku.includes("gra2")) { window.location.href = "/gra2"; }
+        });
     </script>
 </body>
 
