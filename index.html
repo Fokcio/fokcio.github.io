@@ -286,6 +286,19 @@
         // Pokaż pierwszy obrazek od razu
         pokazObrazek(aktualnyObrazek);
 
+        obrazekElement.addEventListener('click', () => {
+            const nazwaPliku = obrazki[aktualnyObrazek]; // np. "images/gra1.png"
+
+            if (nazwaPliku.includes("gra1.png")) {
+                window.location.href = "/PilkaNaRownowazni"; // przekieruj na wybraną podstronę
+            }
+
+            // Jeśli dodasz więcej obrazków, możesz rozwinąć warunki np.:
+            // else if (nazwaPliku.includes("gra2.png")) { 
+            //     window.location.href = "/gra2"; 
+            // }
+        });
+
     </script>
 </body>
 
