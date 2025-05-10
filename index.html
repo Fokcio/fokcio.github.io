@@ -1,293 +1,335 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
-  <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    #gifOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #gifOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            display: none;
+        }
 
-    #gifOverlay img {
-      max-width: 80%;
-      height: auto;
-    }
+        #gifOverlay img {
+            max-width: 80%;
+            height: auto;
+        }
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: 'Cal Sans', sans-serif;
-      background-color: black;
-      flex-direction: column;
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Cal Sans', sans-serif;
+            background-color: black;
+            flex-direction: column;
+        }
 
-    main {
-      border: 3px solid rgb(119, 0, 255);
-      padding: 10px;
-      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
-      color: blueviolet;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        main {
+            border: 3px solid rgb(119, 0, 255);
+            padding: 10px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+            color: blueviolet;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    div#napis {
-      font-size: 50px;
-      filter: blur(2px);
-      transition: opacity 0.5s;
-      opacity: 1;
-    }
+        div#napis {
+            font-size: 50px;
+            filter: blur(2px);
+        }
 
-    button {
-      font-family: 'Cal Sans', sans-serif;
-      padding: 10px 20px;
-      font-size: 20px;
-      background-color: blueviolet;
-      color: black;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+        button {
+            font-family: 'Cal Sans', sans-serif;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: blueviolet;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-    button:hover {
-      transform: scale(1.1);
-      background-color: #8c1bff;
-    }
+        button:hover {
+            transform: scale(1.1);
+            background-color: #8c1bff;
+        }
 
-    buttons {
-      display: flex;
-      gap: 10px;
-    }
+        .fade {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
 
-    h2 {
-      color: blueviolet;
-      text-align: center;
-      margin-top: 20px;
-    }
+        .show {
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
 
-    #karuzela {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 100vw;
-      padding: 0 10px;
-      box-sizing: border-box;
-      margin-top: 20px;
-    }
+        #napis {
+            transition: opacity 0.5s;
+            opacity: 1;
+        }
 
-    #karuzela img {
-      width: 300px;
-      height: auto;
-      border: 2px solid blueviolet;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(137, 43, 226, 0.5);
-      transition: opacity 0.5s;
-    }
+        buttons {
+            display: flex;
+            gap: 10px;
+        }
 
-    #karuzela button {
-      background-color: transparent;
-      border: none;
-      font-size: 40px;
-      color: blueviolet;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
+        h2 {
+            color: blueviolet;
+            font-family: 'Cal Sans', sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    #karuzela button:hover {
-      transform: scale(1.2);
-    }
+        #karuzela {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Zmniejszyłem odstęp */
+            margin-top: 20px;
+            position: relative;
+        }
 
-    @media (max-width: 600px) {
-      #karuzela img {
-        width: 80%;
-      }
-    }
-  </style>
-  <title>Fokcio</title>
+        /* Strzałki */
+        #karuzela button {
+            background-color: transparent;
+            border: none;
+            font-size: 30px; /* Zmniejszyłem wielkość na komputerze */
+            color: blueviolet;
+            cursor: pointer;
+            transition: transform 0.3s;
+            padding: 10px;
+        }
+
+        /* Zmiana wielkości strzałek na mniejszych ekranach */
+        @media (max-width: 600px) {
+            #karuzela button {
+                font-size: 25px; /* Mniejsza wielkość strzałek na telefonie */
+                padding: 8px;
+            }
+        }
+
+        /* Zmniejszenie odstępu między strzałkami na większych ekranach */
+        @media (min-width: 1024px) {
+            #karuzela {
+                gap: 5px; /* Zmniejszenie odstępu między strzałkami na komputerze */
+            }
+        }
+    </style>
+    <title>Fokcio</title>
 </head>
+
 <body>
-  <main>
-    <div id="napis" class="show"></div>
-  </main>
+    <main>
+        <div id="napis" class="show"></div>
+    </main>
 
-  <buttons>
-    <button>Bio</button>
-    <button>Filmiki</button>
-  </buttons>
+    <buttons>
+        <button>Bio</button>
+        <button>Filmiki</button>
+    </buttons>
 
-  <div id="gifOverlay">
-    <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
-  </div>
+    <div id="gifOverlay">
+        <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
+    </div>
 
-  <h2>Moje Projekty</h2>
+    <h2>Moje Projekty</h2>
 
-  <div id="karuzela">
-    <button id="prev">&#8592;</button>
-    <img id="obrazek" src="images/gra1.png" alt="Karuzela" />
-    <button id="next">&#8594;</button>
-  </div>
+    <div id="karuzela">
+        <button id="prev">&#8592;</button>
+        <img id="obrazek" src="images/gra1.png" alt="Karuzela" />
+        <button id="next">&#8594;</button>
+    </div>
 
-  <script>
-    // Napisy zmieniające się na środku
-    let napisy = [
-      "Cześć, Jestem Fokcio",
-      "To jest moja strona :D",
-      "Cześć, Jestem Fokcio",
-      "To jest moja strona :D",  
-      "Cześć, Jestem Fokcio",
-      "To jest moja strona :D",
-      "Dalej to czytasz?",
-      "Czekasz na easteregga?",
-      "umm rozumiem...",
-      "przełącz aplikację lub kartę i wróć tutaj"
-    ];
+    <script>
+        // Napisy zmieniające się na środku
+        let napisy = [
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Dalej to czytasz?",
+            "Czekasz na easteregga?",
+            "umm rozumiem...",
+            "przełącz aplikację lub kartę i wróć tutaj"
+        ];
 
-    let napisElement = document.getElementById("napis");
-    let indexNapisu = 0;
+        let napisElement = document.getElementById("napis");
+        let indexNapisu = 0;
 
-    function zmienNapis() {
-      napisElement.classList.remove("show");
-      napisElement.classList.add("fade");
+        function zmienNapis() {
+            napisElement.classList.remove("show");
+            napisElement.classList.add("fade");
 
-      setTimeout(() => {
-        napisElement.innerText = napisy[indexNapisu];
-        napisElement.classList.remove("show", "fade");
-        napisElement.classList.add("fade");
+            setTimeout(() => {
+                napisElement.innerText = napisy[indexNapisu];
+                napisElement.classList.remove("show", "fade");
+                napisElement.classList.add("fade");
 
-        indexNapisu = (indexNapisu + 1) % napisy.length;
-      }, 500);
-    }
-
-    setInterval(zmienNapis, 2500);
-    zmienNapis();
-
-    // GIF i overlay
-    const gifOverlay = document.getElementById('gifOverlay');
-    let gif = document.getElementById('funGif');
-
-    // Sekwencja klawiszy
-    const sekwencja = ['k', 'o', 't', 'e', 'l'];
-    let aktualnaSekwencja = [];
-
-    document.addEventListener('keydown', function (e) {
-      const key = e.key.toLowerCase();
-      if (sekwencja.includes(key)) {
-        aktualnaSekwencja.push(key);
-        if (aktualnaSekwencja.join('') === sekwencja.join('')) {
-          const newGif = gif.cloneNode(true);
-          gif.replaceWith(newGif);
-          gif = newGif;
-          gifOverlay.style.display = 'flex';
-          setTimeout(() => {
-            gifOverlay.style.display = 'none';
-          }, 2120);
-          aktualnaSekwencja = [];
+                indexNapisu++;
+                if (indexNapisu >= napisy.length) indexNapisu = 0;
+            }, 500);
         }
-      } else {
-        aktualnaSekwencja = [];
-      }
-    });
 
-    // Animacja tytułu
-    let tytuly = ["Fokcio", "Fokci", "Fokc", "Fok", "Fo", "F", "Fo", "Fok", "Fokc", "Fokci", "Fokcio"];
-    let index = 0;
-    let titleInterval;
-    let pageVisibility = true;
+        setInterval(zmienNapis, 2500);
+        zmienNapis();
 
-    function startTitleAnimation() {
-      titleInterval = setInterval(() => {
-        if (pageVisibility) {
-          document.title = tytuly[index];
-          index = (index + 1) % tytuly.length;
-        }
-      }, 500);
-    }
+        // Sekwencja klawiszy
+        const sekwencja = ['k', 'o', 't', 'e', 'l'];
+        let aktualnaSekwencja = [];
 
-    startTitleAnimation();
+        document.addEventListener('keydown', function (e) {
+            const key = e.key.toLowerCase();
+            if (sekwencja.includes(key)) {
+                aktualnaSekwencja.push(key);
+                if (aktualnaSekwencja.toString() === sekwencja.toString()) {
+                    const newGif = gif.cloneNode();
+                    gif.replaceWith(newGif);
 
-    // Powrót do karty - pokazanie GIFa
-    let hasInteracted = false;
+                    // Pokaż GIF
+                    gifOverlay.style.display = 'flex';
 
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        hasInteracted = true;
-        pageVisibility = false;
-        document.title = "Wróć do kotka :D";
-      } else {
-        pageVisibility = true;
-        if (hasInteracted) {
-          const newGif = gif.cloneNode(true);
-          gif.replaceWith(newGif);
-          gif = newGif;
-          gifOverlay.style.display = 'flex';
-          setTimeout(() => {
-            gifOverlay.style.display = 'none';
-          }, 2120);
-        }
-      }
-    });
-
-    // Przekierowania przycisków
-    const elements = document.querySelectorAll('button, a');
-
-    elements.forEach(element => {
-      const text = element.textContent.trim();
-      let redirectTo = '';
-
-      if (text === 'Bio') redirectTo = '/bio';
-      else if (text === 'Filmiki') redirectTo = '/video';
-
-      if (redirectTo) {
-        element.addEventListener('click', (event) => {
-          event.preventDefault();
-          window.location.href = redirectTo;
+                    // Schowaj po określonym czasie
+                    setTimeout(() => {
+                        gifOverlay.style.display = 'none';
+                    }, 2120); // <- dopasuj do długości gifa
+                    aktualnaSekwencja = [];
+                }
+            } else {
+                aktualnaSekwencja = [];
+            }
         });
-      }
-    });
 
-    // Karuzela obrazków
-    const obrazki = ["images/gra1.png"];
-    let aktualnyObrazek = 0;
-    const obrazekElement = document.getElementById("obrazek");
-    const prevButton = document.getElementById("prev");
-    const nextButton = document.getElementById("next");
+        // Animacja tytułu
+        let tytuly = ["Fokcio", "Fokci", "Fokc", "Fok", "Fo", "F", "Fo", "Fok", "Fokc", "Fokci", "Fokcio"];
+        let index = 0;
+        let titleInterval;
+        let pageVisibility = true;
 
-    function pokazObrazek(index) {
-      obrazekElement.style.opacity = 0;
-      setTimeout(() => {
-        obrazekElement.src = obrazki[index];
-        obrazekElement.style.opacity = 1;
-      }, 300);
-    }
+        function startTitleAnimation() {
+            titleInterval = setInterval(() => {
+                if (pageVisibility) {
+                    document.title = tytuly[index];
+                    index++;
+                    if (index >= tytuly.length) {
+                        index = 0;
+                    }
+                }
+            }, 500);
 
-    prevButton.addEventListener("click", () => {
-      aktualnyObrazek = (aktualnyObrazek - 1 + obrazki.length) % obrazki.length;
-      pokazObrazek(aktualnyObrazek);
-    });
+        }
 
-    nextButton.addEventListener("click", () => {
-      aktualnyObrazek = (aktualnyObrazek + 1) % obrazki.length;
-      pokazObrazek(aktualnyObrazek);
-    });
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                pageVisibility = false;
+                document.title = 'Wróć do kotka :D';
+            } else {
+                pageVisibility = true;
+            }
+        });
 
-    pokazObrazek(aktualnyObrazek);
+        startTitleAnimation();
 
-    obrazekElement.addEventListener('click', () => {
-      const nazwaPliku = obrazki[aktualnyObrazek];
-      if (nazwaPliku.includes("gra1.png")) {
-        window.location.href = "/PilkaNaRownowazni";
-      }
-    });
-  </script>
+        // Przekierowania przycisków
+        const elements = document.querySelectorAll('button, a');
+
+        elements.forEach(element => {
+            const text = element.textContent.trim();
+            let redirectTo = '';
+
+            if (text === 'Bio') {
+                redirectTo = '/bio';
+            } else if (text === 'Filmiki') {
+                redirectTo = '/video';
+            }
+
+            if (redirectTo) {
+                element.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    window.location.href = redirectTo;
+                });
+            }
+        });
+
+        // Karuzela obrazków
+        const obrazki = [
+            "images/gra1.png",
+        ];
+
+        let aktualnyObrazek = 0;
+        const obrazekElement = document.getElementById("obrazek");
+        const prevButton = document.getElementById("prev");
+        const nextButton = document.getElementById("next");
+
+        function pokazObrazek(index) {
+            obrazekElement.style.opacity = 0;
+            setTimeout(() => {
+                obrazekElement.src = obrazki[index];
+                obrazekElement.style.opacity = 1;
+            }, 300);
+        }
+
+        prevButton.addEventListener("click", () => {
+            aktualnyObrazek = (aktualnyObrazek - 1 + obrazki.length) % obrazki.length;
+            pokazObrazek(aktualnyObrazek);
+        });
+
+        nextButton.addEventListener("click", () => {
+            aktualnyObrazek = (aktualnyObrazek + 1) % obrazki.length;
+            pokazObrazek(aktualnyObrazek);
+        });
+
+        // Pokaż pierwszy obrazek od razu
+        pokazObrazek(aktualnyObrazek);
+
+        let hasInteracted = false; // zapamiętuje, że użytkownik opuścił i wrócił
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+                hasInteracted = true;
+            }
+
+            if (document.visibilityState === "visible" && hasInteracted) {
+                const gifOverlay = document.getElementById('gifOverlay');
+                const gif = document.getElementById('funGif');
+
+                // Resetuj GIF
+                const newGif = gif.cloneNode();
+                gif.replaceWith(newGif);
+
+                // Pokaż GIF
+                gifOverlay.style.display = 'flex';
+
+                // Schowaj po określonym czasie
+                setTimeout(() => {
+                    gifOverlay.style.display = 'none';
+                }, 2120); // <- dopasuj do długości gifa
+            }
+        });
+
+        // Kliknięcie w obrazek przenosi na odpowiednią stronę
+        obrazekElement.addEventListener('click', () => {
+            const nazwaPliku = obrazki[aktualnyObrazek]; // np. "images/gra1.png"
+
+            if (nazwaPliku.includes("gra1.png")) {
+                window.location.href = "/PilkaNaRownowazni"; // przekieruj na wybraną podstronę
+            }
+
+            // jeśli dodasz więcej obrazków, możesz rozwinąć warunki np.:
+            // else if (nazwaPliku.includes("gra2")) { window.location.href = "/gra2"; }
+        });
+    </script>
 </body>
+
 </html>
