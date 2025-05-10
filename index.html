@@ -136,7 +136,10 @@
 
     <div id="karuzela">
         <button id="prev">&#8592;</button>
-        <img id="obrazek" src="images/gra1.png" alt="Karuzela" />
+        <a id="obrazekLink" href="/PilkaNaRownowazni">
+            <img id="obrazek" src="images/gra1.png" alt="Karuzela" />
+        </a>
+
         <button id="next">&#8594;</button>
     </div>
 
@@ -229,6 +232,13 @@
                 document.title = 'Wróć do kotka :D';
             } else {
                 pageVisibility = true;
+                document.title = tytuly[index]; // Przywraca animację tytułu
+
+                // Pokazuje kotka (GIF) po powrocie na stronę
+                gifOverlay.style.display = 'flex';
+                setTimeout(() => {
+                    gifOverlay.style.display = 'none';
+                }, 2120); // dopasuj do długości gifa
             }
         });
 
@@ -257,8 +267,11 @@
 
         // Karuzela obrazków
         const obrazki = [
-            "images/gra1.png",
+            { src: "images/gra1.png", href: "/PilkaNaRownowazni" }
+            // Możesz dodać więcej:
+            // { src: "images/gra2.png", href: "/InnaGra" }
         ];
+
 
         let aktualnyObrazek = 0;
         const obrazekElement = document.getElementById("obrazek");
@@ -266,12 +279,15 @@
         const nextButton = document.getElementById("next");
 
         function pokazObrazek(index) {
+            const obrazekDane = obrazki[index];
             obrazekElement.style.opacity = 0;
             setTimeout(() => {
-                obrazekElement.src = obrazki[index];
+                obrazekElement.src = obrazekDane.src;
+                obrazekLink.href = obrazekDane.href;
                 obrazekElement.style.opacity = 1;
             }, 300);
         }
+
 
         prevButton.addEventListener("click", () => {
             aktualnyObrazek = (aktualnyObrazek - 1 + obrazki.length) % obrazki.length;
@@ -286,18 +302,6 @@
         // Pokaż pierwszy obrazek od razu
         pokazObrazek(aktualnyObrazek);
 
-        obrazekElement.addEventListener('click', () => {
-            const nazwaPliku = obrazki[aktualnyObrazek]; // np. "images/gra1.png"
-
-            if (nazwaPliku.includes("gra1.png")) {
-                window.location.href = "/PilkaNaRownowazni"; // przekieruj na wybraną podstronę
-            }
-
-            // Jeśli dodasz więcej obrazków, możesz rozwinąć warunki np.:
-            // else if (nazwaPliku.includes("gra2.png")) { 
-            //     window.location.href = "/gra2"; 
-            // }
-        });
 
     </script>
 </body>
