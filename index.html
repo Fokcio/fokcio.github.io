@@ -142,7 +142,6 @@
 
         <button id="next">&#8594;</button>
     </div>
-    <div id="gif-scroll-container"></div>
     <div id="gifOverlay">
         <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
     </div>
@@ -368,38 +367,6 @@
             if (aktualnaHack.length > 4) aktualnaHack.shift();
         });
 
-//rickgif
-const container = document.getElementById("gif-scroll-container");
-const totalFrames = 23;
-let currentFrame = 1;
-
-function createFrame(index) {
-    const img = document.createElement("img");
-    img.src = `images/rick/frame (${index}).gif`; // nawiasy uwzględnione
-    img.style.width = "100%";
-    img.style.display = "block";
-    img.loading = "lazy"; // optymalizacja
-    return img;
-}
-
-function loadFrames(count = 5) {
-    for (let i = 0; i < count; i++) {
-        container.appendChild(createFrame(currentFrame));
-        currentFrame++;
-        if (currentFrame > totalFrames) currentFrame = 1; // zapętlenie
-    }
-}
-
-window.addEventListener("scroll", () => {
-    const scrollBottom = window.scrollY + window.innerHeight;
-    const docHeight = document.documentElement.scrollHeight;
-
-    if (scrollBottom + 100 > docHeight) {
-        loadFrames();
-    }
-});
-
-loadFrames(10); // ładowanie początkowych klatek
 
     </script>
 </body>
