@@ -368,13 +368,14 @@
             if (aktualnaHack.length > 4) aktualnaHack.shift();
         });
 
+//rickgif
 const container = document.getElementById("gif-scroll-container");
 const totalFrames = 23;
 let currentFrame = 1;
 
 function createFrame(index) {
     const img = document.createElement("img");
-    img.src = `frames/frame (${index}).gif`; // nawiasy uwzględnione
+    img.src = `images/rick/frame (${index}).gif`; // nawiasy uwzględnione
     img.style.width = "100%";
     img.style.display = "block";
     img.loading = "lazy"; // optymalizacja
