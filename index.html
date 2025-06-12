@@ -72,7 +72,7 @@
             transition: opacity 0.5s;
         }
 
-        #napis {
+       #napis {
             transition: opacity 0.5s;
             opacity: 1;
         }
@@ -118,6 +118,94 @@
         #karuzela button:hover {
             transform: scale(1.2);
         }
+
+        /* 16 */
+        .btn-16 {
+            border: 1px solid #7700ff;
+            box-shadow: 0 0 5px #7700ff, 0 0 5px #7700ff inset;
+        }
+
+        .btn-16:after {
+            position: absolute;
+            content: "";
+            width: 0;
+            height: 100%;
+            top: 0;
+            left: 0;
+            direction: rtl;
+            z-index: -1;
+            box-shadow: -7px -7px 20px 0px #a200ff99, -4px -4px 5px 0px #a200ff99,
+                7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
+            transition: all 0.3s ease;
+        }
+
+        .btn-16:hover {
+            box-shadow: rgb(0, 0, 0) -1px -1px, -2px -2px,
+                rgb(111, 0, 255) -3px -3px, rgba(111, 0, 255, 0.9) -4px -4px,
+                rgba(111, 0, 255, 0.8) -5px -5px, rgba(111, 0, 255, 0.7) -6px -6px,
+                rgba(111, 0, 255, 0.6) -7px -7px, rgba(111, 0, 255, 0.5) -8px -8px,
+                rgba(111, 0, 255, 0.4) -9px -9px, rgba(111, 0, 255, 0.3) -10px -10px,
+                rgba(111, 0, 255, 0.2) -11px -11px, rgba(111, 0, 255, 0.1) -12px -12px;
+        }
+
+        .btn-16:hover:after {
+            left: auto;
+            right: 0;
+            width: 100%;
+        }
+
+        .btn-16:active {
+            top: 2px;
+        }
+
+        h1, p {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        #countdown, #clock {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 72px;
+            color: #00ff88;
+            display: none;
+            z-index: 9999;
+        }
+
+        .glitch {
+            position: absolute;
+            background: #f00;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 0.9; }
+            to { transform: scale(1.1); opacity: 0.4; }
+        }
+
+        .explode {
+    animation: explode-away 1s ease forwards;
+}
+
+@keyframes explode-away {
+    to {
+        transform: translateY(100vh) rotate(720deg) scale(0);
+        opacity: 0;
+    }
+}
+
+
+        @keyframes fall {
+            to {
+                transform: translateY(200vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
     </style>
     <title>Fokcio</title>
 </head>
@@ -128,8 +216,8 @@
     </main>
 
     <div id="buttons">
-        <button>Bio</button>
-        <button>Filmiki</button>
+        <button class="custom-btn btn-16">Bio</button>
+        <button class="custom-btn btn-16">Filmiki</button>
     </div>
 
     <h2>Moje Projekty</h2>
@@ -145,6 +233,8 @@
     <div id="gifOverlay">
         <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
     </div>
+    <div id="countdown"></div>
+    <div id="clock" style="display:none;"></div>
 
     <script>
         // Napisy zmieniające się na środku
@@ -301,73 +391,6 @@
 
         // Pokaż pierwszy obrazek od razu
         pokazObrazek(aktualnyObrazek);
-
-        const hackSekwencja = ['h', 'a', 'c', 'k'];
-        let aktualnaHack = [];
-        let hacked = false;
-
-        const losowe = {
-            kolor: () => '#' + Math.floor(Math.random() * 16777215).toString(16),
-            font: () => ['Comic Sans MS', 'Courier New', 'Impact', 'Times New Roman', 'Papyrus', 'Verdana'][Math.floor(Math.random() * 6)],
-            px: (min, max) => Math.floor(Math.random() * (max - min) + min) + 'px',
-            deg: () => `rotate(${Math.floor(Math.random() * 360)}deg)`,
-            gif: () => [
-                'https://media.tenor.com/ZoRrzJ5czJYAAAAC/glitch.gif',
-                'https://media.tenor.com/tEbo5U6aC3YAAAAC/hacked-glitch.gif',
-                'https://media.tenor.com/oR9h8pjgJRoAAAAC/glitch.gif'
-            ][Math.floor(Math.random() * 3)]
-        };
-
-        function glitchTytul() {
-            const dots = '.'.repeat((Date.now() / 200) % 4);
-            document.title = 'Fokcio Page Is Hacked ' + dots;
-        }
-
-        function glitchStrona() {
-            document.body.style.background = `url(${losowe.gif()}) center center / cover no-repeat`;
-
-            document.querySelectorAll('*').forEach(el => {
-                el.style.fontFamily = losowe.font();
-                el.style.color = losowe.kolor();
-                el.style.backgroundColor = losowe.kolor();
-                el.style.fontSize = losowe.px(12, 42);
-                el.style.margin = losowe.px(0, 40);
-                el.style.padding = losowe.px(0, 30);
-                el.style.borderRadius = losowe.px(0, 30);
-                el.style.transform = `translate(${losowe.px(-20, 20)}, ${losowe.px(-20, 20)}) ${losowe.deg()}`;
-                el.style.boxShadow = `0 0 ${losowe.px(5, 50)} ${losowe.kolor()}`;
-                el.style.transition = 'all 0.1s';
-                el.style.animation = 'shake 0.2s infinite alternate';
-            });
-        }
-
-        // Styl animacji "shake"
-        const style = document.createElement('style');
-        style.textContent = `
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    25% { transform: translate(-1px, 2px) rotate(-1deg); }
-    50% { transform: translate(-3px, 1px) rotate(1deg); }
-    75% { transform: translate(1px, -2px) rotate(1deg); }
-    100% { transform: translate(1px, 2px) rotate(-1deg); }
-}
-`;
-        document.head.appendChild(style);
-
-        // Nasłuch na słowo "hack"
-        document.addEventListener('keydown', function (e) {
-            const key = e.key.toLowerCase();
-            aktualnaHack.push(key);
-            if (aktualnaHack.slice(-4).toString() === hackSekwencja.toString()) {
-                if (!hacked) {
-                    hacked = true;
-                    setInterval(glitchStrona, 200);
-                    setInterval(glitchTytul, 200);
-                }
-            }
-            if (aktualnaHack.length > 4) aktualnaHack.shift();
-        });
-
 
     </script>
 </body>
