@@ -4,85 +4,12 @@
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-
-.bio-container {
-    background-color: #1f1f1f;
-    color: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 60%;
-    max-width: 900px;
-    margin: 50px auto;
-    margin-top: 80px;
+.iframe {
+  width: 600px;      /* lub inna szerokość */
+  margin-left: auto;
+  margin-right: auto;
 }
-
-/* 🔹 Nagłówek profilu */
-.bio-header {
-    text-align: center;
-    margin-bottom: 30px;
-    margin-bottom: 60px;
-}
-
-/* 🔹 Profilowe */
-.bio-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-    border: 3px solid #6b03fc;
-    background-color: #444;
-    object-fit: cover;
-}
-
-/* 🔹 Nazwa użytkownika */
-.bio-container h1 {
-    font-size: 2.5em;
-    color: #fff;
-    margin-bottom: 20px;
-}
-
-/* 🔹 Opis */
-.bio-container h2 {
-    font-size: 1.8em;
-    color: #6b03fc;
-}
-
-/* 🔹 Sekcje informacji */
-.bio-container h3 {
-    font-size: 1.5em;
-    margin-top: 30px;
-}
-
-/* 🔹 Tekst */
-.bio-container p {
-    font-size: 1.2em;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    color: #ccc;
-}
-
-/* 🔹 Lista linków */
-.bio-container ul {
-    list-style: none;
-    padding: 0;
-}
-
-.bio-container ul li {
-    font-size: 1.1em;
-    margin: 10px 0;
-}
-
-/* 🔹 Linki */
-.bio-container ul li a {
-    color: #6b03fc;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.bio-container ul li a:hover {
-    color: #8c1bff;
-}
-
+        
 #gifOverlay {
     position: fixed;
     top: 0;
@@ -316,24 +243,7 @@ h1, p {
 
     <div id="clock" style="display:none;"></div>
 
-    <div class="bio-container">
-        <div class="bio-header">
-            <img src="images/profil.png" alt="Profilowe" class="bio-image">
-            <h1>Fokcio</h1>
-            <p class="bio-description">
-                Fokcio. Minecraftowy gremlin. Koduję jak mnie najdzie. Gry? Rzadko. Ale jak już, to ładnie.
-            </p>
-        </div>
-
-        <div class="bio-links">
-            <h2>Linki</h2>
-            <ul>
-                <li>
-                    <a href="https://github.com/fokcio" target="_blank">Github</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <iframe class="bio">https://fokcio.github.io/bio</iframe>
 
     <script>
         // Napisy zmieniające się na środku
