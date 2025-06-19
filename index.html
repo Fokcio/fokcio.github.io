@@ -48,6 +48,7 @@
             /* lub inna wartość */
             width: 100%;
             transform: rotate(-35deg);
+            z-index: 0;
         }
 
         .container .box {
@@ -272,6 +273,7 @@
 </head>
 
 <body>
+
     <main>
         <div id="napis" class="show"></div>
     </main>
@@ -305,7 +307,19 @@
 
     <script>
         // Napisy zmieniające się na środku
+
+        const chars = "~`!@#$%^&*(){}[]|:;\"<>?/.,";
         let napisy = [
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
+            "Cześć, Jestem Fokcio",
+            "To jest moja strona :D",
             "Cześć, Jestem Fokcio",
             "To jest moja strona :D",
             "Cześć, Jestem Fokcio",
@@ -323,22 +337,31 @@
         let napisElement = document.getElementById("napis");
         let indexNapisu = 0;
 
+        function scrambleEffect(text) {
+            let i = 0;
+            const interval = setInterval(() => {
+                napisElement.textContent = text.split('').map((c, j) =>
+                    j < i ? c : chars[Math.floor(Math.random() * chars.length)]
+                ).join('');
+                if (i++ > text.length) clearInterval(interval);
+            }, 80);
+        }
+
         function zmienNapis() {
             napisElement.classList.remove("show");
             napisElement.classList.add("fade");
 
             setTimeout(() => {
-                napisElement.innerText = napisy[indexNapisu];
-                napisElement.classList.remove("show", "fade");
-                napisElement.classList.add("fade");
+                const nowy = napisy[indexNapisu];
+                scrambleEffect(nowy);
 
-                indexNapisu++;
-                if (indexNapisu >= napisy.length) indexNapisu = 0;
+                indexNapisu = (indexNapisu + 1) % napisy.length;
             }, 500);
         }
 
-        setInterval(zmienNapis, 2500);
+        setInterval(zmienNapis, 3000);
         zmienNapis();
+
 
         // Sekwencja klawiszy
         const sekwencja = ['k', 'o', 't', 'e', 'l'];
