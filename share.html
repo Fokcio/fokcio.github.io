@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Auto-udostępnianie wiadomości</title>
+</head>
+<body>
+  <pre id="message"></pre>
+
+  <script>
+    // Pobierz i przetwórz tekst z URL (np. ?=tekst%0Az%0Anowymi%0Aliniami)
+    const rawText = decodeURIComponent(location.search.slice(2));
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = rawText; // wyświetlenie wiadomości na stronie
+
+    // Automatyczne udostępnienie
+    async function autoShare() {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Wiadomość',
+            text: rawText
+          });
+        } catch (err) {
+          console.log('Udostępnianie anulowane lub błąd:', err);
+        }
+      } else {
+        alert("Twoja przeglądarka nie obsługuje udostępniania.");
+      }
+    }
+
+    autoShare();
+  </script>
+</body>
+</html>
