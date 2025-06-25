@@ -4,6 +4,48 @@
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
+         #language-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  #lang-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* EN – granatowe tło, biały tekst */
+  #lang-btn.en {
+    background-color: #002b5c; /* granatowy */
+    color: #ffffff;
+  }
+
+  #lang-btn.en:hover {
+    background-color: #001f3f;
+    transform: scale(1.05);
+  }
+
+  /* PL – białe tło, czerwony tekst i obramowanie */
+  #lang-btn.pl {
+    background-color: #ffffff;
+    color: #d4213d; /* czerwony */
+    border: 2px solid #d4213d;
+  }
+
+  #lang-btn.pl:hover {
+    background-color: #d4213d;
+    color: #ffffff;
+    transform: scale(1.05);
+  }
+        
         .cat-drop {
             position: fixed;
             top: -100px;
@@ -305,7 +347,50 @@
         <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
     </div>
 
+    <div id="language-switcher">
+      <button id="lang-btn">EN</button>
+    </div>
+
+
     <script>
+
+        <script>
+  const btn = document.getElementById('lang-btn');
+
+  function getCurrentLang(path) {
+    const match = path.match(/^\/(pl|en)(\/|$)/);
+    return match ? match[1] : null;
+  }
+
+  function setButtonLangStyle(lang) {
+    if (lang === 'pl') {
+      btn.textContent = 'PL';
+      btn.classList.remove('en');
+      btn.classList.add('pl');
+    } else {
+      btn.textContent = 'EN';
+      btn.classList.remove('pl');
+      btn.classList.add('en');
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    const path = window.location.pathname;
+    const currentLang = getCurrentLang(path);
+    const newLang = currentLang === 'pl' ? 'en' : 'pl';
+    const newPath = path.replace(/^\/(pl|en)(\/|$)/, '/');
+
+    window.location.pathname = '/' + newLang + newPath;
+  });
+
+  // Ustaw wygląd przycisku przy załadowaniu
+  window.addEventListener('DOMContentLoaded', () => {
+    const lang = getCurrentLang(window.location.pathname);
+    setButtonLangStyle(lang === 'pl' ? 'pl' : 'en');
+  });
+</script>
+
+        
         // Napisy zmieniające się na środku
 
         const chars = "~`!@#$%^&*(){}[]|:;\"<>?/.,";
