@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>404 - Not found</title>
+  <style>
+    :root {
+      --width: 250px;
+      --height: calc(var(--width) / 2);
+      --bg-color: #8c1bff; /* Fioletowy kolor */
+    }
+
+    body {
+      background-color: black;
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Cal Sans', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      flex-direction: column;
+    }
+
+    main {
+      border: 3px solid var(--bg-color);
+      padding: 20px;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+      color: var(--bg-color);
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .blur-text {
+      font-size: 50px;
+      filter: blur(2px);
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: 'Cal Sans', sans-serif;
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: var(--bg-color);
+      color: black;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      border-radius: 8px;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background-color: #6a0dad; /* Jaśniejszy fiolet przy najechaniu */
+    }
+
+    .ball {
+      width: var(--width);
+      height: var(--height);
+      background-color: transparent; /* Fioletowe tło */
+      position: absolute;
+      animation: toRight linear 6.8s infinite alternate, bounce linear 17s infinite alternate;
+    }
+
+    @keyframes bounce {
+      0% {
+        top: 0;
+      }
+      48% {
+        /* Na tym etapie element jest w środku animacji */
+      }
+      50% {
+        top: calc(100% - var(--height)); /* Odbicie od dołu */
+      }
+      52% {
+        /* Element wraca w górę */
+      }
+      100% {
+        top: 0; /* Odbicie od góry */
+      }
+    }
+
+    @keyframes toRight {
+      0% {
+        left: 0;
+      }
+      100% {
+        left: calc(100% - var(--width)); /* Odbicie od prawej strony */
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="blur-text">Error code 404</div>
+    <h1>Page Not Found</h1>
+    <img src="https://http.cat/404" alt="Error 404">
+    <br>
+    <button onclick="window.location.href='index.html'">Back</button>
+  </main>
+  
+  <!-- Fioletowa piłka z animacją -->
+  <div class="ball">
+    <img src="https://fokcio.github.io/images/dvd.png" alt="Obrazek" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+</div>
+
+</body>
+</html>

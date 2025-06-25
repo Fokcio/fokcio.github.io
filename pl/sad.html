@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Update - Wybór systemu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    select {
+      padding: 10px;
+      font-size: 16px;
+    }
+    iframe {
+      display: none;
+      width: 100%;
+      height: 500px;
+      border: 0;
+    }
+
+    /* Ukrywanie kursora */
+    iframe, body {
+      cursor: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wybierz system operacyjny do symulacji aktualizacji:</h1>
+
+  <select id="system-select">
+    <option value="https://fakeupdate.net/sarcastic/">Sarcastic Update</option>
+    <option value="https://fakeupdate.net/apple/">MacOS Update</option>
+    <option value="https://fakeupdate.net/windows98k/">Windows 98k</option>
+    <option value="https://fakeupdate.net/xp/">Windows XP</option>
+    <option value="https://fakeupdate.net/vista/">Windows Vista</option>
+    <option value="https://fakeupdate.net/win8/">Windows 8</option>
+    <option value="https://fakeupdate.net/win7/">Windows 7</option>
+    <option value="https://fakeupdate.net/win11/">Windows 11</option>
+    <option value="https://fakeupdate.net/win10ue/">Windows 10 UE</option>
+  </select>
+
+  <div>
+    <iframe id="system-iframe" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    document.getElementById("system-select").addEventListener("change", function() {
+      // Pobranie wybranego URL
+      const selectedURL = this.value;
+
+      // Ustawienie URL w iframe
+      const iframe = document.getElementById("system-iframe");
+      iframe.src = selectedURL;
+
+      // Pokaż iframe
+      iframe.style.display = "block";
+
+      // Przełącz iframe na pełny ekran
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.mozRequestFullScreen) { // Firefox
+        iframe.mozRequestFullScreen();
+      } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari i Opera
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) { // IE/Edge
+        iframe.msRequestFullscreen();
+      }
+    });
+  </script>
+</body>
+</html>
