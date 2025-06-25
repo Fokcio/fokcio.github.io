@@ -5,7 +5,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
 
-          #language-switcher {
+    #language-switcher {
     position: fixed;
     top: 20px;
     right: 20px;
@@ -13,22 +13,41 @@
   }
 
   #lang-btn {
-    background-color: #f0f0f0;
-    color: #333;
     border: none;
     border-radius: 20px;
-    padding: 10px 16px;
+    padding: 10px 18px;
     font-size: 14px;
+    font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  #lang-btn:hover {
-    background-color: #333;
-    color: #fff;
+  /* EN – granatowe tło, biały tekst */
+  #lang-btn.en {
+    background-color: #002b5c; /* granatowy */
+    color: #ffffff;
+  }
+
+  #lang-btn.en:hover {
+    background-color: #001f3f;
     transform: scale(1.05);
   }
+
+  /* PL – białe tło, czerwony tekst i obramowanie */
+  #lang-btn.pl {
+    background-color: #ffffff;
+    color: #d4213d; /* czerwony */
+    border: 2px solid #d4213d;
+  }
+
+  #lang-btn.pl:hover {
+    background-color: #d4213d;
+    color: #ffffff;
+    transform: scale(1.05);
+  }
+
+        
         .cat-drop {
             position: fixed;
             top: -100px;
@@ -335,23 +354,41 @@
     </div>
 
     <script>
-         document.getElementById('lang-btn').addEventListener('click', () => {
-    const path = window.location.pathname;
-    const langRegex = /^\/(pl|en)(\/|$)/;
-    const currentLang = langRegex.test(path) ? path.match(langRegex)[1] : null;
 
+  const btn = document.getElementById('lang-btn');
+
+  function getCurrentLang(path) {
+    const match = path.match(/^\/(pl|en)(\/|$)/);
+    return match ? match[1] : null;
+  }
+
+  function setButtonLangStyle(lang) {
+    if (lang === 'pl') {
+      btn.textContent = 'PL';
+      btn.classList.remove('en');
+      btn.classList.add('pl');
+    } else {
+      btn.textContent = 'EN';
+      btn.classList.remove('pl');
+      btn.classList.add('en');
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    const path = window.location.pathname;
+    const currentLang = getCurrentLang(path);
     const newLang = currentLang === 'pl' ? 'en' : 'pl';
-    const newPath = path.replace(langRegex, '/');
-    
+    const newPath = path.replace(/^\/(pl|en)(\/|$)/, '/');
+
     window.location.pathname = '/' + newLang + newPath;
   });
 
-  // Ustaw aktualny język na przycisku
+  // Ustaw wygląd przycisku przy załadowaniu
   window.addEventListener('DOMContentLoaded', () => {
-    const path = window.location.pathname;
-    const lang = path.startsWith('/pl') ? 'PL' : 'EN';
-    document.getElementById('lang-btn').textContent = lang;
+    const lang = getCurrentLang(window.location.pathname);
+    setButtonLangStyle(lang === 'pl' ? 'pl' : 'en');
   });
+
         
         // Napisy zmieniające się na środku
 
