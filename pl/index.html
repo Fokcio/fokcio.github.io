@@ -4,6 +4,31 @@
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
+
+          #language-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  #lang-btn {
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  #lang-btn:hover {
+    background-color: #333;
+    color: #fff;
+    transform: scale(1.05);
+  }
         .cat-drop {
             position: fixed;
             top: -100px;
@@ -305,7 +330,29 @@
         <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
     </div>
 
+    <div id="language-switcher">
+      <button id="lang-btn">EN</button>
+    </div>
+
     <script>
+         document.getElementById('lang-btn').addEventListener('click', () => {
+    const path = window.location.pathname;
+    const langRegex = /^\/(pl|en)(\/|$)/;
+    const currentLang = langRegex.test(path) ? path.match(langRegex)[1] : null;
+
+    const newLang = currentLang === 'pl' ? 'en' : 'pl';
+    const newPath = path.replace(langRegex, '/');
+    
+    window.location.pathname = '/' + newLang + newPath;
+  });
+
+  // Ustaw aktualny język na przycisku
+  window.addEventListener('DOMContentLoaded', () => {
+    const path = window.location.pathname;
+    const lang = path.startsWith('/pl') ? 'PL' : 'EN';
+    document.getElementById('lang-btn').textContent = lang;
+  });
+        
         // Napisy zmieniające się na środku
 
         const chars = "~`!@#$%^&*(){}[]|:;\"<>?/.,";
