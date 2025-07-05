@@ -4,7 +4,79 @@
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
+  /* Animated Background Waves */
+    .animated-bg {
+      pointer-events: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .wave {
+      position: absolute;
+      left: 0; width: 100vw; height: 320px;
+      opacity: 0.28;
+      filter: blur(2px);
+      animation: waveMove 16s linear infinite alternate;
+      background: linear-gradient(105deg, var(--purple3) 40%, var(--purple2) 90%);
+    }
+    .wave.wave1 {
+      top: 0;
+      height: 340px;
+      opacity: 0.32;
+      background: linear-gradient(90deg, #a259ff 0%, #6c03fa 70%, #fff0 100%);
+      animation-delay: 0s;
+      clip-path: ellipse(120% 65% at 40% 35%);
+    }
+    .wave.wave2 {
+      top: 140px;
+      height: 265px;
+      opacity: 0.22;
+      background: linear-gradient(90deg, #2e003e 0%, #a259ff 80%);
+      animation-delay: 1.7s;
+      clip-path: ellipse(100% 45% at 60% 40%);
+    }
+    .wave.wave3 {
+      top: 340px;
+      height: 220px;
+      opacity: 0.18;
+      background: linear-gradient(100deg, #6c03fa 0%, #a259ff 100%);
+      animation-delay: 3s;
+      clip-path: ellipse(140% 40% at 80% 50%);
+    }
+    @keyframes waveMove {
+      0%   { transform: translateX(-8vw) scaleX(1);}
+      100% { transform: translateX(8vw) scaleX(1.07);}
+    }
+    /* Animated Glowing Dots */
+    .dots-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      width: 100vw;
+      height: 100vh;
+    }
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.13;
+      filter: blur(1.5px);
+      background: var(--purple1);
+      animation: dotFloat 12s ease-in-out infinite alternate;
+    }
+    .dot1 { width: 60px; height: 60px; left: 12vw; top: 15vh; animation-delay: 1s;}
+    .dot2 { width: 100px; height: 100px; left: 80vw; top: 22vh; background: var(--purple2); animation-delay: 2.7s;}
+    .dot3 { width: 46px; height: 46px; left: 55vw; top: 77vh; background: #fff; opacity: 0.07; animation-delay: 4.2s;}
+    .dot4 { width: 90px; height: 90px; left: 10vw; top: 80vh; background: var(--purple4); opacity: 0.16; animation-delay: 6.3s;}
+    @keyframes dotFloat {
+      0%   { transform: translateY(0) scale(1);}
+      100% { transform: translateY(-32px) scale(1.15);}
+    }
 
+
+        
     #language-switcher {
     position: fixed;
     top: 20px;
@@ -83,6 +155,7 @@
             align-items: center;
             min-height: 100vh;
             background: #000;
+            scroll-behavior: smooth;
             overflow: auto;
         }
 
@@ -352,6 +425,19 @@
     <div id="language-switcher">
       <button id="lang-btn">EN</button>
     </div>
+
+    <!-- New beautiful animated background -->
+  <div class="animated-bg" aria-hidden="true">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+  </div>
+  <div class="dots-bg" aria-hidden="true">
+    <div class="dot dot1"></div>
+    <div class="dot dot2"></div>
+    <div class="dot dot3"></div>
+    <div class="dot dot4"></div>
+  </div>
 
     <script>
 
