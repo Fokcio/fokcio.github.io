@@ -2,7 +2,8 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Chat With AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat z AI</title>
   <script src="https://js.puter.com/v2/"></script>
   <style>
     :root {
@@ -17,6 +18,12 @@
       --fg: #ffffff;
       --bubble-ai: #2a2a2a;
       --bubble-user: #3a3a3a;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
     }
 
     * {
@@ -47,6 +54,7 @@
       color: var(--fg);
       border-radius: 5px;
       cursor: pointer;
+      font-size: 16px;
     }
 
     .chat-container {
@@ -62,6 +70,7 @@
       display: flex;
       gap: 10px;
       max-width: 80%;
+      word-break: break-word;
     }
 
     .message.user {
@@ -73,7 +82,6 @@
       padding: 10px;
       border-radius: 15px;
       background: var(--bubble-ai);
-      word-break: break-word;
       white-space: pre-wrap;
     }
 
@@ -111,8 +119,10 @@
     }
 
     .input-wrapper {
-      width: 1000px;
+      width: 100%;
+      max-width: 1000px;
       display: flex;
+      gap: 10px;
     }
 
     .input-area textarea {
@@ -129,13 +139,13 @@
     }
 
     .input-area button {
-      margin-left: 10px;
       padding: 10px 15px;
       background: #4caf50;
       color: white;
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      font-size: 16px;
     }
 
     .typing {
@@ -182,20 +192,51 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
+    @media (max-width: 600px) {
+      .input-area {
+        padding: 5px;
+      }
+
+      .input-area textarea {
+        font-size: 14px;
+        min-height: 35px;
+        max-height: 150px;
+      }
+
+      .input-area button {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      .toolbar button {
+        padding: 5px 8px;
+        font-size: 14px;
+      }
+
+      .chat-container {
+        padding: 8px;
+        gap: 8px;
+      }
+
+      .message {
+        max-width: 90%;
+      }
+    }
   </style>
 </head>
 <body class="dark">
   <div class="toolbar">
-    <button onclick="toggleTheme()">🌗 Mode</button>
-    <button onclick="clearChat()">🗑️ Clear</button>
+    <button onclick="toggleTheme()">🌗 Tryb</button>
+    <button onclick="clearChat()">🗑️ Wyczyść</button>
   </div>
 
   <div id="chat" class="chat-container"></div>
 
   <div class="input-area">
     <div class="input-wrapper">
-      <textarea id="input" placeholder="Write something..."></textarea>
-      <button id="sendBtn" onclick="sendMessage()">Send</button>
+      <textarea id="input" placeholder="Napisz coś..."></textarea>
+      <button id="sendBtn" onclick="sendMessage()">Wyślij</button>
     </div>
   </div>
 
@@ -302,7 +343,7 @@
 
       try {
         const result = await puter.ai.chat(messages, { model: "gpt-4.1-mini" });
-        const answer = result.message?.content || "❌ No response";
+        const answer = result.message?.content || "❌ Brak odpowiedzi";
         messages.push({ role: "assistant", content: answer });
         saveChat();
 
@@ -312,7 +353,7 @@
       } catch (e) {
         console.error(e);
         chat.removeChild(loading);
-        renderMessage("❌ Error communicating with AI.", "ai");
+        renderMessage("❌ Błąd podczas komunikacji z AI.", "ai");
         isTyping = false;
       }
     }
