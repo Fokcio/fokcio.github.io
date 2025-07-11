@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chat z AI</title>
+  <title>Chat with AI</title>
   <script src="https://js.puter.com/v2/"></script>
   <style>
     :root {
@@ -235,8 +235,8 @@
 
   <div class="input-area">
     <div class="input-wrapper">
-      <textarea id="input" placeholder="Napisz coś..."></textarea>
-      <button id="sendBtn" onclick="sendMessage()">Wyślij</button>
+      <textarea id="input" placeholder="Write something..."></textarea>
+      <button id="sendBtn" onclick="sendMessage()">Send</button>
     </div>
   </div>
 
@@ -343,7 +343,7 @@
 
       try {
         const result = await puter.ai.chat(messages, { model: "gpt-4.1-mini" });
-        const answer = result.message?.content || "❌ Brak odpowiedzi";
+        const answer = result.message?.content || "❌ No response";
         messages.push({ role: "assistant", content: answer });
         saveChat();
 
@@ -353,7 +353,7 @@
       } catch (e) {
         console.error(e);
         chat.removeChild(loading);
-        renderMessage("❌ Błąd podczas komunikacji z AI.", "ai");
+        renderMessage("❌ Error communicating with AI.", "ai");
         isTyping = false;
       }
     }
