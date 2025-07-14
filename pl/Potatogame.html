@@ -51,7 +51,7 @@
       box-shadow: 0 0 10px rgba(137, 43, 226, 0.5);
     }
 
-    a.btn {
+    button {
       font-family: 'Cal Sans', sans-serif;
       padding: 10px 25px;
       font-size: 22px;
@@ -64,7 +64,7 @@
       margin-top: 10px;
     }
 
-    a.btn:hover {
+    button:hover {
       transform: scale(1.1);
       background-color: #8c1bff;
     }
@@ -85,7 +85,15 @@
       <source src="videos/PotatoGameTrailer.mp4" type="video/mp4">
       Your browser does not support the video player.
     </video>
-    <a href="/Potato Game.apk" class="btn">📥 Pobierz .apk</a>
+    <button onclick="pobierzAPK()">📥 Pobierz .apk</button>
   </main>
+  <script>
+    function pobierzAPK() {
+      const link = document.createElement('a');
+      link.href = 'Potato Game.apk';
+      link.download = 'Potato Game.apk';
+      link.click();
+    }
+  </script>
 </body>
 </html>
