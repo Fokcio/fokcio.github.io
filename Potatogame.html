@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Potato Game by Fokcio</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Cal Sans', sans-serif;
+      background-color: black;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+    }
+
+    main {
+      border: 3px solid rgb(119, 0, 255);
+      padding: 20px;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+      color: blueviolet;
+      text-align: center;
+      max-width: 700px;
+      width: 90%;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .author,
+    .version {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+
+    .description {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+
+    video.trailer {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px 0;
+      border: 2px solid blueviolet;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(137, 43, 226, 0.5);
+    }
+
+    button {
+      font-family: 'Cal Sans', sans-serif;
+      padding: 10px 25px;
+      font-size: 22px;
+      background-color: blueviolet;
+      color: black;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background-color: #8c1bff;
+    }
+
+    #langSwitcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+
+    #langSwitcher {
+      border: none;
+      border-radius: 20px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Potato Game</h1>
+    <p class="author" data-i18n="PGCreator">Creator: Fokcio</p>
+    <p class="version" data-i18n="PGVersion">Version: 1.0.2</p>
+
+    <p class="description" data-i18n="PGDescription">
+      <!-- Tutaj możesz wkleić swój własny opis -->
+      Zostań ziemniakiem, zbuduj świat, ukończ parkour, i się nie ugotuj
+    </p>
+
+    <select id="langSwitcher">
+      <option value="pl">Polski</option>
+      <option value="en">English</option>
+      <option value="fr">Français</option>
+    </select>
+
+
+    <video class="trailer" controls>
+      <source src="videos/PotatoGameTrailer.mp4" type="video/mp4">
+      Your browser does not support the video player.
+    </video>
+    <button onclick="pobierzAPK()" data-i18n="PGDownload">📥 Pobierz .apk</button>
+  </main>
+  <script>
+    function pobierzAPK() {
+      const link = document.createElement('a');
+      link.href = 'Potato Game.apk';
+      link.download = 'Potato Game.apk';
+      link.click();
+    }
+
+let translations = {};
+let currentLang = 'pl';
+
+const switcher = document.getElementById('langSwitcher');
+
+// pobierz język z URL
+const params = new URLSearchParams(window.location.search);
+const langFromUrl = params.get('lang');
+if (langFromUrl) {
+  currentLang = langFromUrl;
+}
+switcher.value = currentLang;
+
+switcher.addEventListener('change', (e) => {
+  currentLang = e.target.value;
+
+  // zaktualizuj URL bez przeładowania strony
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set('lang', currentLang);
+  window.history.replaceState({}, '', newUrl);
+
+  loadLanguage(currentLang);
+});
+
+function loadLanguage(lang) {
+  fetch(`lang/${lang}.json`)
+    .then(res => res.json())
+    .then(data => {
+      translations = data;
+      updateTextContent();
+    });
+}
+
+function updateTextContent() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[key]) {
+      el.textContent = translations[key];
+    }
+  });
+}
+
+loadLanguage(currentLang);
+
+  </script>
+</body>
+
+</html>

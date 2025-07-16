@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <style>
+        .title {
+            display: inline-block;
+            border: 3px solid rgb(119, 0, 255);
+            padding: 10px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+            color: blueviolet;
+            text-align: center;
+            margin: 20px auto;
+            font-family: 'Cal Sans', sans-serif;
+            font-size: 50px;
+            filter: blur(2px);
+        }
+
+        #videoList {
+            display: flex;
+            font-family: 'Cal Sans', sans-serif;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .video-item {
+            display: inline-block;
+            font-family: 'Cal Sans', sans-serif;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            background-color: #1f1f1f;
+            border-radius: 10px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+
+        .video-item:hover {
+            transform: scale(1.05);
+            font-family: 'Cal Sans', sans-serif;
+            background-color: #6b03fc;
+        }
+
+        body {
+            font-family: 'Cal Sans', sans-serif;
+            /* Zmieniono na Cal Sans */
+            background-color: black;
+            /* Ciemny motyw */
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        /* 🔹 Nagłówek */
+        header {
+            margin-top: 100px;
+            font-family: 'Cal Sans', sans-serif;
+            font-size: 2.5em;
+        }
+
+        /* 🔹 Nagłówki */
+        h1 {
+            font-size: 3em;
+            font-family: 'Cal Sans', sans-serif;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #aaa;
+        }
+
+        /* 🔹 Kontener główny */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Cal Sans', sans-serif;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* 🔹 Stopka */
+        footer {
+            margin-top: 50px;
+            font-family: 'Cal Sans', sans-serif;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        #langSwitcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+
+        #langSwitcher {
+            border: none;
+            border-radius: 20px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="VideosTitle">Filmiki</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="title" data-i18n="VideosTitle">Filmiki</div>
+        <div id="videoList"></div>
+    </div>
+
+    <select id="langSwitcher">
+        <option value="pl">Polski</option>
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+    </select>
+
+    <!-- 📌 Skrypty MUSZĄ być na końcu body -->
+    <script src="js/videodata.js"></script>
+    <script src="js/videoscript.js"></script>
+    <script>
+        let translations = {};
+let currentLang = 'pl';
+
+const switcher = document.getElementById('langSwitcher');
+
+// pobierz język z URL
+const params = new URLSearchParams(window.location.search);
+const langFromUrl = params.get('lang');
+if (langFromUrl) {
+  currentLang = langFromUrl;
+}
+switcher.value = currentLang;
+
+switcher.addEventListener('change', (e) => {
+  currentLang = e.target.value;
+
+  // zaktualizuj URL bez przeładowania strony
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set('lang', currentLang);
+  window.history.replaceState({}, '', newUrl);
+
+  loadLanguage(currentLang);
+});
+
+function loadLanguage(lang) {
+  fetch(`lang/${lang}.json`)
+    .then(res => res.json())
+    .then(data => {
+      translations = data;
+      updateTextContent();
+    });
+}
+
+function updateTextContent() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[key]) {
+      el.textContent = translations[key];
+    }
+  });
+}
+
+loadLanguage(currentLang);
+
+    </script>
+</body>
+
+</html>

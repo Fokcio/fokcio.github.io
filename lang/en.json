@@ -1,0 +1,34 @@
+{
+  "bio": "Bio",
+  "filmiki": "Videos",
+  "Ai": "AI",
+  "ProjektyTekst": "My projects",
+
+  "Napis1": "Hi, Im Fokcio",
+  "Napis2": "This is my website :D",
+  "Napis3": "You're still reading this?",
+  "Napis4": "You are waiting for Easter Egg?",
+  "Napis5": "ummm I see...",
+  "Napis6": "enter kotel or meow...",
+
+  "AiSiteTitle": "Chat With Ai",
+  "ModeBtnAi": "🌗 Mode",
+  "ClearBtnAi": "🗑️ Clear",
+  "WriteLabbelAi": "Write Something...",
+  "SendBtnAi": "Send",
+  "AiError": "❌ Error communicating with AI.",
+  "NoResponseAi": "❌ No response",
+
+
+  "BioDescription": "Fokcio. Minecraft gremlin. I code when the mood strikes. Games? Rarely. But when I do, it's nice.",
+  "LinksBio": "Links",
+
+
+  "PGDownload": "📥 Download .apk",
+  "PGDescription": "Become a potato, build a world, complete parkour, and don't get cooked",
+  "PGCreator": "Creator: Fokcio",
+  "PGVersion": "Version: 1.0.2",
+
+
+  "VideosTitle": "Videos"
+}

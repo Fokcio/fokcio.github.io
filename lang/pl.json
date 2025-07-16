@@ -1,0 +1,35 @@
+{
+  "bio": "Bio",
+  "filmiki": "Filmiki",
+  "Ai": "AI",
+  "ProjektyTekst": "Moje Projekty",
+
+  "Napis1": "Cześć, jestem Fokcio",
+  "Napis2": "To jest moja strona :D",
+  "Napis3": "Dalej to czytasz?",
+  "Napis4": "Czekasz na easteregga?",
+  "Napis5": "umm rozumiem..",
+  "Napis6": "wpisz kotel lub zamiaucz...",
+
+
+  "AiSiteTitle": "Chat z Ai",
+  "ModeBtnAi": "🌗 Tryb",
+  "ClearBtnAi": "🗑️ Wyczyść",
+  "WriteLabbelAi": "Napisz coś...",
+  "SendBtnAi": "Wyślij",
+  "AiError": "❌ Błąd podczas komunikacji z AI.",
+  "NoResponseAi": "❌ Brak odpowiedzi",
+
+
+  "BioDescription": "Fokcio. Minecraftowy gremlin. Koduję jak mnie najdzie. Gry? Rzadko. Ale jak już, to ładnie.",
+  "LinksBio": "Linki",
+
+
+  "PGDownload": "📥 Pobierz .apk",
+  "PGDescription": "Zostań ziemniakiem, zbuduj świat, ukończ parkour, i się nie ugotuj",
+  "PGCreator": "Twórca: Fokcio",
+  "PGVersion": "Wersja: 1.0.2",
+
+  
+  "VideosTitle": "Filmiki"
+}
