@@ -160,31 +160,6 @@ document.addEventListener('visibilitychange', function () {
 
 startTitleAnimation();
 
-// Przekierowania przycisków
-const elements = document.querySelectorAll('button, a');
-
-elements.forEach(element => {
-    const text = element.textContent.trim();
-    let redirectTo = '';
-
-    if (text === 'Bio') {
-        redirectTo = '/bio';
-    } else if (text === 'Filmiki') {
-        redirectTo = '/video';
-    } else if (text === 'AI') {
-        redirectTo = '/ai';
-    } else if (text === 'Marchekwa') {
-        redirectTo = '/texts/marchewka';
-    }
-
-    if (redirectTo) {
-        element.addEventListener('click', (event) => {
-            event.preventDefault();
-            window.location.href = redirectTo;
-        });
-    }
-});
-
 // Karuzela obrazków
 const obrazki = [
     { src: "images/gra1.png", href: "/PilkaNaRownowazni" },
