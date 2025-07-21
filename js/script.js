@@ -173,6 +173,8 @@ elements.forEach(element => {
         redirectTo = '/video';
     } else if (text === 'AI') {
         redirectTo = '/ai';
+    } else if (text === 'Marchekwa') {
+        redirectTo = '/texts/marchewka';
     }
 
     if (redirectTo) {
