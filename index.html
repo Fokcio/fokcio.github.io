@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <title>Fokcio</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <main>
+        <div id="napis" class="show"></div>
+    </main>
+
+    <div id="buttons">
+        <button id="biobtn" class="custom-btn btn-16" data-i18n="bio">Bio</button>
+        <button id="filmikibtn" class="custom-btn btn-16" data-i18n="filmiki">Filmiki</button>
+        <button id="aibtn" class="custom-btn btn-16" data-i18n="Ai">AI</button>
+        <button onclick="location.href='/texts/marchewka'">Marchewka</button>
+    </div>
+
+    <select id="langSwitcher">
+        <option value="pl">Polski</option>
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+    </select>
+
+    <h2 data-i18n="ProjektyTekst">Moje Projekty</h2>
+
+    <div id="karuzela">
+        <button id="prev">&#8592;</button>
+        <a id="obrazekLink" href="/pl/PilkaNaRownowazni">
+            <img id="obrazek" src="/images/gra1.png" alt="Karuzela" />
+        </a>
+        <button id="next">&#8594;</button>
+
+    </div>
+
+    <div id="gifOverlay">
+        <img id="funGif" src="https://media1.tenor.com/m/larrKhuDtGAAAAAd/fun-pet-pet-fun.gif" alt="Fun GIF">
+    </div>
+
+    <script src="/js/winbox.bundle.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
