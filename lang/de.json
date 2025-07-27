@@ -1,0 +1,31 @@
+{
+  "bio": "Bio",
+  "filmiki": "Videos",
+  "Ai": "KI",
+  "ProjektyTekst": "Meine Projekte",
+
+  "Napis1": "Hi, ich bin Fokcio",
+  "Napis2": "Das ist meine Seite :D",
+  "Napis3": "Liest du immer noch?",
+  "Napis4": "Wartest du auf ein Easter Egg?",
+  "Napis5": "umm, verstehe...",
+  "Napis6": "gib kotel ein oder miaue...",
+
+  "AiSiteTitle": "Chat mit KI",
+  "ModeBtnAi": "🌗 Modus",
+  "ClearBtnAi": "🗑️ Leeren",
+  "WriteLabbelAi": "Schreib etwas...",
+  "SendBtnAi": "Senden",
+  "AiError": "❌ Fehler bei der Kommunikation mit der KI.",
+  "NoResponseAi": "❌ Keine Antwort",
+
+  "BioDescription": "Fokcio. Minecraft-Gremlin. Ich code, wenn ich Lust habe. Spiele? Selten. Aber wenn, dann hübsch.",
+  "LinksBio": "Links",
+
+  "PGDownload": "📥 .apk herunterladen",
+  "PGDescription": "Werde eine Kartoffel, baue eine Welt, beende den Parkour und werde nicht gekocht.",
+  "PGCreator": "Ersteller: Fokcio",
+  "PGVersion": "Version: 1.0.2",
+
+  "VideosTitle": "Videos"
+}
