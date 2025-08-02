@@ -300,20 +300,20 @@ if (annyang) {
 
   annyang.addCommands(commands);
 
-  // 🔐 Klawiaturowy kod aktywujący
+  // 🔐 Sekwencja aktywująca głos — 'voice'
   const kodAktywacyjny = 'voice';
-  let wpisane = '';
+  let wpisaneVoice = '';
 
   document.addEventListener('keydown', (e) => {
     if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
-      wpisane += e.key.toLowerCase();
+      wpisaneVoice += e.key.toLowerCase();
 
-      if (wpisane === kodAktywacyjny) {
+      if (wpisaneVoice === kodAktywacyjny) {
         console.log("🎤 Voice tryb aktywowany!");
-        annyang.start(); // uruchamia mikrofon
-        wpisane = '';
-      } else if (!kodAktywacyjny.startsWith(wpisane)) {
-        wpisane = ''; // reset jeśli literka nie pasuje
+        annyang.start();
+        wpisaneVoice = '';
+      } else if (!kodAktywacyjny.startsWith(wpisaneVoice)) {
+        wpisaneVoice = ''; // reset jeśli źle
       }
     }
   });
