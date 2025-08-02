@@ -319,4 +319,29 @@ if (annyang) {
   });
 }
 
+// Debug: Loguj rozpoznane komendy, start, błędy itd.
+annyang.addCallback('start', function() {
+  console.log('🎧 [annyang] Nasłuch rozpoczęty.');
+});
+
+annyang.addCallback('end', function() {
+  console.log('🛑 [annyang] Nasłuch zakończony.');
+});
+
+annyang.addCallback('error', function() {
+  console.error('❌ [annyang] Wystąpił błąd.');
+});
+
+annyang.addCallback('result', function(phrases) {
+  console.log('🗣️ [annyang] Rozpoznano frazy:', phrases);
+});
+
+annyang.addCallback('resultMatch', function(userSaid, commandText, phrases) {
+  console.log(`✅ [annyang] Dopasowano: "${userSaid}" do komendy "${commandText}"`);
+});
+
+annyang.addCallback('resultNoMatch', function(phrases) {
+  console.warn('⚠️ [annyang] Nie znaleziono dopasowania dla:', phrases);
+});
+
 
