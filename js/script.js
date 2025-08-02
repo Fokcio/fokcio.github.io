@@ -278,10 +278,25 @@ document.getElementById('aibtn').onclick = () => {
 
 if (annyang) {
   const commands = {
-    'test': () => {
-      console.log('Test zaliczony');
+    'bio': () => {
+      new WinBox("BIO", {
+        url: "/bio.html?lang=" + currentLang
+      });
+    },
+    'ai': () => {
+      new WinBox("AI", {
+        url: "/ai.html?lang=" + currentLang
+      });
+    },
+    'videos': () => {
+      new WinBox("VIDEOS", {
+        url: "/videos.html?lang=" + currentLang
+      });
+    },
+    'marchewka': () => {
+      window.location.href = "/texts/marchewka";
     }
-  };
+  }};
 
   annyang.addCommands(commands);
 
@@ -328,3 +343,4 @@ if (annyang) {
     }
   });
 }
+
