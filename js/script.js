@@ -278,25 +278,9 @@ document.getElementById('aibtn').onclick = () => {
 
 if (annyang) {
   const commands = {
-    'bio': () => {
-      new WinBox("BIO", {
-        url: "/bio.html?lang=" + currentLang
-      });
+    'test': () => {
+      console.log('Test zaliczony')
     },
-    'ai': () => {
-      new WinBox("AI", {
-        url: "/ai.html?lang=" + currentLang
-      });
-    },
-    'videos': () => {
-      new WinBox("VIDEOS", {
-        url: "/videos.html?lang=" + currentLang
-      });
-    },
-    'marchewka': () => {
-      window.location.href = "/texts/marchewka";
-    }
-  };
 
   annyang.addCommands(commands);
 
@@ -343,5 +327,6 @@ annyang.addCallback('resultMatch', function(userSaid, commandText, phrases) {
 annyang.addCallback('resultNoMatch', function(phrases) {
   console.warn('⚠️ [annyang] Nie znaleziono dopasowania dla:', phrases);
 });
+
 
 
