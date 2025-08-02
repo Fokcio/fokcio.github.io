@@ -1,34 +1,4 @@
-if (annyang) {
-  // Let's define our first command. First the text we expect, and then the function it should call
-  var commands = {
-        'bio': () => {
-          new WinBox("BIO", {
-            url: "/bio.html?lang=" + currentLang
-          });
-        },
 
-        'ai': () => {
-          new WinBox("AI", {
-            url: "/ai.html?lang=" + currentLang
-          });
-        },
-
-        'videos': () => {
-          new WinBox("VIDEOS", {
-            url: "/videos.html?lang=" + currentLang
-          });
-        },
-        
-        'marchewka': () => {
-          window.location.href = "/texts/marchewka";
-        };
-
-  // Add our commands to annyang
-  annyang.addCommands(commands);
-
-  // Start listening. You can call this here, or attach this call to an event, button, etc.
-  annyang.start();
-}
 
 
 
@@ -303,3 +273,37 @@ document.getElementById('aibtn').onclick = () => {
 
 };
 
+
+
+
+if (annyang) {
+  // Let's define our first command. First the text we expect, and then the function it should call
+  var commands = {
+        'bio': () => {
+          new WinBox("BIO", {
+            url: "/bio.html?lang=" + currentLang
+          });
+        },
+
+        'ai': () => {
+          new WinBox("AI", {
+            url: "/ai.html?lang=" + currentLang
+          });
+        },
+
+        'videos': () => {
+          new WinBox("VIDEOS", {
+            url: "/videos.html?lang=" + currentLang
+          });
+        },
+        
+        'marchewka': () => {
+          window.location.href = "/texts/marchewka";
+        };
+
+  // Add our commands to annyang
+  annyang.addCommands(commands);
+
+  // Start listening. You can call this here, or attach this call to an event, button, etc.
+  annyang.start();
+}
