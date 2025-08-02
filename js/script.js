@@ -277,34 +277,46 @@ document.getElementById('aibtn').onclick = () => {
 
 
 if (annyang) {
-  // Let's define our first command. First the text we expect, and then the function it should call
-  var commands = {
-        'bio': () => {
-          new WinBox("BIO", {
-            url: "/bio.html?lang=" + currentLang
-          });
-        },
+  const commands = {
+    'bio': () => {
+      new WinBox("BIO", {
+        url: "/bio.html?lang=" + currentLang
+      });
+    },
+    'ai': () => {
+      new WinBox("AI", {
+        url: "/ai.html?lang=" + currentLang
+      });
+    },
+    'videos': () => {
+      new WinBox("VIDEOS", {
+        url: "/videos.html?lang=" + currentLang
+      });
+    },
+    'marchewka': () => {
+      window.location.href = "/texts/marchewka";
+    }
+  };
 
-        'ai': () => {
-          new WinBox("AI", {
-            url: "/ai.html?lang=" + currentLang
-          });
-        },
-
-        'videos': () => {
-          new WinBox("VIDEOS", {
-            url: "/videos.html?lang=" + currentLang
-          });
-        },
-        
-        'marchewka': () => {
-          window.location.href = "/texts/marchewka";
-        }
-
-  // Add our commands to annyang
   annyang.addCommands(commands);
 
-  // Start listening. You can call this here, or attach this call to an event, button, etc.
-  annyang.start();
+  // 🔐 Klawiaturowy kod aktywujący
+  const kodAktywacyjny = 'voice';
+  let wpisane = '';
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
+      wpisane += e.key.toLowerCase();
+
+      if (wpisane === kodAktywacyjny) {
+        console.log("🎤 Voice tryb aktywowany!");
+        annyang.start(); // uruchamia mikrofon
+        wpisane = '';
+      } else if (!kodAktywacyjny.startsWith(wpisane)) {
+        wpisane = ''; // reset jeśli literka nie pasuje
+      }
+    }
+  });
 }
+
 
