@@ -1,33 +1,6 @@
-
-  // Słowo, które użytkownik musi wpisać z klawiatury, by aktywować nasłuch
-  const triggerWord = "voice";
-  let typed = "";
-
-  document.addEventListener("keydown", (e) => {
-    // Zbieramy tylko litery
-    if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
-      typed += e.key.toLowerCase();
-
-      // Jeśli dotychczas wpisane litery pasują do początku "voice"
-      if (triggerWord.startsWith(typed)) {
-        // Jeśli wpisano całe słowo — uruchamiamy nasłuch
-        if (typed === triggerWord) {
-          console.log("VOICE wpisane poprawnie – start annyang");
-          startAnnyang();
-          typed = ""; // Resetujemy wpisywanie
-        }
-      } else {
-        // Jeśli użytkownik się pomylił — reset
-        typed = "";
-      }
-    }
-  });
-
-  // ====== TU JEST FUNKCJA, KTÓRA SIĘ WYKONA, GDY UŻYTKOWNIK POWIE COŚ DO MIKROFONU ======
-  function startAnnyang() {
-    if (annyang) {
-      // === TU WPISUJESZ SWOJE KOMENDY GŁOSOWE ===
-      const commands = {
+if (annyang) {
+  // Let's define our first command. First the text we expect, and then the function it should call
+  var commands = {
         'bio': () => {
           new WinBox("BIO", {
             url: "/bio.html?lang=" + currentLang
@@ -48,24 +21,14 @@
         
         'marchewka': () => {
           window.location.href = "/texts/marchewka";
-        },
-        'stop': () => {
-          alert("Zatrzymuję nasłuch komend głosowych.");
-          annyang.abort();
-        }
-      };
+        };
 
-      // Dodajemy komendy
-      annyang.addCommands(commands);
+  // Add our commands to annyang
+  annyang.addCommands(commands);
 
-      // Uruchamiamy nasłuch
-      annyang.start();
-
-      console.log("annyang nasłuchuje...");
-    } else {
-      alert("Ten browser nie obsługuje rozpoznawania mowy 😞");
-    }
-  }
+  // Start listening. You can call this here, or attach this call to an event, button, etc.
+  annyang.start();
+}
 
 
 
@@ -339,3 +302,4 @@ document.getElementById('aibtn').onclick = () => {
   });
 
 };
+
