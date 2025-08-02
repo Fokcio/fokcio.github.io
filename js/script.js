@@ -299,7 +299,7 @@ if (annyang) {
         
         'marchewka': () => {
           window.location.href = "/texts/marchewka";
-        };
+        }
 
   // Add our commands to annyang
   annyang.addCommands(commands);
@@ -307,3 +307,4 @@ if (annyang) {
   // Start listening. You can call this here, or attach this call to an event, button, etc.
   annyang.start();
 }
+
