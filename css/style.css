@@ -122,6 +122,10 @@ button {
     transition: background-color 0.3s;
 }
 
+button.highlight {
+    background: #ac54ff;
+    box-shadow: 0 0 15px blueviolet;
+
 button:hover {
     transform: scale(1.1);
     background-color: #8c1bff;
@@ -227,3 +231,91 @@ h1,
 p {
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
+
+
+
+
+
+
+#chatToggle {
+    position: fixed; bottom: 20px; right: 20px;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: #4caf50;
+    color: white;
+    font-size: 32px;
+    line-height: 60px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+  }
+  #chatWindow {
+    position: fixed; bottom: 90px; right: 20px;
+    width: 320px; max-height: 400px; height: 400px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1000;
+    font-size: 14px;
+  }
+  #chatHeader {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  #chatClose {
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 20px;
+  }
+  #chatMessages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #fafafa;
+  }
+  .message {
+    margin-bottom: 10px;
+    max-width: 80%;
+    padding: 8px 12px;
+    border-radius: 15px;
+    white-space: pre-wrap;
+  }
+  .userMsg {
+    background: #d1e7dd;
+    align-self: flex-end;
+  }
+  .aiMsg {
+    background: #f1f1f1;
+    align-self: flex-start;
+  }
+  #chatInputArea {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+  #chatInput {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+  }
+  #chatInput:focus {
+    outline: none;
+  }
+  #sendBtn {
+    background: #4caf50;
+    border: none;
+    color: white;
+    padding: 0 15px;
+    cursor: pointer;
+  }
+  #sendBtn:disabled {
+    background: #9ccc9c;
+    cursor: not-allowed;
+  }
