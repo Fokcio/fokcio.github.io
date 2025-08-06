@@ -9,6 +9,20 @@
 <link rel="icon" href="/images/profil.png" type="image/png">
 </head>
 
+<div id="chatToggle" title="Otwórz chat AI">💬</div>
+
+<div id="chatWindow" role="region" aria-label="Chat z AI">
+  <div id="chatHeader">
+    Chat AI
+    <span id="chatClose" title="Zamknij chat">&times;</span>
+  </div>
+  <div id="chatMessages" aria-live="polite"></div>
+  <div id="chatInputArea">
+    <input id="chatInput" type="text" placeholder="Napisz coś..." autocomplete="off" />
+    <button id="sendBtn">Wyślij</button>
+  </div>
+</div>
+    
 <body>
 
     <main>
@@ -50,7 +64,9 @@
     <script src="/js/winbox.bundle.js"></script>
     <script src="/js/script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+    <script src="https://js.puter.com/v2/"></script>
 </html>
+
 
 
 
