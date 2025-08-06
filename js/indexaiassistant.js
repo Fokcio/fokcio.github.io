@@ -83,9 +83,17 @@ Odpowiadasz w języku ` + swither.value + `.
 
 {"akcja": "pokaz_filmiki"}
 
-- Jeśli użytkownik pyta **gdzie jest bio** lub o **lokalizację filmików** lub o **przycisk filmiki** (np. "gdzie są filmiki?", "lokalizacja przycisku filmiki", "gdzie znaleźć filmiki", "jak otworzyć filmiki"), odpowiedz naturalnie, powiedz mu że przycisk został podświetlony i na końcu dodaj:
+- Jeśli użytkownik pyta **gdzie są filmiki** lub o **lokalizację filmików** lub o **przycisk filmiki** (np. "gdzie są filmiki?", "lokalizacja przycisku filmiki", "gdzie znaleźć filmiki", "jak otworzyć filmiki"), odpowiedz naturalnie, powiedz mu że przycisk został podświetlony i na końcu dodaj:
 
 {"akcja": "podswietl_filmiki"}
+
+- Jeśli użytkownik chce **otworzyć Ai** (np. komendy typu: "otwórz Ai", "pokaż Ai", "Ai"), odpowiedz naturalnie że otwierasz Ai i na końcu dodaj w osobnej linii:
+
+{"akcja": "pokaz_Ai"}
+
+- Jeśli użytkownik pyta **gdzie jest Ai** lub o **lokalizację Ai** lub o **przycisk Ai** (np. "gdzie jest Ai?", "lokalizacja przycisku Ai", "gdzie znaleźć Ai", "jak otworzyć Ai"), odpowiedz naturalnie, powiedz mu że przycisk został podświetlony i na końcu dodaj:
+
+{"akcja": "podswietl_Ai"}
 
 
 
@@ -153,11 +161,11 @@ async function processUserInput(text) {
         });
       } else if (akcja.akcja === 'podswietl_filmiki') {
         highlightFilmikiBtn();  
-      } else if (akcja.akcja === 'pokaz_ai') {
+      } else if (akcja.akcja === 'pokaz_Ai') {
         new WinBox("AI", {
           url: "/ai.html?lang=" + currentLang
         });
-      } else if (akcja.akcja === 'podswietl_ai') {
+      } else if (akcja.akcja === 'podswietl_Ai') {
         highlightAiBtn();
       }
     }
