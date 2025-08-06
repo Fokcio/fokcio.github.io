@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nowy Odtwarzacz</title>
+  <title>Stylowy Odtwarzacz</title>
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <style>
     body {
@@ -83,7 +83,6 @@
 
   <div id="videoTitle"></div>
 
-  <!-- ⬇️ Piękny odtwarzacz video -->
   <video id="player" playsinline controls>
     <source src="" type="video/mp4" />
   </video>
@@ -91,7 +90,11 @@
   <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
     const videoFiles = [
-      "test.mp4"
+      "przyklad.mp4",
+      "demo.mp4",
+      "film_testowy.mp4",
+      "wakacje_2023.mp4",
+      "trailer.mp4"
     ];
 
     const searchInput = document.getElementById("searchInput");
@@ -99,9 +102,10 @@
     const videoTitle = document.getElementById("videoTitle");
     const playerElement = document.getElementById("player");
 
-    // Inicjalizacja PLYR
     const player = new Plyr(playerElement, {
-      controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen']
+      controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+      settings: ['speed'],
+      speed: { selected: 1, options: [0.5, 1, 1.25, 1.5, 2] }
     });
 
     function loadVideo(filename) {
