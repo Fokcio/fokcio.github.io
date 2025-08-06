@@ -6,14 +6,6 @@
   <title>Video</title>
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <style>
-    :root {
-      --plyr-color-main: blueviolet;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       background-color: black;
@@ -22,17 +14,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 50px 20px;
     }
 
     .search-container {
       position: relative;
-      width: 100%;
-      max-width: 500px;
+      width: 60%;
+      max-width: 400px;
     }
 
     input[type="text"] {
-      padding: 12px;
+      padding: 10px;
       width: 100%;
       border: 2px solid blueviolet;
       border-radius: 5px;
@@ -69,57 +61,34 @@
     #videoTitle {
       color: blueviolet;
       font-size: 1.2rem;
-      margin: 15px 0 10px;
+      margin: 20px 0 10px;
       text-align: center;
-      word-break: break-word;
     }
 
     .plyr {
-      width: 100%;
+      width: 80%;
       max-width: 960px;
       border: 2px solid blueviolet;
       border-radius: 8px;
       margin-bottom: 20px;
     }
 
-    .spacer {
-      height: 30px;
+    :root {
+      --plyr-color-main: blueviolet;
     }
 
-    @media (max-width: 768px) {
-      #videoTitle {
-        font-size: 1rem;
-        margin: 10px 0 5px;
-      }
-
-      input[type="text"] {
-        font-size: 0.95rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .plyr {
-        width: 100%;
-      }
-
-      input[type="text"] {
-        font-size: 0.9rem;
-      }
-
-      .dropdown .result {
-        font-size: 0.9rem;
-      }
-    }
   </style>
 </head>
 <body>
 
   <div class="search-container">
-    <input type="text" id="searchInput" placeholder="🔍 Search" autocomplete="off">
+    <input type="text" id="searchInput" placeholder="🔍" autocomplete="off">
     <div id="dropdown" class="dropdown"></div>
   </div>
 
-  <div class="spacer"></div>
+  <div style="height: 30px;"></div>
+
+  
 
   <video id="player" playsinline controls>
     <source src="" type="video/mp4" />
@@ -130,10 +99,7 @@
   <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
     const videoFiles = [
-      "test.mp4",
-      "drugi.mp4",
-      "filmik-zabawny.mp4",
-      "demo-video.mp4"
+      "test.mp4"
     ];
 
     const searchInput = document.getElementById("searchInput");
