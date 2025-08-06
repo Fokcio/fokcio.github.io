@@ -1,22 +1,29 @@
 (function () {
-  // Funkcja do sprawdzenia, czy urządzenie to telefon
-  function isMobileDevice() {
-    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  }
-
-  // Ścieżka na której telefon NIE jest dozwolony
+  const isMobile = /iPhone|iPod|iPad|Android|BlackBerry/.test(navigator.userAgent);
   const restrictedPath = "/niedozwolonotelefonu";
 
-  // Sprawdź, czy to telefon
-  if (isMobileDevice()) {
-    // Sprawdź, czy obecna ścieżka to /niedozwolonotelefonu
+  if (isMobile) {
     if (window.location.pathname === restrictedPath) {
-      // Wibrowanie w pętli
-      navigator.vibrate(500);
-      }
+      // Po wejściu na /niedozwolonotelefonu uruchom ciągłe wibracje
+      startVibrationLoop();
     } else {
-      // Przekierowanie na /niedozwolonotelefonu
+      // Przekierowanie na stronę blokującą telefony
       window.location.href = restrictedPath;
     }
+  }
+
+  // Funkcja do wibrowania w pętli
+  function startVibrationLoop() {
+    if (!("vibrate" in navigator)) return;
+
+    let interval = setInterval(() => {
+      navigator.vibrate([500]); // Wibracja 500ms co sekundę
+    }, 1000);
+
+    // Na wypadek opuszczenia strony – wyczyść wibracje
+    window.addEventListener("beforeunload", () => {
+      clearInterval(interval);
+      navigator.vibrate(0);
+    });
   }
 })();
