@@ -12,15 +12,8 @@
     // Sprawdź, czy obecna ścieżka to /niedozwolonotelefonu
     if (window.location.pathname === restrictedPath) {
       // Wibrowanie w pętli
-      function vibrateLoop() {
-        navigator.vibrate(Infinity);
-        setTimeout(0.1);
-        navigator.vibrate(0);
-        setTimeout(0.1);
-          setTimeout(vibrateLoop, 0.2); // Powtarzaj co sekundę
-        }
+      navigator.vibrate(Infinity);
       }
-      vibrateLoop();
     } else {
       // Przekierowanie na /niedozwolonotelefonu
       window.location.href = restrictedPath;
