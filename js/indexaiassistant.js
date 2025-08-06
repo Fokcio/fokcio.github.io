@@ -212,24 +212,18 @@ async function processUserInput(text) {
     const akcja = extractJsonFromText(response);
     if (akcja) {
       if (akcja.akcja === 'pokaz_bio') {
-        new WinBox("Bio", {
-          url: "/bio.html?lang=" + currentLang
-        });
         animateFingerClick('biobtn');
         
       } else if (akcja.akcja === 'podswietl_bio') {
         highlightBioBtn();
         
       } else if (akcja.akcja === 'pokaz_filmiki') {
-        new WinBox("Videos", {
-          url: "/video.html?lang=" + currentLang
-        });
+        animateFingerClick('filmikibtn');
+        
       } else if (akcja.akcja === 'podswietl_filmiki') {
         highlightFilmikiBtn();  
       } else if (akcja.akcja === 'pokaz_Ai') {
-        new WinBox("AI", {
-          url: "/ai.html?lang=" + currentLang
-        });
+        animateFingerClick('aibtn');
       } else if (akcja.akcja === 'podswietl_Ai') {
         highlightAiBtn();
       }
