@@ -138,8 +138,8 @@ async function processUserInput(text) {
         highlightBioBtn();
         
       } else if (akcja.akcja === 'pokaz_filmiki') {
-        new WinBox("Filmiki", {
-          url: "/filmiki.html?lang=" + currentLang
+        new WinBox("Videos", {
+          url: "/video.html?lang=" + currentLang
         });
       } else if (akcja.akcja === 'podswietl_filmiki') {
         highlightFilmikiBtn();  
