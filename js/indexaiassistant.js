@@ -7,6 +7,7 @@ const aiBtn = document.getElementById('aibtn');
   const chatMessages = document.getElementById('chatMessages');
   const chatInput = document.getElementById('chatInput');
   const sendBtn = document.getElementById('sendBtn');
+const switcher = document.getElementById('langSwitcher');
 
   let highlightTimeout;
 
@@ -68,7 +69,7 @@ function highlightAiBtn() {
 
   const systemPrompt = `
 Jesteś pomocnym asystentem AI na stronie internetowej użytkownika Fokcio, strona nazywa sie fokcio.github.io.
-Odpowiadasz po polsku.
+Odpowiadasz w języku ` + swither.value + `.
 
 - Jeśli użytkownik chce **otworzyć bio** (np. komendy typu: "otwórz bio", "pokaż bio", "bio"), odpowiedz naturalnie że otwierasz bio i na końcu dodaj w osobnej linii:
 
@@ -96,8 +97,8 @@ Odpowiadasz po polsku.
 
 ---
 
-Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.
-`;
+Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.`
+;
 
   async function sendToPuter(message) {
     // Przygotuj tablicę wiadomości do puter.ai.chat
