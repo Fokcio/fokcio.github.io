@@ -11,17 +11,17 @@
     
 <body>
 
-    <div id="chatToggle" title="Otwórz chat AI">💬</div>
+    <div id="chatToggle" title="Assistant">💬</div>
 
-<div id="chatWindow" role="region" aria-label="Chat z AI">
+<div id="chatWindow" role="region" aria-label="Chat AI">
   <div id="chatHeader">
     Chat AI
-    <span id="chatClose" title="Zamknij chat">&times;</span>
+    <span id="chatClose" title="X close">&times;</span>
   </div>
   <div id="chatMessages" aria-live="polite"></div>
   <div id="chatInputArea">
-    <input id="chatInput" type="text" placeholder="Napisz coś..." autocomplete="off" />
-    <button id="sendBtn">Wyślij</button>
+    <input id="chatInput" type="text" placeholder="..." autocomplete="off" />
+    <button id="sendBtn" data-i18n="SendBtnAi">Wyślij</button>
   </div>
 </div>
 
@@ -41,9 +41,7 @@
         <option value="en">English</option>
         <option value="fr">Français</option>
         <option value="de">Deutsch</option>
-        <option value="zh">中文</option>
         <option value="no">Norsk</option>
-        <option value="hi">हिन्दी</option>
     </select>
 
     <h2 data-i18n="ProjektyTekst">Moje Projekty</h2>
@@ -67,6 +65,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
     <script src="https://js.puter.com/v2/"></script>
 </html>
+
 
 
 
