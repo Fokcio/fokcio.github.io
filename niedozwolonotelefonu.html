@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TA STRONA NIE WSPIERA TELEFONU</title>
-    <style>
+  <style>
     body {
       margin: 0;
       background-color: black;
@@ -15,12 +17,12 @@
     }
     h1 {
       text-align: center;
-      font-size: 10vw; /* 10% szerokości okna — elastyczne i responsywne */
-      max-font-size: 100px;
+      /* Font-size responsywny: minimum 24px, preferowana wartość 10vw, max 100px */
+      font-size: clamp(24px, 10vw, 100px);
       line-height: 1.2;
     }
   </style>
-  <script src="/js/niedozwolonytelefon.js"></script>
+  <script src="/js/niedozwolonytelefon.js" defer></script>
 </head>
 <body>
   <h1>TA STRONA NIE WSPIERA TELEFONU</h1>
