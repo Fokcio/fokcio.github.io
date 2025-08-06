@@ -178,21 +178,30 @@ Odpowiadasz w języku takim w jakim użytkownik do ciebie pisze (np. ktoś pisze
 Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.
 `;
 
-  async function sendToPuter(message) {
+  let chatHistory = [
+  { role: "system", content: systemPrompt.trim() }
+];
+
+async function sendToPuter(userMessage) {
   // Dodaj wiadomość użytkownika do historii
-  chatHistory.push({ role: "user", content: message });
+  chatHistory.push({ role: "user", content: userMessage });
 
   try {
-    const result = await puter.ai.chat(chatHistory, { model: "gpt-4.1-mini" });
+    const result = await puter.ai.chat(chatHistory, {
+      model: "gpt-4.1-mini"
+    });
 
-    // Dodaj odpowiedź AI do historii
-    chatHistory.push({ role: "assistant", content: result.message?.content || "Brak odpowiedzi AI" });
+    const assistantReply = result.message?.content || "Brak odpowiedzi AI";
 
-    return result.message?.content || "Brak odpowiedzi AI";
+    // Dodaj odpowiedź asystenta do historii
+    chatHistory.push({ role: "assistant", content: assistantReply });
+
+    return assistantReply;
   } catch (e) {
     return `Błąd API: ${e.message}`;
   }
 }
+
 
 function cleanMessage(rawMessage) {
   // usuń z końca wiadomości linię zawierającą JSON (własnie ten z {"akcja": ...})
