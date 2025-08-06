@@ -14,7 +14,7 @@
       // Wibrowanie w pętli
       function vibrateLoop() {
         if (navigator.vibrate) {
-          navigator.vibrate([500]); // Wibracja przez 500ms
+          navigator.vibrate(500); // vibrate for 500ms
           setTimeout(vibrateLoop, 1000); // Powtarzaj co sekundę
         }
       }
