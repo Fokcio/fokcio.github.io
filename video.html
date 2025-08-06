@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Odtwarzacz</title>
+  <title>Nowy Odtwarzacz</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <style>
     body {
       margin: 0;
@@ -64,25 +65,30 @@
       text-align: center;
     }
 
-    video {
+    .plyr {
       width: 80%;
       max-width: 960px;
       border: 2px solid blueviolet;
       border-radius: 8px;
-      background-color: #111;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
   <div class="search-container">
-    <input type="text" id="searchInput" placeholder="🔍" autocomplete="off">
+    <input type="text" id="searchInput" placeholder="Szukaj wideo..." autocomplete="off">
     <div id="dropdown" class="dropdown"></div>
   </div>
 
-  <video id="videoPlayer" controls></video>
   <div id="videoTitle"></div>
 
+  <!-- ⬇️ Piękny odtwarzacz video -->
+  <video id="player" playsinline controls>
+    <source src="" type="video/mp4" />
+  </video>
+
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
     const videoFiles = [
       "test.mp4"
@@ -90,11 +96,19 @@
 
     const searchInput = document.getElementById("searchInput");
     const dropdown = document.getElementById("dropdown");
-    const videoPlayer = document.getElementById("videoPlayer");
     const videoTitle = document.getElementById("videoTitle");
+    const playerElement = document.getElementById("player");
+
+    // Inicjalizacja PLYR
+    const player = new Plyr(playerElement, {
+      controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen']
+    });
 
     function loadVideo(filename) {
-      videoPlayer.src = `videos/${filename}`;
+      const source = playerElement.querySelector("source");
+      source.src = `videos/${filename}`;
+      playerElement.load();
+      player.play();
       videoTitle.textContent = filename;
       history.replaceState(null, "", `?video=${encodeURIComponent(filename)}`);
     }
@@ -115,43 +129,37 @@
         noResult.className = "result";
         noResult.textContent = "Brak wyników";
         dropdown.appendChild(noResult);
-        return;
+      } else {
+        filteredList.forEach(file => {
+          const div = document.createElement("div");
+          div.className = "result";
+          div.textContent = file;
+          div.onclick = () => {
+            loadVideo(file);
+            dropdown.style.display = "none";
+            searchInput.value = "";
+          };
+          dropdown.appendChild(div);
+        });
       }
-
-      filteredList.forEach(file => {
-        const div = document.createElement("div");
-        div.className = "result";
-        div.textContent = file;
-        div.onclick = () => {
-          loadVideo(file);
-          dropdown.style.display = "none";
-          searchInput.value = "";
-        };
-        dropdown.appendChild(div);
-      });
-
       dropdown.style.display = "block";
     }
 
-    // Pokazuj dropdown przy kliknięciu
     searchInput.addEventListener("focus", () => {
       showDropdown(videoFiles);
     });
 
-    // Filtrowanie przy pisaniu
     searchInput.addEventListener("input", (e) => {
       const filtered = filterVideos(e.target.value);
       showDropdown(filtered);
     });
 
-    // Ukryj dropdown jeśli kliknięto poza polem i listą
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".search-container")) {
         dropdown.style.display = "none";
       }
     });
 
-    // Start: jeśli w URL jest video, załaduj
     const initialVideo = getQueryParam("video");
     if (initialVideo && videoFiles.includes(initialVideo)) {
       loadVideo(initialVideo);
