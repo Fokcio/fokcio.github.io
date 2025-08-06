@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Odtwarzacz Wideo</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    h1 {
+      color: blueviolet;
+      margin-bottom: 20px;
+    }
+
+    video {
+      width: 80%;
+      max-width: 960px;
+      border: 2px solid blueviolet;
+      border-radius: 8px;
+      background-color: #111;
+    }
+
+    #videoName {
+      margin-top: 15px;
+      font-size: 1rem;
+      color: blueviolet;
+    }
+  </style>
+</head>
+<body>
+  <h1>Odtwarzacz Wideo</h1>
+  <video id="videoPlayer" controls>
+    Twoja przeglądarka nie obsługuje tagu <code>video</code>.
+  </video>
+  <p id="videoName"></p>
+
+  <script>
+    // Funkcja do pobierania parametrów z URL
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    const videoFile = getQueryParam("video");
+    const videoPlayer = document.getElementById("videoPlayer");
+    const videoName = document.getElementById("videoName");
+
+    if (videoFile) {
+      const safeName = decodeURIComponent(videoFile);
+      videoPlayer.src = `videos/${safeName}`;
+      videoName.textContent = `Aktualnie odtwarzany plik: ${safeName}`;
+    } else {
+      videoName.textContent = "Brak pliku wideo. Dodaj ?video=twojfilm.mp4 do adresu URL.";
+    }
+  </script>
+</body>
+</html>
