@@ -7,7 +7,7 @@ function animateFingerClick(targetId) {
 
   // 1. Tworzymy emoji 👇
   const finger = document.createElement('div');
-  finger.textContent = '👇';
+  finger.textContent = '👆';
   finger.style.position = 'fixed';
   finger.style.zIndex = '9999';
   finger.style.fontSize = '32px';
