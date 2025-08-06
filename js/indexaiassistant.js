@@ -179,21 +179,20 @@ Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycis
 `;
 
   async function sendToPuter(message) {
-    // Przygotuj tablicę wiadomości do puter.ai.chat
-    // W formacie [{role: "system", content: ...}, {role: "user", content: ...}]
-    const messages = [
-      { role: "system", content: systemPrompt.trim() },
-      { role: "user", content: message }
-    ];
+  // Dodaj wiadomość użytkownika do historii
+  chatHistory.push({ role: "user", content: message });
 
-    // Wywołaj API puter.ai.chat (musisz mieć puter obiekt globalnie dostępny)
-    try {
-      const result = await puter.ai.chat(messages, { model: "gpt-4.1-mini" });
-      return result.message?.content || "Brak odpowiedzi AI";
-    } catch (e) {
-      return `Błąd API: ${e.message}`;
-    }
+  try {
+    const result = await puter.ai.chat(chatHistory, { model: "gpt-4.1-mini" });
+
+    // Dodaj odpowiedź AI do historii
+    chatHistory.push({ role: "assistant", content: result.message?.content || "Brak odpowiedzi AI" });
+
+    return result.message?.content || "Brak odpowiedzi AI";
+  } catch (e) {
+    return `Błąd API: ${e.message}`;
   }
+}
 
 function cleanMessage(rawMessage) {
   // usuń z końca wiadomości linię zawierającą JSON (własnie ten z {"akcja": ...})
