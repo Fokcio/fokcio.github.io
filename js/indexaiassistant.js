@@ -5,21 +5,18 @@ function animateFingerClick(targetId) {
     return;
   }
 
-  // 1. Tworzymy emoji 👇
+  // 1. Tworzymy emoji
   const finger = document.createElement('div');
   finger.textContent = '👆';
   finger.style.position = 'fixed';
   finger.style.zIndex = '9999';
   finger.style.fontSize = '32px';
-  finger.style.width = '1em';
-  finger.style.height = '1em';
-  finger.style.transformOrigin = '50% 50%';
-  finger.style.left = 'calc(100% - 40px)';
-  finger.style.top = 'calc(100% - 40px)';
+  finger.style.left = 'calc(100% - 60px)';
+  finger.style.top = 'calc(100% - 60px)';
   finger.style.pointerEvents = 'none';
   document.body.appendChild(finger);
 
-  // 2. Pozycje start/end
+  // 2. Obliczamy start/end punkt (viewport-relative)
   const startX = window.innerWidth - 40;
   const startY = window.innerHeight - 40;
 
@@ -28,7 +25,7 @@ function animateFingerClick(targetId) {
   const endY = rect.top + rect.height / 2;
 
   // 3. Parametry animacji
-  const duration = 1000;
+  const duration = 1000; // ms
   const startTime = performance.now();
 
   function easeInOut(t) {
@@ -37,28 +34,20 @@ function animateFingerClick(targetId) {
 
   function animate(time) {
     const elapsed = time - startTime;
-    const t = Math.min(elapsed / duration, 1);
+    let t = Math.min(elapsed / duration, 1);
     const progress = easeInOut(t);
 
-    // Pozycja w trakcie animacji (z zakrzywieniem Y)
-    const currentX = startX + (endX - startX) * progress;
-    const currentY = startY + (endY - startY) * progress - Math.sin(progress * Math.PI) * 100;
+    // Interpolacja pozycji (łuk: robimy offset w Y dla efektu skoku)
+    const x = startX + (endX - startX) * progress;
+    const y = startY + (endY - startY) * progress - Math.sin(progress * Math.PI) * 100;
 
-    // ROTACJA – końcówka palca ma celować w cel
-    const dx = endX - currentX;
-    const dy = endY - currentY;
-    const angleRad = Math.atan2(dy, dx);
-    const angleDeg = angleRad * (180 / Math.PI);
-    const adjustedAngle = angleDeg + 90; // 👇 patrzy domyślnie w dół, czyli 90°
-
-    finger.style.left = `${currentX}px`;
-    finger.style.top = `${currentY}px`;
-    finger.style.transform = `rotate(${adjustedAngle}deg)`;
+    finger.style.left = `${x}px`;
+    finger.style.top = `${y}px`;
 
     if (t < 1) {
       requestAnimationFrame(animate);
     } else {
-      // Klik i zniknięcie
+      // Klikamy, usuwamy
       target.click();
       finger.style.transition = 'opacity 0.3s';
       finger.style.opacity = '0';
