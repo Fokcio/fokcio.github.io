@@ -13,25 +13,55 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 50px 20px;
+    }
+
+    .search-container {
+      position: relative;
+      width: 60%;
+      max-width: 400px;
     }
 
     input[type="text"] {
       padding: 10px;
-      width: 60%;
-      max-width: 400px;
+      width: 100%;
       border: 2px solid blueviolet;
       border-radius: 5px;
       background-color: #111;
       color: white;
       font-size: 1rem;
-      margin-bottom: 20px;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #222;
+      border: 1px solid blueviolet;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+    }
+
+    .dropdown .result {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #333;
+      transition: background-color 0.2s;
+    }
+
+    .dropdown .result:hover {
+      background-color: blueviolet;
+      color: black;
     }
 
     #videoTitle {
       color: blueviolet;
       font-size: 1.2rem;
-      margin-bottom: 10px;
+      margin: 20px 0 10px;
+      text-align: center;
     }
 
     video {
@@ -41,38 +71,17 @@
       border-radius: 8px;
       background-color: #111;
     }
-
-    #results {
-      margin-top: 20px;
-      width: 80%;
-      max-width: 960px;
-      display: none; /* <-- Domyślnie ukryte */
-    }
-
-    .result {
-      padding: 10px;
-      background-color: #222;
-      margin-bottom: 5px;
-      border: 1px solid blueviolet;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .result:hover {
-      background-color: blueviolet;
-      color: black;
-    }
   </style>
 </head>
 <body>
 
-  <input type="text" id="searchInput" placeholder="Szukaj wideo...">
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Szukaj wideo..." autocomplete="off">
+    <div id="dropdown" class="dropdown"></div>
+  </div>
 
   <div id="videoTitle"></div>
   <video id="videoPlayer" controls></video>
-
-  <div id="results"></div>
 
   <script>
     const videoFiles = [
@@ -81,17 +90,17 @@
       "trailer.mp4",
       "film_testowy.mp4",
       "wakacje_2023.mp4",
+      "test1.mp4",
+      "test2.mp4",
+      "test3.mp4",
+      "dokument.mp4",
+      "muzyka.mp4"
     ];
 
+    const searchInput = document.getElementById("searchInput");
+    const dropdown = document.getElementById("dropdown");
     const videoPlayer = document.getElementById("videoPlayer");
     const videoTitle = document.getElementById("videoTitle");
-    const resultsContainer = document.getElementById("results");
-    const searchInput = document.getElementById("searchInput");
-
-    function getQueryParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-    }
 
     function loadVideo(filename) {
       videoPlayer.src = `videos/${filename}`;
@@ -99,43 +108,59 @@
       history.replaceState(null, "", `?video=${encodeURIComponent(filename)}`);
     }
 
-    function showResults(filter = "") {
-      resultsContainer.innerHTML = "";
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
 
-      const filtered = videoFiles.filter(file => file.toLowerCase().includes(filter.toLowerCase()));
+    function filterVideos(query) {
+      return videoFiles.filter(file => file.toLowerCase().includes(query.toLowerCase()));
+    }
 
-      if (filter.trim() === "") {
-        resultsContainer.style.display = "none";
+    function showDropdown(filteredList) {
+      dropdown.innerHTML = "";
+      if (filteredList.length === 0) {
+        const noResult = document.createElement("div");
+        noResult.className = "result";
+        noResult.textContent = "Brak wyników";
+        dropdown.appendChild(noResult);
         return;
       }
 
-      if (filtered.length === 0) {
-        const noResult = document.createElement("div");
-        noResult.className = "result";
-        noResult.textContent = "Brak wyników.";
-        resultsContainer.appendChild(noResult);
-      } else {
-        filtered.forEach(file => {
-          const div = document.createElement("div");
-          div.className = "result";
-          div.textContent = file;
-          div.onclick = () => {
-            loadVideo(file);
-            resultsContainer.style.display = "none";
-            searchInput.value = ""; // Wyczyść pole
-          };
-          resultsContainer.appendChild(div);
-        });
-      }
+      filteredList.forEach(file => {
+        const div = document.createElement("div");
+        div.className = "result";
+        div.textContent = file;
+        div.onclick = () => {
+          loadVideo(file);
+          dropdown.style.display = "none";
+          searchInput.value = "";
+        };
+        dropdown.appendChild(div);
+      });
 
-      resultsContainer.style.display = "block";
+      dropdown.style.display = "block";
     }
 
-    searchInput.addEventListener("input", (e) => {
-      showResults(e.target.value);
+    // Pokazuj dropdown przy kliknięciu
+    searchInput.addEventListener("focus", () => {
+      showDropdown(videoFiles);
     });
 
-    // Załaduj z URL, jeśli jest
+    // Filtrowanie przy pisaniu
+    searchInput.addEventListener("input", (e) => {
+      const filtered = filterVideos(e.target.value);
+      showDropdown(filtered);
+    });
+
+    // Ukryj dropdown jeśli kliknięto poza polem i listą
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".search-container")) {
+        dropdown.style.display = "none";
+      }
+    });
+
+    // Start: jeśli w URL jest video, załaduj
     const initialVideo = getQueryParam("video");
     if (initialVideo && videoFiles.includes(initialVideo)) {
       loadVideo(initialVideo);
