@@ -1,4 +1,5 @@
 const bioBtn = document.getElementById('biobtn');
+const filmikiBtn = document.getElementById('filmikibtn');
   const chatToggle = document.getElementById('chatToggle');
   const chatWindow = document.getElementById('chatWindow');
   const chatClose = document.getElementById('chatClose');
@@ -8,7 +9,15 @@ const bioBtn = document.getElementById('biobtn');
 
   let highlightTimeout;
 
-  function highlightBioBtn() {
+  function highlightFilmikiBtn() {
+    filmikiBtn.classList.add('highlight');
+    clearTimeout(highlightTimeout);
+    highlightTimeout = setTimeout(() => {
+      filmikiBtn.classList.remove('highlight');
+    }, 3000);
+  }
+
+ function highlightBioBtn() {
     bioBtn.classList.add('highlight');
     clearTimeout(highlightTimeout);
     highlightTimeout = setTimeout(() => {
@@ -60,6 +69,14 @@ Odpowiadasz po polsku.
 
 {"akcja": "podswietl_bio"}
 
+- Jeśli użytkownik chce **otworzyć filmiki** (np. komendy typu: "otwórz filmiki", "pokaż filmiki", "filmiki"), odpowiedz naturalnie że otwierasz filmiki i na końcu dodaj w osobnej linii:
+
+{"akcja": "pokaz_filmiki"}
+
+- Jeśli użytkownik pyta **gdzie jest bio** lub o **lokalizację filmików** lub o **przycisk filmiki** (np. "gdzie są filmiki?", "lokalizacja przycisku filmiki", "gdzie znaleźć filmiki", "jak otworzyć filmiki"), odpowiedz naturalnie, powiedz mu że przycisk został podświetlony i na końcu dodaj:
+
+{"akcja": "podswietl_filmiki"}
+
 
 
 - Jeśli nie ma potrzeby żadnej akcji, nie dodawaj JSON-a.
@@ -70,7 +87,7 @@ Odpowiadasz po polsku.
 
 ---
 
-Pamiętaj, by dokładnie rozróżniać **otwieranie bio** i **podświetlanie przycisku bio**.
+Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.
 `;
 
   async function sendToPuter(message) {
@@ -116,8 +133,16 @@ async function processUserInput(text) {
         new WinBox("Bio", {
           url: "/bio.html?lang=" + currentLang
         });
+        
       } else if (akcja.akcja === 'podswietl_bio') {
         highlightBioBtn();
+        
+      } else if (akcja.akcja === 'pokaz_filmiki') {
+        new WinBox("Filmiki", {
+          url: "/filmiki.html?lang=" + currentLang
+        });
+      } else if (akcja.akcja === 'podswietl_filmiki') {
+        highlightFilmikiBtn();  
       }
     }
   } catch (e) {
