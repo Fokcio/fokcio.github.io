@@ -112,7 +112,7 @@ div#napis {
     filter: blur(2px);
 }
 
-button {
+#buttons button {
     font-family: 'Cal Sans', sans-serif;
     padding: 10px 20px;
     font-size: 20px;
@@ -122,7 +122,7 @@ button {
     transition: background-color 0.3s;
 }
 
-button.highlight {
+#buttons button.highlight {
     background: #ac54ff;
     box-shadow: 0 0 15px blueviolet;
 }
