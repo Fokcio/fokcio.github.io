@@ -7,7 +7,6 @@ const aiBtn = document.getElementById('aibtn');
   const chatMessages = document.getElementById('chatMessages');
   const chatInput = document.getElementById('chatInput');
   const sendBtn = document.getElementById('sendBtn');
-const switcher = document.getElementById('langSwitcher');
 
   let highlightTimeout;
 
