@@ -168,7 +168,7 @@ h2 {
 }
 
 #karuzela img {
-    width: 300px;
+    width: 200px;
     height: auto;
     border: 2px solid blueviolet;
     border-radius: 10px;
@@ -320,4 +320,5 @@ p {
     background: #9ccc9c;
     cursor: not-allowed;
   }
+
 
