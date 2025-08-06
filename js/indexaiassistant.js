@@ -5,7 +5,7 @@ function animateFingerClick(targetId) {
     return;
   }
 
-  // 1. Tworzymy emoji
+  // 1. Tworzymy emoji 👇
   const finger = document.createElement('div');
   finger.textContent = '👇';
   finger.style.position = 'fixed';
@@ -40,23 +40,25 @@ function animateFingerClick(targetId) {
     const t = Math.min(elapsed / duration, 1);
     const progress = easeInOut(t);
 
+    // Pozycja w trakcie animacji (z zakrzywieniem Y)
     const currentX = startX + (endX - startX) * progress;
     const currentY = startY + (endY - startY) * progress - Math.sin(progress * Math.PI) * 100;
 
-    // ROTACJA w kierunku celu
+    // ROTACJA – końcówka palca ma celować w cel
     const dx = endX - currentX;
     const dy = endY - currentY;
     const angleRad = Math.atan2(dy, dx);
     const angleDeg = angleRad * (180 / Math.PI);
+    const adjustedAngle = angleDeg + 90; // 👇 patrzy domyślnie w dół, czyli 90°
 
     finger.style.left = `${currentX}px`;
     finger.style.top = `${currentY}px`;
-    finger.style.transform = `rotate(${angleDeg}deg)`;
+    finger.style.transform = `rotate(${adjustedAngle}deg)`;
 
     if (t < 1) {
       requestAnimationFrame(animate);
     } else {
-      // Klik i usunięcie
+      // Klik i zniknięcie
       target.click();
       finger.style.transition = 'opacity 0.3s';
       finger.style.opacity = '0';
@@ -66,6 +68,7 @@ function animateFingerClick(targetId) {
 
   requestAnimationFrame(animate);
 }
+
 
 
 
