@@ -4,10 +4,12 @@
 
   if (isMobile) {
     if (window.location.pathname === restrictedPath) {
-      // Po wejściu na /niedozwolonotelefonu uruchom ciągłe wibracje
-      startVibrationLoop();
+      // Po interakcji użytkownika (kliknięciu gdziekolwiek) – uruchom wibracje
+      document.body.addEventListener("click", function onClick() {
+        document.body.removeEventListener("click", onClick);
+        startVibrationLoop();
+      });
     } else {
-      // Przekierowanie na stronę blokującą telefony
       window.location.href = restrictedPath;
     }
   }
@@ -16,11 +18,10 @@
   function startVibrationLoop() {
     if (!("vibrate" in navigator)) return;
 
-    let interval = setInterval(() => {
-      navigator.vibrate([500]); // Wibracja 500ms co sekundę
+    const interval = setInterval(() => {
+      navigator.vibrate([500]); // Wibracja 500ms co 1s
     }, 1000);
 
-    // Na wypadek opuszczenia strony – wyczyść wibracje
     window.addEventListener("beforeunload", () => {
       clearInterval(interval);
       navigator.vibrate(0);
