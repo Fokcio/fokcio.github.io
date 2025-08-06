@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Odtwarzacz Wideo</title>
+  <title>Odtwarzacz</title>
   <style>
     body {
       margin: 0;
@@ -11,15 +11,27 @@
       color: white;
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
-      height: 100vh;
+      align-items: center;
+      padding: 20px;
     }
 
-    h1 {
-      color: blueviolet;
+    input[type="text"] {
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
+      border: 2px solid blueviolet;
+      border-radius: 5px;
+      background-color: #111;
+      color: white;
+      font-size: 1rem;
       margin-bottom: 20px;
+    }
+
+    #videoTitle {
+      color: blueviolet;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
     }
 
     video {
@@ -30,37 +42,103 @@
       background-color: #111;
     }
 
-    #videoName {
-      margin-top: 15px;
-      font-size: 1rem;
-      color: blueviolet;
+    #results {
+      margin-top: 20px;
+      width: 80%;
+      max-width: 960px;
+      display: none; /* <-- Domyślnie ukryte */
+    }
+
+    .result {
+      padding: 10px;
+      background-color: #222;
+      margin-bottom: 5px;
+      border: 1px solid blueviolet;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .result:hover {
+      background-color: blueviolet;
+      color: black;
     }
   </style>
 </head>
 <body>
-  <h1>Odtwarzacz Wideo</h1>
-  <video id="videoPlayer" controls>
-    Twoja przeglądarka nie obsługuje tagu <code>video</code>.
-  </video>
-  <p id="videoName"></p>
+
+  <input type="text" id="searchInput" placeholder="Szukaj wideo...">
+
+  <div id="videoTitle"></div>
+  <video id="videoPlayer" controls></video>
+
+  <div id="results"></div>
 
   <script>
-    // Funkcja do pobierania parametrów z URL
+    const videoFiles = [
+      "przyklad.mp4",
+      "demo.mp4",
+      "trailer.mp4",
+      "film_testowy.mp4",
+      "wakacje_2023.mp4",
+    ];
+
+    const videoPlayer = document.getElementById("videoPlayer");
+    const videoTitle = document.getElementById("videoTitle");
+    const resultsContainer = document.getElementById("results");
+    const searchInput = document.getElementById("searchInput");
+
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
 
-    const videoFile = getQueryParam("video");
-    const videoPlayer = document.getElementById("videoPlayer");
-    const videoName = document.getElementById("videoName");
+    function loadVideo(filename) {
+      videoPlayer.src = `videos/${filename}`;
+      videoTitle.textContent = filename;
+      history.replaceState(null, "", `?video=${encodeURIComponent(filename)}`);
+    }
 
-    if (videoFile) {
-      const safeName = decodeURIComponent(videoFile);
-      videoPlayer.src = `videos/${safeName}`;
-      videoName.textContent = `Aktualnie odtwarzany plik: ${safeName}`;
-    } else {
-      videoName.textContent = "Brak pliku wideo. Dodaj ?video=twojfilm.mp4 do adresu URL.";
+    function showResults(filter = "") {
+      resultsContainer.innerHTML = "";
+
+      const filtered = videoFiles.filter(file => file.toLowerCase().includes(filter.toLowerCase()));
+
+      if (filter.trim() === "") {
+        resultsContainer.style.display = "none";
+        return;
+      }
+
+      if (filtered.length === 0) {
+        const noResult = document.createElement("div");
+        noResult.className = "result";
+        noResult.textContent = "Brak wyników.";
+        resultsContainer.appendChild(noResult);
+      } else {
+        filtered.forEach(file => {
+          const div = document.createElement("div");
+          div.className = "result";
+          div.textContent = file;
+          div.onclick = () => {
+            loadVideo(file);
+            resultsContainer.style.display = "none";
+            searchInput.value = ""; // Wyczyść pole
+          };
+          resultsContainer.appendChild(div);
+        });
+      }
+
+      resultsContainer.style.display = "block";
+    }
+
+    searchInput.addEventListener("input", (e) => {
+      showResults(e.target.value);
+    });
+
+    // Załaduj z URL, jeśli jest
+    const initialVideo = getQueryParam("video");
+    if (initialVideo && videoFiles.includes(initialVideo)) {
+      loadVideo(initialVideo);
     }
   </script>
 </body>
