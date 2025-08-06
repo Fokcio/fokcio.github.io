@@ -113,7 +113,9 @@ async function processUserInput(text) {
     const akcja = extractJsonFromText(response);
     if (akcja) {
       if (akcja.akcja === 'pokaz_bio') {
-        alert('Otwieram Bio');
+        new WinBox("Bio", {
+          url: "/bio.html?lang=" + currentLang
+        });
       } else if (akcja.akcja === 'podswietl_bio') {
         highlightBioBtn();
       }
