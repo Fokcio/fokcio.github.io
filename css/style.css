@@ -242,7 +242,7 @@ p {
     position: fixed; bottom: 20px; right: 20px;
     width: 60px; height: 60px;
     border-radius: 50%;
-    background: #4caf50;
+    background: blueviolet;
     color: white;
     font-size: 32px;
     line-height: 60px;
@@ -264,7 +264,7 @@ p {
     font-size: 14px;
   }
   #chatHeader {
-    background: #4caf50;
+    background: blueviolet;
     color: white;
     padding: 10px;
     font-weight: bold;
@@ -293,7 +293,7 @@ p {
     align-self: flex-end;
   }
   .aiMsg {
-    background: #f1f1f1;
+    background: #a770e6;
     align-self: flex-start;
   }
   #chatInputArea {
@@ -310,15 +310,16 @@ p {
     outline: none;
   }
   #sendBtn {
-    background: #4caf50;
+    background: blueviolet;
     border: none;
     color: white;
     padding: 0 15px;
     cursor: pointer;
   }
   #sendBtn:disabled {
-    background: #9ccc9c;
+    background: blueviolet;
     cursor: not-allowed;
   }
+
 
 
