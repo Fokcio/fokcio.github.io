@@ -1,5 +1,6 @@
 const bioBtn = document.getElementById('biobtn');
 const filmikiBtn = document.getElementById('filmikibtn');
+const aiBtn = document.getElementById('aibtn');
   const chatToggle = document.getElementById('chatToggle');
   const chatWindow = document.getElementById('chatWindow');
   const chatClose = document.getElementById('chatClose');
@@ -8,6 +9,14 @@ const filmikiBtn = document.getElementById('filmikibtn');
   const sendBtn = document.getElementById('sendBtn');
 
   let highlightTimeout;
+
+function highlightAiBtn() {
+    aiBtn.classList.add('highlight');
+    clearTimeout(highlightTimeout);
+    highlightTimeout = setTimeout(() => {
+      aiBtn.classList.remove('highlight');
+    }, 3000);
+  }
 
   function highlightFilmikiBtn() {
     filmikiBtn.classList.add('highlight');
@@ -143,6 +152,12 @@ async function processUserInput(text) {
         });
       } else if (akcja.akcja === 'podswietl_filmiki') {
         highlightFilmikiBtn();  
+      } else if (akcja.akcja === 'pokaz_ai') {
+        new WinBox("AI", {
+          url: "/ai.html?lang=" + currentLang
+        });
+      } else if (akcja.akcja === 'podswietl_ai') {
+        highlightAiBtn();
       }
     }
   } catch (e) {
