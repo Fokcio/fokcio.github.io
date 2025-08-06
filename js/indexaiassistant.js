@@ -1,3 +1,52 @@
+function animateFingerClick(targetId) {
+  const target = document.getElementById(targetId);
+  if (!target) {
+    console.warn("Element not found: #" + targetId);
+    return;
+  }
+
+  // Tworzymy emoji palca
+  const finger = document.createElement('div');
+  finger.textContent = '👇';
+  finger.style.position = 'fixed';
+  finger.style.zIndex = 9999;
+  finger.style.fontSize = '32px';
+  finger.style.right = '20px';
+  finger.style.bottom = '20px';
+  finger.style.transition = 'transform 1s ease-in-out, opacity 0.5s';
+  document.body.appendChild(finger);
+
+  // Pobieramy pozycję celu
+  const rect = target.getBoundingClientRect();
+  const targetX = rect.left + rect.width / 2;
+  const targetY = rect.top + rect.height / 2;
+
+  // Obliczamy ruch palca względem viewportu
+  const fingerX = window.innerWidth - 20; // start x (from right)
+  const fingerY = window.innerHeight - 20; // start y (from bottom)
+
+  // Używamy transformacji, żeby palec „poleciał” do celu
+  const deltaX = targetX - fingerX;
+  const deltaY = targetY - fingerY;
+
+  // Ustawiamy transformację po krótkim czasie (żeby CSS transition zadziałał)
+  requestAnimationFrame(() => {
+    finger.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+  });
+
+  // Po zakończeniu animacji klikamy element i usuwamy emoji
+  setTimeout(() => {
+    target.click();
+    finger.style.opacity = '0';
+    setTimeout(() => {
+      document.body.removeChild(finger);
+    }, 500);
+  }, 1000); // musi pasować do czasu z .style.transition
+}
+
+
+
+
 const bioBtn = document.getElementById('biobtn');
 const filmikiBtn = document.getElementById('filmikibtn');
 const aiBtn = document.getElementById('aibtn');
@@ -150,6 +199,7 @@ async function processUserInput(text) {
         new WinBox("Bio", {
           url: "/bio.html?lang=" + currentLang
         });
+        animateFingerClick('biobtn');
         
       } else if (akcja.akcja === 'podswietl_bio') {
         highlightBioBtn();
