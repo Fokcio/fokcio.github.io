@@ -14,9 +14,9 @@
       // Wibrowanie w pętli
       function vibrateLoop() {
         navigator.vibrate(Infinity);
-        wait(0.1)
+        setTimeout(0.1);
         navigator.vibrate(0);
-        wait(0.1)
+        setTimeout(0.1);
           setTimeout(vibrateLoop, 0.2); // Powtarzaj co sekundę
         }
       }
