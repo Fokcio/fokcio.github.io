@@ -11,12 +11,15 @@ function animateFingerClick(targetId) {
   finger.style.position = 'fixed';
   finger.style.zIndex = '9999';
   finger.style.fontSize = '32px';
-  finger.style.left = 'calc(100% - 60px)';
-  finger.style.top = 'calc(100% - 60px)';
+  finger.style.width = '1em';
+  finger.style.height = '1em';
+  finger.style.transformOrigin = '50% 50%';
+  finger.style.left = 'calc(100% - 40px)';
+  finger.style.top = 'calc(100% - 40px)';
   finger.style.pointerEvents = 'none';
   document.body.appendChild(finger);
 
-  // 2. Obliczamy start/end punkt (viewport-relative)
+  // 2. Pozycje start/end
   const startX = window.innerWidth - 40;
   const startY = window.innerHeight - 40;
 
@@ -25,7 +28,7 @@ function animateFingerClick(targetId) {
   const endY = rect.top + rect.height / 2;
 
   // 3. Parametry animacji
-  const duration = 1000; // ms
+  const duration = 1000;
   const startTime = performance.now();
 
   function easeInOut(t) {
@@ -34,20 +37,26 @@ function animateFingerClick(targetId) {
 
   function animate(time) {
     const elapsed = time - startTime;
-    let t = Math.min(elapsed / duration, 1);
+    const t = Math.min(elapsed / duration, 1);
     const progress = easeInOut(t);
 
-    // Interpolacja pozycji (łuk: robimy offset w Y dla efektu skoku)
-    const x = startX + (endX - startX) * progress;
-    const y = startY + (endY - startY) * progress - Math.sin(progress * Math.PI) * 100;
+    const currentX = startX + (endX - startX) * progress;
+    const currentY = startY + (endY - startY) * progress - Math.sin(progress * Math.PI) * 100;
 
-    finger.style.left = `${x}px`;
-    finger.style.top = `${y}px`;
+    // ROTACJA w kierunku celu
+    const dx = endX - currentX;
+    const dy = endY - currentY;
+    const angleRad = Math.atan2(dy, dx);
+    const angleDeg = angleRad * (180 / Math.PI);
+
+    finger.style.left = `${currentX}px`;
+    finger.style.top = `${currentY}px`;
+    finger.style.transform = `rotate(${angleDeg}deg)`;
 
     if (t < 1) {
       requestAnimationFrame(animate);
     } else {
-      // Klikamy, usuwamy
+      // Klik i usunięcie
       target.click();
       finger.style.transition = 'opacity 0.3s';
       finger.style.opacity = '0';
@@ -57,6 +66,7 @@ function animateFingerClick(targetId) {
 
   requestAnimationFrame(animate);
 }
+
 
 
 
