@@ -225,8 +225,7 @@ async function processUserInput(text) {
       } else if (akcja.akcja === 'pokaz_Ai') {
         animateFingerClick('aibtn');
       } else if (akcja.akcja === 'podswietl_Ai') {
-    //    highlightAiBtn();
-        AI.close()
+        highlightAiBtn();
       }
     }
   } catch (e) {
