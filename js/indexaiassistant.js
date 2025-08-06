@@ -226,7 +226,7 @@ async function processUserInput(text) {
         animateFingerClick('aibtn');
       } else if (akcja.akcja === 'podswietl_Ai') {
     //    highlightAiBtn();
-        buttons.close()
+        AI.close()
       }
     }
   } catch (e) {
