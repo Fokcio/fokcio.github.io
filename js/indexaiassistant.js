@@ -1,48 +1,64 @@
 function animateFingerClick(targetId) {
   const target = document.getElementById(targetId);
   if (!target) {
-    console.warn("Element not found: #" + targetId);
+    console.warn("Nie znaleziono elementu:", targetId);
     return;
   }
 
-  // Tworzymy emoji palca
+  // 1. Tworzymy emoji
   const finger = document.createElement('div');
   finger.textContent = '👇';
   finger.style.position = 'fixed';
-  finger.style.zIndex = 9999;
+  finger.style.zIndex = '9999';
   finger.style.fontSize = '32px';
-  finger.style.right = '20px';
-  finger.style.bottom = '20px';
-  finger.style.transition = 'transform 1s ease-in-out, opacity 0.5s';
+  finger.style.left = 'calc(100% - 60px)';
+  finger.style.top = 'calc(100% - 60px)';
+  finger.style.pointerEvents = 'none';
   document.body.appendChild(finger);
 
-  // Pobieramy pozycję celu
+  // 2. Obliczamy start/end punkt (viewport-relative)
+  const startX = window.innerWidth - 40;
+  const startY = window.innerHeight - 40;
+
   const rect = target.getBoundingClientRect();
-  const targetX = rect.left + rect.width / 2;
-  const targetY = rect.top + rect.height / 2;
+  const endX = rect.left + rect.width / 2;
+  const endY = rect.top + rect.height / 2;
 
-  // Obliczamy ruch palca względem viewportu
-  const fingerX = window.innerWidth - 20; // start x (from right)
-  const fingerY = window.innerHeight - 20; // start y (from bottom)
+  // 3. Parametry animacji
+  const duration = 1000; // ms
+  const startTime = performance.now();
 
-  // Używamy transformacji, żeby palec „poleciał” do celu
-  const deltaX = targetX - fingerX;
-  const deltaY = targetY - fingerY;
+  function easeInOut(t) {
+    return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+  }
 
-  // Ustawiamy transformację po krótkim czasie (żeby CSS transition zadziałał)
-  requestAnimationFrame(() => {
-    finger.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-  });
+  function animate(time) {
+    const elapsed = time - startTime;
+    let t = Math.min(elapsed / duration, 1);
+    const progress = easeInOut(t);
 
-  // Po zakończeniu animacji klikamy element i usuwamy emoji
-  setTimeout(() => {
-    target.click();
-    finger.style.opacity = '0';
-    setTimeout(() => {
-      document.body.removeChild(finger);
-    }, 500);
-  }, 1000); // musi pasować do czasu z .style.transition
+    // Interpolacja pozycji (łuk: robimy offset w Y dla efektu skoku)
+    const x = startX + (endX - startX) * progress;
+    const y = startY + (endY - startY) * progress - Math.sin(progress * Math.PI) * 100;
+
+    finger.style.left = `${x}px`;
+    finger.style.top = `${y}px`;
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      // Klikamy, usuwamy
+      target.click();
+      finger.style.transition = 'opacity 0.3s';
+      finger.style.opacity = '0';
+      setTimeout(() => finger.remove(), 300);
+    }
+  }
+
+  requestAnimationFrame(animate);
 }
+
+
 
 
 
