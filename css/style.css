@@ -125,6 +125,7 @@ button {
 button.highlight {
     background: #ac54ff;
     box-shadow: 0 0 15px blueviolet;
+}
 
 button:hover {
     transform: scale(1.1);
@@ -319,3 +320,4 @@ p {
     background: #9ccc9c;
     cursor: not-allowed;
   }
+
