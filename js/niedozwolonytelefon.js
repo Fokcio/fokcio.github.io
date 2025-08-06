@@ -13,9 +13,7 @@
     if (window.location.pathname === restrictedPath) {
       // Wibrowanie w pętli
       function vibrateLoop() {
-        const vibrate = () => {
-        window.navigator.vibrate([500])
-        }// vibrate for 500ms
+        navigator.vibrate([200]);
           setTimeout(vibrateLoop, 1000); // Powtarzaj co sekundę
         }
       }
