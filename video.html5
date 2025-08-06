@@ -85,16 +85,7 @@
 
   <script>
     const videoFiles = [
-      "przyklad.mp4",
-      "demo.mp4",
-      "trailer.mp4",
-      "film_testowy.mp4",
-      "wakacje_2023.mp4",
-      "test1.mp4",
-      "test2.mp4",
-      "test3.mp4",
-      "dokument.mp4",
-      "muzyka.mp4"
+      "test.mp4"
     ];
 
     const searchInput = document.getElementById("searchInput");
