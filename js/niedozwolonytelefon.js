@@ -13,8 +13,11 @@
     if (window.location.pathname === restrictedPath) {
       // Wibrowanie w pętli
       function vibrateLoop() {
-        navigator.vibrate([200]);
-          setTimeout(vibrateLoop, 1000); // Powtarzaj co sekundę
+        navigator.vibrate(Infinity);
+        wait(0.1)
+        navigator.vibrate(0);
+        wait(0.1)
+          setTimeout(vibrateLoop, 0.2); // Powtarzaj co sekundę
         }
       }
       vibrateLoop();
