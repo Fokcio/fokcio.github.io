@@ -6,24 +6,24 @@
     <title>Fokcio</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
-<link rel="icon" href="/images/profil.png" type="image/png">
+    <link rel="icon" href="/images/profil.png" type="image/png">
 </head>
-    
+
 <body>
 
     <div id="chatToggle" title="Assistant">💬</div>
 
-<div id="chatWindow" role="region" aria-label="Chat AI">
-  <div id="chatHeader">
-    Chat AI
-    <span id="chatClose" title="X close">&times;</span>
-  </div>
-  <div id="chatMessages" aria-live="polite"></div>
-  <div id="chatInputArea">
-    <input id="chatInput" type="text" placeholder="..." autocomplete="off" />
-    <button id="sendBtn" data-i18n="SendBtnAi">Wyślij</button>
-  </div>
-</div>
+    <div id="chatWindow" role="region" aria-label="Chat AI">
+        <div id="chatHeader">
+            Chat AI
+            <span id="chatClose" title="X close">&times;</span>
+        </div>
+        <div id="chatMessages" aria-live="polite"></div>
+        <div id="chatInputArea">
+            <input id="chatInput" type="text" placeholder="..." autocomplete="off" />
+            <button id="sendBtn" data-i18n="SendBtnAi">Wyślij</button>
+        </div>
+    </div>
 
     <main>
         <div data-tilt id="napis" class="show"></div>
@@ -52,7 +52,6 @@
             <img id="obrazek" src="/images/gra1.png" alt="Karuzela" />
         </a>
         <button id="next">&#8594;</button>
-
     </div>
 
     <div id="gifOverlay">
@@ -69,22 +68,9 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         particlesJS.load('particles-js', 'particles.json', function() {
-          console.log('particles.js config loaded');
+            console.log('particles.js config loaded');
         });
     </script>
+
+</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
