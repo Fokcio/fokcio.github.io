@@ -321,5 +321,10 @@ p {
     cursor: not-allowed;
   }
 
+#particles-js {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
 
 
