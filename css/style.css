@@ -145,6 +145,7 @@ button:hover {
 #napis {
     transition: opacity 0.5s;
     opacity: 1;
+    background-color: black;
 }
 
 #buttons {
@@ -326,5 +327,6 @@ p {
   inset: 0;
   z-index: -1;
 }
+
 
 
