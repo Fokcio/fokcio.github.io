@@ -27,9 +27,11 @@
 
   "PGDownload": "📥 Pobierz .apk",
   "PGDescription": "Zostań ziemniakiem, zbuduj świat, ukończ parkour, i się nie ugotuj",
-  "PGCreator": "Twórca: Fokcio",
-  "PGVersion": "Wersja: 1.0.2",
+
+  "CDownload": "📥 Pobierz .exe na windows",
+  "CDescription": "Catus to fałszywy wirus komputerowy napisany w Pythonie,\ngra muzykę i wyświetla KOTKI.\nAby wyłączyć, należy kliknąć ESC.\nAplikacja została przetestowana na komputerze z Windows 11.",
 
   
   "VideosTitle": "Filmiki"
 }
+
