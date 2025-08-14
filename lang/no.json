@@ -24,8 +24,10 @@
 
   "PGDownload": "📥 Last ned .apk",
   "PGDescription": "Bli en potet, bygg en verden, fullfør parkour – og ikke bli kokt.",
-  "PGCreator": "Skaper: Fokcio",
-  "PGVersion": "Versjon: 1.0.2",
+
+
+      "CDownload": "📥 Last ned .exe for Windows",
+    "CDescription": "Catus er et falskt datavirus skrevet i Python,\ndet spiller musikk og viser KATTUNGER.\nFor å avslutte, trykk ESC.\nProgrammet er testet på en Windows 11-datamaskin.",
 
   "VideosTitle": "Videoer"
 }
