@@ -167,8 +167,8 @@ startTitleAnimation();
 
 // Karuzela obrazków
 const obrazki = [
-  { src: "images/gra1.png", href: "/PilkaNaRownowazni" },
-  { src: "images/gra2.png", href: "/Potatogame" }
+  { src: "images/gra1.png", href: "projects/PilkaNaRownowazni" },
+  { src: "images/gra2.png", href: "projects/Potatogame" }
   // Możesz dodać więcej:
   // { src: "images/gra2.png", href: "/InnaGra" }
 ];
@@ -272,5 +272,6 @@ document.getElementById('aibtn').onclick = () => {
   });
 
 };
+
 
 
