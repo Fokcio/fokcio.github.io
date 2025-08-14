@@ -26,9 +26,12 @@
 
   "PGDownload": "📥 Télécharger .apk",
   "PGDescription": "Devenez une patate, construisez un monde, faites du parkour et ne vous faites pas cuire",
-  "PGCreator": "Créateur: Fokcio",
-  "PGVersion": "Version: 1.0.2",
+
+
+    "CDownload": "📥 Téléchargez le .exe pour Windows",
+    "CDescription": "Catus est un faux virus informatique écrit en Python,\nil joue de la musique et affiche des CHATONS.\nPour quitter, appuyez sur ESC.\nL’application a été testée sur un ordinateur Windows 11.",
 
 
   "VideosTitle": "Vidéos"
 }
+
