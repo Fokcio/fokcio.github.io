@@ -26,9 +26,12 @@
 
   "PGDownload": "📥 Download .apk",
   "PGDescription": "Become a potato, build a world, complete parkour, and don't get cooked",
-  "PGCreator": "Creator: Fokcio",
-  "PGVersion": "Version: 1.0.2",
+
+
+  "CDownload": "📥 Download the .exe for Windows",
+    "CDescription": "Catus is a fake computer virus written in Python,\nit plays music and displays KITTIES.\nTo exit, press ESC.\nThe application has been tested on a Windows 11 computer.",
 
 
   "VideosTitle": "Videos"
 }
+
