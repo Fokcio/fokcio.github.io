@@ -24,8 +24,10 @@
 
   "PGDownload": "📥 .apk herunterladen",
   "PGDescription": "Werde eine Kartoffel, baue eine Welt, beende den Parkour und werde nicht gekocht.",
-  "PGCreator": "Ersteller: Fokcio",
-  "PGVersion": "Version: 1.0.2",
+
+
+  "CDownload": "📥 Lade die .exe für Windows herunter",
+    "CDescription": "Catus ist ein falscher Computer-Virus, geschrieben in Python,\ner spielt Musik und zeigt KÄTZCHEN an.\nZum Beenden ESC drücken.\nDie Anwendung wurde auf einem Windows-11-Computer getestet.",
 
   "VideosTitle": "Videos"
 }
