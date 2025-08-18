@@ -1,33 +1,24 @@
-
-
-
-
-
 let translations = {};
 let currentLang = 'pl';
 let napisy = [];
 let napisElement = document.getElementById("napis");
 let indexNapisu = 0;
 const chars = "~`!@#$%^&*(){}[]|:;\"<>?/.,";
-
 let zmienNapisInterval = null;
 
 const switcher = document.getElementById('langSwitcher');
 
-// 🟢 Pobierz język z URL (np. ?lang=pl)
+// Pobierz język z URL
 const params = new URLSearchParams(window.location.search);
 const langFromUrl = params.get('lang');
-if (langFromUrl) {
-  currentLang = langFromUrl;
-}
+if (langFromUrl) currentLang = langFromUrl;
 
-// 🟢 Ustaw <select> zgodnie z URL
+// Ustaw <select> zgodnie z URL
 switcher.value = currentLang;
 
-// 🔁 Zmieniamy język i aktualizujemy URL (bez przeładowania)
+// Zmieniamy język i aktualizujemy URL
 switcher.addEventListener('change', async (e) => {
   currentLang = e.target.value;
-
   const newUrl = new URL(window.location.href);
   newUrl.searchParams.set('lang', currentLang);
   window.history.replaceState({}, '', newUrl);
@@ -35,23 +26,22 @@ switcher.addEventListener('change', async (e) => {
   await loadLanguage(currentLang);
 });
 
+// Load JSON language
 async function loadLanguage(lang) {
   const res = await fetch(`lang/${lang}.json`);
   translations = await res.json();
   updateTextContent();
   updateNapisy();
+  pokazObrazek(aktualnyObrazek); // odśwież karuzelę po zmianie języka
 }
 
 function updateTextContent() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (translations[key]) {
-      el.textContent = translations[key];
-    }
+    if (translations[key]) el.textContent = translations[key];
   });
 }
 
-// 🔁 Aktualizacja napisów po zmianie języka
 function updateNapisy() {
   napisy = [
     translations['Napis1'],
@@ -65,13 +55,13 @@ function updateNapisy() {
     translations['Napis5'],
     translations['Napis6'],
     "meow...",
-    "meow...",
+    "meow..."
   ];
 
   indexNapisu = 0;
   if (zmienNapisInterval) clearInterval(zmienNapisInterval);
   zmienNapisInterval = setInterval(zmienNapis, 3000);
-  zmienNapis(); // od razu pierwszy
+  zmienNapis();
 }
 
 function scrambleEffect(text) {
@@ -87,7 +77,6 @@ function scrambleEffect(text) {
 function zmienNapis() {
   napisElement.classList.remove("show");
   napisElement.classList.add("fade");
-
   setTimeout(() => {
     const nowy = napisy[indexNapisu] || '';
     scrambleEffect(nowy);
@@ -95,29 +84,11 @@ function zmienNapis() {
   }, 500);
 }
 
-// 🟢 Start po załadowaniu strony
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadLanguage(currentLang);
-});
-
-
-// Karuzela obrazków
+// Karuzela obrazków z kluczem key
 const obrazki = [
-  { 
-    src: "images/gra1.png", 
-    href: "projects/PilkaNaRownowazni",
-    opis: translations['KaruzelaOpisPNR']
-  },
-  { 
-    src: "images/gra2.png", 
-    href: "projects/Potatogame",
-    opis: translations['KaruzelaOpisPG']
-  },
-  { 
-    src: "images/Catus.png", 
-    href: "projects/catus",
-    opis: translations['KaruzelaOpisC']
-  }
+  { src: "images/gra1.png", href: "projects/PilkaNaRownowazni", key: "KaruzelaOpisPNR" },
+  { src: "images/gra2.png", href: "projects/Potatogame", key: "KaruzelaOpisPG" },
+  { src: "images/Catus.png", href: "projects/catus", key: "KaruzelaOpisC" }
 ];
 
 let aktualnyObrazek = 0;
@@ -135,8 +106,7 @@ function pokazObrazek(index) {
   setTimeout(() => {
     obrazekElement.src = obrazekDane.src;
     obrazekLink.href = obrazekDane.href;
-    opisElement.innerHTML = obrazekDane.opis;
-    
+    opisElement.innerHTML = translations[obrazekDane.key] || "";
     obrazekElement.style.opacity = 1;
     opisElement.style.opacity = 1;
   }, 300);
@@ -152,34 +122,21 @@ nextButton.addEventListener("click", () => {
   pokazObrazek(aktualnyObrazek);
 });
 
-// Pokaż pierwszy obrazek od razu
-pokazObrazek(aktualnyObrazek);
-
-
-// Sekwencja klawiszy
+// Sekwencja klawiszy, animacje, deszcz kotów itp.
 const sekwencja = ['k', 'o', 't', 'e', 'l'];
 let aktualnaSekwencja = [];
-
 const gifOverlay = document.getElementById('gifOverlay');
-const gif = document.getElementById('funGif');
 
 document.addEventListener('keydown', function (e) {
   const key = e.key.toLowerCase();
   if (sekwencja.includes(key)) {
     aktualnaSekwencja.push(key);
     if (aktualnaSekwencja.toString() === sekwencja.toString()) {
-      // Pokaż GIF
       gifOverlay.style.display = 'flex';
-
-      // Schowaj po określonym czasie
-      setTimeout(() => {
-        gifOverlay.style.display = 'none';
-      }, 2120); // <- dopasuj do długości gifa
+      setTimeout(() => { gifOverlay.style.display = 'none'; }, 2120);
       aktualnaSekwencja = [];
     }
-  } else {
-    aktualnaSekwencja = [];
-  }
+  } else aktualnaSekwencja = [];
 });
 
 // Animacja tytułu
@@ -192,10 +149,7 @@ function startTitleAnimation() {
   titleInterval = setInterval(() => {
     if (pageVisibility) {
       document.title = tytuly[index];
-      index++;
-      if (index >= tytuly.length) {
-        index = 0;
-      }
+      index = (index + 1) % tytuly.length;
     }
   }, 500);
 }
@@ -206,38 +160,21 @@ document.addEventListener('visibilitychange', function () {
     document.title = 'Wróć do kotka :D';
   } else {
     pageVisibility = true;
-    document.title = tytuly[index]; // Przywraca animację tytułu
-
-    // Pokazuje kotka (GIF) po powrocie na stronę
+    document.title = tytuly[index];
     gifOverlay.style.display = 'flex';
-    setTimeout(() => {
-      gifOverlay.style.display = 'none';
-    }, 2120); // dopasuj do długości gifa
+    setTimeout(() => { gifOverlay.style.display = 'none'; }, 2120);
   }
 });
 
 startTitleAnimation();
 
-
-function spawnCatRain() {
-  for (let i = 0; i < 20; i++) {
-    const cat = document.createElement('img');
-    cat.src = 'https://cataas.com/cat/cute?width=60'
-    cat.classList.add('cat-rain');
-    cat.style.left = `${Math.random() * 100}vw`;
-    document.body.appendChild(cat);
-    setTimeout(() => cat.remove(), 5000);
-  }
-}
-
-// Funkcja do uruchamiania deszczu kotów
+// Funkcja deszczu kotów
 function startCatRain() {
   const interval = setInterval(() => {
     const cat = document.createElement('img');
-    const size = Math.random() * 60 + 40; // 40px - 100px
+    const size = Math.random() * 60 + 40;
     const left = Math.random() * window.innerWidth;
-    const duration = Math.random() * 3 + 3; // 3 - 6 sekundy
-
+    const duration = Math.random() * 3 + 3;
     const url = `https://cataas.com/cat?width=${Math.floor(size)}&height=${Math.floor(size)}&t=${Date.now()}-${Math.floor(Math.random() * 10000)}`;
     cat.src = url;
     cat.className = 'cat-drop';
@@ -245,52 +182,29 @@ function startCatRain() {
     cat.style.width = `${size}px`;
     cat.style.height = `${size}px`;
     cat.style.animationDuration = `${duration}s`;
-
     document.body.appendChild(cat);
+    cat.addEventListener('animationend', () => cat.remove());
+  }, 300);
 
-    cat.addEventListener('animationend', () => {
-      cat.remove();
-    });
-  }, 300); // co 300ms nowy kot
-
-  setTimeout(() => clearInterval(interval), 15000); // 15s deszcz
+  setTimeout(() => clearInterval(interval), 15000);
 }
 
-// Wykrywanie sekwencji "meow"
 let wpisane = [];
-
 document.addEventListener("keydown", (e) => {
   wpisane.push(e.key.toLowerCase());
   if (wpisane.length > 4) wpisane.shift();
-
   if (wpisane.join("") === "meow") {
     startCatRain();
-    wpisane = []; // reset
+    wpisane = [];
   }
 });
 
+// WinBox buttons
+document.getElementById('biobtn').onclick = () => { new WinBox("Bio", { url: "/bio.html?lang=" + currentLang }); };
+document.getElementById('filmikibtn').onclick = () => { new WinBox("Videos", { url: "/video.html?lang=" + currentLang }); };
+document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.html?lang=" + currentLang }); };
 
-document.getElementById('biobtn').onclick = () => {
-  new WinBox("Bio", {
-    url: "/bio.html?lang=" + currentLang
-  });
-};
-
-document.getElementById('filmikibtn').onclick = () => {
-  new WinBox("Videos", {
-    url: "/video.html?lang=" + currentLang
-  });
-};
-
-document.getElementById('aibtn').onclick = () => {
-  new WinBox("AI", {
-    url: "/ai.html?lang=" + currentLang
-  });
-
-};
-
-
-
-
-
-
+// Start
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadLanguage(currentLang);
+});
