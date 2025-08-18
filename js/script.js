@@ -3,7 +3,7 @@ let currentLang = 'pl';
 let napisy = [];
 let napisElement = document.getElementById("napis");
 let indexNapisu = 0;
-const chars = "~`!@#$%^&*(){}[]|:;\"<>?/.,";
+const chars = "~`!@#$%^&*(){}[]|:;\"<>?/.,"; 
 let zmienNapisInterval = null;
 
 const switcher = document.getElementById('langSwitcher');
@@ -88,9 +88,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Karuzela obrazków
 const obrazki = [
-  { src: "images/gra1.png", href: "projects/PilkaNaRownowazni", opis: translations['KaruzelaOpisPNR'] },
-  { src: "images/gra2.png", href: "projects/Potatogame", opis: translations['KaruzelaOpisPG'] },
-  { src: "images/Catus.png", href: "projects/catus", opis: translations['KaruzelaOpisC'] }
+  { src: "images/gra1.png", href: "projects/PilkaNaRownowazni", opisKey: 'KaruzelaOpisPNR' },
+  { src: "images/gra2.png", href: "projects/Potatogame", opisKey: 'KaruzelaOpisPG' },
+  { src: "images/Catus.png", href: "projects/catus", opisKey: 'KaruzelaOpisC' }
 ];
 
 let aktualnyObrazek = 0;
@@ -108,7 +108,7 @@ function pokazObrazek(index) {
   setTimeout(() => {
     obrazekElement.src = obrazekDane.src;
     obrazekLink.href = obrazekDane.href;
-    opisElement.innerHTML = obrazekDane.opis;
+    opisElement.innerHTML = translations[obrazekDane.opisKey] || '';
     obrazekElement.style.opacity = 1;
     opisElement.style.opacity = 1;
   }, 300);
