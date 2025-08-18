@@ -168,18 +168,29 @@ h2 {
     margin-top: 20px;
 }
 
-#karuzela img {
+/* wspólny kontener */
+.karuzelaCard {
     width: 200px;
-    height: auto;
     border: 2px solid blueviolet;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(137, 43, 226, 0.5);
-    transition: opacity 0.5s;
+    overflow: hidden; /* żeby obrazek i opis ładnie mieściły się w ramce */
+    text-align: center;
+    background: white; /* żeby opis nie zlewał się z tłem */
 }
 
-#karuzelaOpis {
-    width: 200px;
+/* obrazek w środku ramki */
+.karuzelaCard img {
+    width: 100%;
     height: auto;
+    display: block;
+}
+
+/* opis w środku ramki */
+#karuzelaOpis {
+    padding: 10px;
+    font-size: 14px;
+    color: black;
     transition: opacity 0.5s;
 }
 
@@ -195,6 +206,7 @@ h2 {
 #karuzela button:hover {
     transform: scale(1.2);
 }
+
 
 /* 16 */
 .btn-16 {
@@ -333,4 +345,5 @@ p {
   inset: 0;
   z-index: -1;
 }
+
 
