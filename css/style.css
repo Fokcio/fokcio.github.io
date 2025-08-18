@@ -177,6 +177,12 @@ h2 {
     transition: opacity 0.5s;
 }
 
+#karuzelaOpis {
+    width: 200px;
+    height: auto;
+    transition: opacity 0.5s;
+}
+
 #karuzela button {
     background-color: transparent;
     border: none;
@@ -327,6 +333,7 @@ p {
   inset: 0;
   z-index: -1;
 }
+
 
 
 
