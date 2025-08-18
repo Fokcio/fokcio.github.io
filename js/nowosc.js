@@ -1,4 +1,3 @@
-<script>
 (function () {
   const Y = '8px', X = '-20px'; // przesunięcie w prawo, żeby po obrocie było ładnie
 
@@ -62,4 +61,3 @@
     }
   }).observe(document.documentElement, { childList: true, subtree: true });
 })();
-</script>
