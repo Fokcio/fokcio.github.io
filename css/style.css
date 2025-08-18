@@ -176,7 +176,7 @@ h2 {
     box-shadow: 0 0 10px rgba(137, 43, 226, 0.5);
     overflow: hidden; /* żeby obrazek i opis ładnie mieściły się w ramce */
     text-align: center;
-    background: white; /* żeby opis nie zlewał się z tłem */
+    background: black; /* żeby opis nie zlewał się z tłem */
 }
 
 /* obrazek w środku ramki */
@@ -190,7 +190,7 @@ h2 {
 #karuzelaOpis {
     padding: 10px;
     font-size: 14px;
-    color: black;
+    color: blueviolet;
     transition: opacity 0.5s;
 }
 
@@ -345,5 +345,6 @@ p {
   inset: 0;
   z-index: -1;
 }
+
 
 
