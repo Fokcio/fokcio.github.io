@@ -3,17 +3,17 @@ const obrazki = [
   { 
     src: "images/gra1.png", 
     href: "projects/PilkaNaRownowazni",
-    opis: "Gra wykonana przez AI, polega na utrzymaniu piłki na platformie używając przycisków lub strzałek na klawiaturze."
+    opis: translations['KaruzelaOpisPNR']
   },
   { 
     src: "images/gra2.png", 
     href: "projects/Potatogame",
-    opis: "Zostań ziemniakiem, zbuduj świat, ukończ parkour, i się nie ugotuj"
+    opis: translations['KaruzelaOpisPG']
   },
   { 
     src: "images/Catus.png", 
     href: "projects/catus",
-    opis: "<b>Catus</b> to fałszywy wirus komputerowy napisany w <b>Pythonie</b>,<br>gra muzykę i wyświetla <i>losowe KOTY</i>,<br>Aby wyłączyć należy kliknąć <b>ESC</b><br><small>Aplikacja została przetestowana na Windows 11</small>"
+    opis: translations['KaruzelaOpisC']
   }
 ];
 
