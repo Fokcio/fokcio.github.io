@@ -168,14 +168,16 @@ h2 {
     margin-top: 20px;
 }
 
-#obrazekLink {
+#karuzela img {
+    width: 200px;
+    height: auto;
     border: 2px solid blueviolet;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(137, 43, 226, 0.5);
-    display: flex;
+    transition: opacity 0.5s;
 }
 
-#karuzelaOpis #obrazek {
+#karuzelaOpis {
     width: 200px;
     height: auto;
     transition: opacity 0.5s;
@@ -331,11 +333,4 @@ p {
   inset: 0;
   z-index: -1;
 }
-
-
-
-
-
-
-
 
