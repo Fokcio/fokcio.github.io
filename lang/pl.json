@@ -31,7 +31,13 @@
   "CDownload": "📥 Pobierz .exe na windows",
   "CDescription": "Catus to fałszywy wirus komputerowy napisany w Pythonie,\ngra muzykę i wyświetla KOTKI.\nAby wyłączyć, należy kliknąć ESC.\nAplikacja została przetestowana na komputerze z Windows 11.",
 
+
+  "KaruzelaOpisPNR": "Gra wykonana przez AI, polega na utrzymaniu piłki na platformie używając przycisków lub strzałek na klawiaturze.",
+  "KaruzelaOpisPG": "Zostań ziemniakiem, zbuduj świat, ukończ parkour, i się nie ugotuj",
+  "KaruzelaOpisC": "<b>Catus</b> to fałszywy wirus komputerowy napisany w <b>Pythonie</b>,<br>gra muzykę i wyświetla <i>losowe KOTY</i>,<br>Aby wyłączyć należy kliknąć <b>ESC</b><br><small>Aplikacja została przetestowana na Windows 11</small>",
+
   
   "VideosTitle": "Filmiki"
 }
+
 
