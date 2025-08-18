@@ -22,17 +22,14 @@ switcher.addEventListener('change', async (e) => {
   const newUrl = new URL(window.location.href);
   newUrl.searchParams.set('lang', currentLang);
   window.history.replaceState({}, '', newUrl);
-
   await loadLanguage(currentLang);
 });
 
-// Load JSON language
 async function loadLanguage(lang) {
   const res = await fetch(`lang/${lang}.json`);
   translations = await res.json();
   updateTextContent();
   updateNapisy();
-  pokazObrazek(aktualnyObrazek); // odśwież karuzelę po zmianie języka
 }
 
 function updateTextContent() {
@@ -55,7 +52,7 @@ function updateNapisy() {
     translations['Napis5'],
     translations['Napis6'],
     "meow...",
-    "meow..."
+    "meow...",
   ];
 
   indexNapisu = 0;
@@ -77,6 +74,7 @@ function scrambleEffect(text) {
 function zmienNapis() {
   napisElement.classList.remove("show");
   napisElement.classList.add("fade");
+
   setTimeout(() => {
     const nowy = napisy[indexNapisu] || '';
     scrambleEffect(nowy);
@@ -84,11 +82,15 @@ function zmienNapis() {
   }, 500);
 }
 
-// Karuzela obrazków z kluczem key
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadLanguage(currentLang);
+});
+
+// Karuzela obrazków
 const obrazki = [
-  { src: "images/gra1.png", href: "projects/PilkaNaRownowazni", key: "KaruzelaOpisPNR" },
-  { src: "images/gra2.png", href: "projects/Potatogame", key: "KaruzelaOpisPG" },
-  { src: "images/Catus.png", href: "projects/catus", key: "KaruzelaOpisC" }
+  { src: "images/gra1.png", href: "projects/PilkaNaRownowazni", opis: translations['KaruzelaOpisPNR'] },
+  { src: "images/gra2.png", href: "projects/Potatogame", opis: translations['KaruzelaOpisPG'] },
+  { src: "images/Catus.png", href: "projects/catus", opis: translations['KaruzelaOpisC'] }
 ];
 
 let aktualnyObrazek = 0;
@@ -106,7 +108,7 @@ function pokazObrazek(index) {
   setTimeout(() => {
     obrazekElement.src = obrazekDane.src;
     obrazekLink.href = obrazekDane.href;
-    opisElement.innerHTML = translations[obrazekDane.key] || "";
+    opisElement.innerHTML = obrazekDane.opis;
     obrazekElement.style.opacity = 1;
     opisElement.style.opacity = 1;
   }, 300);
@@ -122,25 +124,31 @@ nextButton.addEventListener("click", () => {
   pokazObrazek(aktualnyObrazek);
 });
 
-// Sekwencja klawiszy, animacje, deszcz kotów itp.
-const sekwencja = ['k', 'o', 't', 'e', 'l'];
-let aktualnaSekwencja = [];
+pokazObrazek(aktualnyObrazek);
+
+// Sekwencja klawiszy
+const secretKeySequence = ['k', 'o', 't', 'e', 'l'];
+let currentSequence = [];
+
 const gifOverlay = document.getElementById('gifOverlay');
+const gif = document.getElementById('funGif');
 
 document.addEventListener('keydown', function (e) {
   const key = e.key.toLowerCase();
-  if (sekwencja.includes(key)) {
-    aktualnaSekwencja.push(key);
-    if (aktualnaSekwencja.toString() === sekwencja.toString()) {
+  if (secretKeySequence.includes(key)) {
+    currentSequence.push(key);
+    if (currentSequence.toString() === secretKeySequence.toString()) {
       gifOverlay.style.display = 'flex';
       setTimeout(() => { gifOverlay.style.display = 'none'; }, 2120);
-      aktualnaSekwencja = [];
+      currentSequence = [];
     }
-  } else aktualnaSekwencja = [];
+  } else {
+    currentSequence = [];
+  }
 });
 
 // Animacja tytułu
-let tytuly = ["Fokcio", "Fokci", "Fokc", "Fok", "Fo", "F", "Fo", "Fok", "Fokc", "Fokci", "Fokcio"];
+let tytuly = ["Fokcio","Fokci","Fokc","Fok","Fo","F","Fo","Fok","Fokc","Fokci","Fokcio"];
 let index = 0;
 let titleInterval;
 let pageVisibility = true;
@@ -168,7 +176,18 @@ document.addEventListener('visibilitychange', function () {
 
 startTitleAnimation();
 
-// Funkcja deszczu kotów
+// Deszcz kotów
+function spawnCatRain() {
+  for (let i = 0; i < 20; i++) {
+    const cat = document.createElement('img');
+    cat.src = 'https://cataas.com/cat/cute?width=60';
+    cat.classList.add('cat-rain');
+    cat.style.left = `${Math.random() * 100}vw`;
+    document.body.appendChild(cat);
+    setTimeout(() => cat.remove(), 5000);
+  }
+}
+
 function startCatRain() {
   const interval = setInterval(() => {
     const cat = document.createElement('img');
@@ -183,12 +202,12 @@ function startCatRain() {
     cat.style.height = `${size}px`;
     cat.style.animationDuration = `${duration}s`;
     document.body.appendChild(cat);
-    cat.addEventListener('animationend', () => cat.remove());
+    cat.addEventListener('animationend', () => { cat.remove(); });
   }, 300);
-
   setTimeout(() => clearInterval(interval), 15000);
 }
 
+// Sekwencja "meow"
 let wpisane = [];
 document.addEventListener("keydown", (e) => {
   wpisane.push(e.key.toLowerCase());
@@ -199,12 +218,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// WinBox buttons
+// WinBoxy
 document.getElementById('biobtn').onclick = () => { new WinBox("Bio", { url: "/bio.html?lang=" + currentLang }); };
 document.getElementById('filmikibtn').onclick = () => { new WinBox("Videos", { url: "/video.html?lang=" + currentLang }); };
 document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.html?lang=" + currentLang }); };
-
-// Start
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadLanguage(currentLang);
-});
