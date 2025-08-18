@@ -29,9 +29,18 @@
 
 
   "CDownload": "📥 Download the .exe for Windows",
-    "CDescription": "Catus is a fake computer virus written in Python,\nit plays music and displays KITTIES.\nTo exit, press ESC.\nThe application has been tested on a Windows 11 computer.",
+  "CDescription": "Catus is a fake computer virus written in Python,\nit plays music and displays KITTIES.\nTo exit, press ESC.\nThe application has been tested on a Windows 11 computer.",
+
+
+  
+  "KaruzelaOpisPNR": "A game created by AI, the goal is to keep the ball on the platform using the buttons or the arrow keys.",
+  "KaruzelaOpisPG": "Become a potato, build a world, complete the parkour, and don’t get cooked.",
+  "KaruzelaOpisC": "<b>Catus</b> is a fake computer virus written in <b>Python</b>,<br>it plays music and shows <i>random CATS</i>,<br>To close it press <b>ESC</b><br><small>The application has been tested on Windows 11</small>"
+
+
 
 
   "VideosTitle": "Videos"
 }
+
 
