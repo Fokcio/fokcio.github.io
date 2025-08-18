@@ -13,7 +13,7 @@ const obrazki = [
   { 
     src: "images/Catus.png", 
     href: "projects/catus",
-    opis: "<b>Catus</b> to fałszywy wirus komputerowy napisany w <mark>Pythonie</mark>,<br>gra muzykę i wyświetla <i>losowe KOTY</i>,<br>Aby wyłączyć należy kliknąć <b>ESC</b><br><small>Aplikacja została przetestowana na Windows 11</small>"
+    opis: "<b>Catus</b> to fałszywy wirus komputerowy napisany w <b>Pythonie</b>,<br>gra muzykę i wyświetla <i>losowe KOTY</i>,<br>Aby wyłączyć należy kliknąć <b>ESC</b><br><small>Aplikacja została przetestowana na Windows 11</small>"
   }
 ];
 
