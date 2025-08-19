@@ -24,6 +24,10 @@
   "LinksBio": "Links",
 
 
+  "CADownload": "📥 Download the .exe for Windows",
+  "CADescription": "Cawagla is a fake computer virus written in Python, which gives the user the impression that their computer has frozen.\nTo close it, press ESC.\nThe application has been tested on a computer running Windows 11.",
+  
+
   "PGDownload": "📥 Download .apk",
   "PGDescription": "Become a potato, build a world, complete parkour, and don't get cooked",
 
@@ -36,12 +40,13 @@
   "KaruzelaOpisPNR": "A game created by AI, the goal is to keep the ball on the platform using the buttons or the arrow keys.",
   "KaruzelaOpisPG": "Become a potato, build a world, complete the parkour, and don’t get cooked.",
   "KaruzelaOpisC": "<b>Catus</b> is a fake computer virus written in <b>Python</b>,<br>it plays music and shows <i>random CATS</i>,<br>To close it press <b>ESC</b><br><small>The application has been tested on Windows 11</small>",
-
+  "KaruzelaOpisCA": "<b>Cawagla</b> is a fake computer virus written in <b>Python</b>,<br>which gives the user the impression that their computer has frozen,<br>To close it, press <b>ESC</b><br><small>The application has been tested on Windows 11</small>"
 
 
 
   "VideosTitle": "Videos"
 }
+
 
 
 
