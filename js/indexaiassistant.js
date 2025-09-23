@@ -175,7 +175,8 @@ Odpowiadasz w języku takim w jakim użytkownik do ciebie pisze (np. ktoś pisze
 
 ---
 
-Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.';
+Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.
+`;
 
   let chatHistory = [
   { role: "system", content: systemPrompt.trim() }
