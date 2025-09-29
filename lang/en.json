@@ -2,51 +2,39 @@
   "bio": "Bio",
   "filmiki": "Videos",
   "Ai": "AI",
-  "ProjektyTekst": "My projects",
+  "ProjektyTekst": "My Projects",
 
-  "Napis1": "Hi, Im Fokcio",
+  "Napis1": "Hi, I'm Fokcio",
   "Napis2": "This is my website :D",
-  "Napis3": "You're still reading this?",
-  "Napis4": "You are waiting for Easter Egg?",
-  "Napis5": "ummm I see...",
-  "Napis6": "enter kotel or meow...",
+  "Napis3": "Still reading?",
+  "Napis4": "Waiting for an easter egg?",
+  "Napis5": "umm, I see...",
+  "Napis6": "type 'kotel' or 'meow'...",
 
-  "AiSiteTitle": "Chat With Ai",
+  "AiSiteTitle": "AI Chat",
   "ModeBtnAi": "🌗 Mode",
   "ClearBtnAi": "🗑️ Clear",
-  "WriteLabbelAi": "Write Something...",
+  "WriteLabbelAi": "Write something...",
   "SendBtnAi": "Send",
   "AiError": "❌ Error communicating with AI.",
   "NoResponseAi": "❌ No response",
 
-
-  "BioDescription": "Fokcio. Minecraft gremlin. I code when the mood strikes. Games? Rarely. But when I do, it's nice.",
+  "BioDescription": "Fokcio. A Minecraft gremlin. I code when the mood strikes me. Games? Rarely. But when I do, nicely.",
   "LinksBio": "Links",
 
-
-  "CADownload": "📥 Download the .exe for Windows",
-  "CADescription": "Cawagla is a fake computer virus written in Python, which gives the user the impression that their computer has frozen.\nTo close it, press ESC.\nThe application has been tested on a computer running Windows 11.",
-  
-
   "PGDownload": "📥 Download .apk",
-  "PGDescription": "Become a potato, build a world, complete parkour, and don't get cooked",
+  "PGDescription": "Become a potato, build a world, complete the parkour, and don't get cooked",
 
-
-  "CDownload": "📥 Download the .exe for Windows",
-  "CDescription": "Catus is a fake computer virus written in Python,\nit plays music and displays KITTIES.\nTo exit, press ESC.\nThe application has been tested on a Windows 11 computer.",
-
-
+  "CADownload": "📥 Download .exe for Windows",
+  "CADescription": "Cawagla is a fake computer virus written in Python that makes the user feel like their computer is freezing.\nTo exit, press ESC.\nThe application has been tested on Windows 11.",
   
-  "KaruzelaOpisPNR": "A game created by AI, the goal is to keep the ball on the platform using the buttons or the arrow keys.",
-  "KaruzelaOpisPG": "Become a potato, build a world, complete the parkour, and don’t get cooked.",
-  "KaruzelaOpisC": "<b>Catus</b> is a fake computer virus written in <b>Python</b>,<br>it plays music and shows <i>random CATS</i>,<br>To close it press <b>ESC</b><br><small>The application has been tested on Windows 11</small>",
-  "KaruzelaOpisCA": "<b>Cawagla</b> is a fake computer virus written in <b>Python</b>,<br>which gives the user the impression that their computer has frozen,<br>To close it, press <b>ESC</b><br><small>The application has been tested on Windows 11</small>"
+  "CDownload": "📥 Download .exe for Windows",
+  "CDescription": "Catus is a fake computer virus written in Python,\nplays music and shows CATS.\nTo exit, press ESC.\nThe application has been tested on Windows 11.",
 
-
+  "KaruzelaOpisPNR": "Game created by AI, involves keeping the ball on the platform using buttons or keyboard arrows.",
+  "KaruzelaOpisPG": "Become a potato, build a world, complete the parkour, and don't get cooked",
+  "KaruzelaOpisC": "<b>Catus</b> is a fake computer virus written in <b>Python</b>,<br>plays music and displays <i>random CATS</i>,<br>To exit, press <b>ESC</b><br><small>The application has been tested on Windows 11</small>",
+  "KaruzelaOpisCA": "<b>Cawagla</b> is a fake computer virus written in <b>Python</b>,<br>makes the user feel like their computer is freezing,<br>To exit, press <b>ESC</b><br><small>The application has been tested on Windows 11</small>",
 
   "VideosTitle": "Videos"
 }
-
-
-
-
