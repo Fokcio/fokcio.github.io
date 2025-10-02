@@ -187,12 +187,13 @@ document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.
 
 
 (function(){
-  let target = "paint";   // słowo-klucz
-  let buffer = "";        // aktualnie wpisane
+  let target = "paint";   
+  let buffer = "";        
 
-  // dodajemy <style> przez JS
-  function addPaintStyles() {
-    if (document.getElementById("paint-style")) return; // już istnieje
+  function applyPaintMode() {
+    // jeśli już dodany, nie powtarzamy
+    if (document.getElementById("paint-style")) return;
+
     const style = document.createElement("style");
     style.id = "paint-style";
     style.textContent = `
@@ -200,15 +201,22 @@ document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.
         font-family: "PaintFont";
         src: url("/fonts/paint.woff2") format("woff2");
       }
-      body.paint-mode {
+      
+      body {
         font-family: "PaintFont", sans-serif !important;
         background: #fff !important;
         color: #000 !important;
       }
-      body.paint-mode button {
-        background: url("/images/pbutton.png") no-repeat center center / contain !important;
+
+      * {
         color: #000 !important;
+        background: none !important;
+      }
+
+      button {
+        background: url("/images/pbutton.png") no-repeat center center / contain !important;
         border: none !important;
+        color: #000 !important;
       }
     `;
     document.head.appendChild(style);
@@ -217,20 +225,17 @@ document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.
   document.addEventListener("keydown", (e) => {
     buffer += e.key.toLowerCase();
 
-    // sprawdzanie zgodności wpisu
     if (target.startsWith(buffer)) {
       if (buffer === target) {
-        addPaintStyles();
-        document.body.classList.add("paint-mode");
-        buffer = ""; // reset po aktywacji
+        applyPaintMode();
+        buffer = ""; 
       }
     } else {
-      // źle wpisane → reset
       buffer = "";
-      document.body.classList.remove("paint-mode");
     }
   });
 })();
+
 
 
 
