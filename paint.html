@@ -1,0 +1,166 @@
+@font-face {
+  font-family: "PaintFont";
+  src: url("/fonts/Paint.woff2") format("woff2");
+}
+
+body {
+  font-family: "PaintFont", sans-serif !important;
+  background: #fff !important;
+  color: #000 !important;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+  color: #000 !important;
+  background: none !important;
+}
+
+/* sekcja główna */
+main {
+  padding: 10px;
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* napis */
+#napis {
+  font-size: 40px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* przyciski */
+#buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+button {
+  background: url("/images/pbutton.png") no-repeat center center / contain !important;
+  border: none !important;
+  color: #000 !important;
+  font-family: "PaintFont", sans-serif !important;
+  cursor: pointer;
+  width: 150px;
+  height: 50px;
+}
+
+/* język */
+#langSwitcher {
+  margin: 20px;
+  font-family: "PaintFont", sans-serif;
+}
+
+/* karuzela */
+#karuzela {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+.karuzelaCard {
+  width: 200px;
+  border: 2px solid black;
+  border-radius: 5px;
+  overflow: hidden;
+  text-align: center;
+  background: white;
+}
+.karuzelaCard img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+#karuzelaOpis {
+  padding: 10px;
+  font-size: 14px;
+  color: #000;
+}
+
+/* chat */
+#chatToggle {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: #000;
+  color: white;
+  font-size: 32px;
+  line-height: 60px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 1000;
+}
+#chatWindow {
+  position: fixed;
+  bottom: 90px; right: 20px;
+  width: 320px; max-height: 400px; height: 400px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+  font-size: 14px;
+}
+#chatHeader {
+  background: black;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex; justify-content: space-between; align-items: center;
+}
+#chatMessages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #fafafa;
+}
+#chatInputArea {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+#chatInput {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+}
+#sendBtn {
+  background: black;
+  border: none;
+  color: white;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+/* overlay gif */
+#gifOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  display: none;
+}
+#gifOverlay img {
+  max-width: 80%;
+  height: auto;
+}
+
+/* particles.js chowamy */
+#particles-js {
+  display: none !important;
+}
