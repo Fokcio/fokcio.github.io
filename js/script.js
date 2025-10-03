@@ -199,7 +199,7 @@ document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.
     style.textContent = `
       @font-face {
         font-family: "PaintFont";
-        src: url("/fonts/paint.woff2") format("woff2");
+        src: url("/fonts/Paint.woff2") format("woff2");
       }
       
       body {
@@ -235,6 +235,7 @@ document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.
     }
   });
 })();
+
 
 
 
