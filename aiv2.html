@@ -194,13 +194,13 @@
       const chats = getChats();
       chats.unshift(chat);
       saveChats(chats);
-      window.location.href = `/chat/${id}`;
+      const newUrl = `${window.location.pathname}?chatID=${id}`;
+      window.location.href = newUrl;
     }
 
     function getCurrentChatId() {
-      const path = window.location.pathname;
-      const match = path.match(/\/chat\/(.+)/);
-      return match ? match[1] : null;
+      const params = new URLSearchParams(window.location.search);
+      return params.get("chatID");
     }
 
     function getCurrentChat() {
@@ -222,8 +222,9 @@
     function deleteChat(id) {
       const chats = getChats().filter(c => c.id !== id);
       saveChats(chats);
-      if (getCurrentChatId() === id) {
-        window.location.href = "/";
+      const current = getCurrentChatId();
+      if (current === id) {
+        window.location.href = window.location.pathname; // wraca do listy
       } else {
         renderChatList();
       }
@@ -241,7 +242,8 @@
         `;
         el.addEventListener("click", (e) => {
           if (!e.target.classList.contains("delete-btn")) {
-            window.location.href = "/chat/" + chat.id;
+            const newUrl = `${window.location.pathname}?chatID=${chat.id}`;
+            window.location.href = newUrl;
           }
         });
         chatListEl.appendChild(el);
