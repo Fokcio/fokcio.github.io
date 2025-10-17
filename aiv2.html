@@ -30,7 +30,7 @@
 
     /* PANEL BOCZNY */
     .sidebar {
-      width: 260px;
+      width: 270px;
       background: var(--bubble-ai);
       border-right: 1px solid #555;
       display: flex;
@@ -61,6 +61,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
     }
     .chat-item:hover {
       background: rgba(0,0,0,0.1);
@@ -72,15 +73,39 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .chat-item .delete-btn {
+    .menu-btn {
       background: none;
       border: none;
-      color: red;
+      font-size: 20px;
+      color: var(--fg);
       cursor: pointer;
-      font-size: 18px;
     }
 
-    /* GŁÓWNY CZAT */
+    .chat-menu {
+      position: absolute;
+      right: 10px;
+      top: 35px;
+      background: var(--bg);
+      border: 1px solid #888;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: none;
+      flex-direction: column;
+      z-index: 100;
+    }
+    .chat-menu button {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      text-align: left;
+      width: 150px;
+      cursor: pointer;
+    }
+    .chat-menu button:hover {
+      background: rgba(0,0,0,0.1);
+    }
+
+    /* CZAT */
     .main {
       flex: 1;
       display: flex;
@@ -104,6 +129,7 @@
       display: flex;
       gap: 10px;
       max-width: 80%;
+      word-wrap: break-word;
     }
     .message.user {
       align-self: flex-end;
@@ -113,10 +139,12 @@
       background: var(--bubble-ai);
       border-radius: 10px;
       padding: 10px;
+      white-space: pre-wrap;
     }
     .message.user .bubble {
       background: var(--bubble-user);
     }
+
     .input-area {
       display: flex;
       padding: 10px;
@@ -140,6 +168,29 @@
       color: white;
       border-radius: 8px;
       padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    pre {
+      background: #222;
+      color: #eee;
+      padding: 10px;
+      border-radius: 10px;
+      position: relative;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      margin: 5px 0;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 5px 8px;
+      font-size: 12px;
+      border-radius: 5px;
       cursor: pointer;
     }
   </style>
@@ -169,19 +220,15 @@
     const chatEl = document.getElementById("chat");
     const input = document.getElementById("input");
     const chatListEl = document.getElementById("chatList");
-
     const aiAvatar = `<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" width="32" height="32"/>`;
 
-    // ------------------ SYSTEM CZATÓW ------------------
-
+    // --- Funkcje czatów ---
     function getChats() {
       return JSON.parse(localStorage.getItem("chats") || "[]");
     }
-
     function saveChats(chats) {
       localStorage.setItem("chats", JSON.stringify(chats));
     }
-
     function createChat() {
       const id = crypto.randomUUID();
       const chat = {
@@ -189,7 +236,7 @@
         name: "Nowy czat",
         createdAt: Date.now(),
         lastUsedAt: Date.now(),
-        messages: [],
+        messages: []
       };
       const chats = getChats();
       chats.unshift(chat);
@@ -197,18 +244,15 @@
       const newUrl = `${window.location.pathname}?chatID=${id}`;
       window.location.href = newUrl;
     }
-
     function getCurrentChatId() {
       const params = new URLSearchParams(window.location.search);
       return params.get("chatID");
     }
-
     function getCurrentChat() {
       const id = getCurrentChatId();
       const chats = getChats();
       return chats.find(c => c.id === id);
     }
-
     function updateChat(chat) {
       const chats = getChats();
       const idx = chats.findIndex(c => c.id === chat.id);
@@ -218,38 +262,17 @@
         saveChats(chats);
       }
     }
-
     function deleteChat(id) {
+      if (!confirm("Czy na pewno chcesz usunąć ten czat?")) return;
       const chats = getChats().filter(c => c.id !== id);
       saveChats(chats);
       const current = getCurrentChatId();
       if (current === id) {
-        window.location.href = window.location.pathname; // wraca do listy
+        window.location.href = window.location.pathname;
       } else {
         renderChatList();
       }
     }
-
-    function renderChatList() {
-      const chats = getChats().sort((a,b) => b.lastUsedAt - a.lastUsedAt);
-      chatListEl.innerHTML = "";
-      chats.forEach(chat => {
-        const el = document.createElement("div");
-        el.className = "chat-item";
-        el.innerHTML = `
-          <span contenteditable="true" onblur="renameChat('${chat.id}', this.textContent)">${chat.name}</span>
-          <button class="delete-btn" onclick="deleteChat('${chat.id}')">🗑️</button>
-        `;
-        el.addEventListener("click", (e) => {
-          if (!e.target.classList.contains("delete-btn")) {
-            const newUrl = `${window.location.pathname}?chatID=${chat.id}`;
-            window.location.href = newUrl;
-          }
-        });
-        chatListEl.appendChild(el);
-      });
-    }
-
     function renameChat(id, newName) {
       const chats = getChats();
       const chat = chats.find(c => c.id === id);
@@ -257,9 +280,76 @@
         chat.name = newName || "Bez nazwy";
         saveChats(chats);
       }
+      renderChatList();
     }
 
-    // ------------------ OBSŁUGA CZATU ------------------
+    // --- Renderowanie listy czatów ---
+    function renderChatList() {
+      const chats = getChats().sort((a,b) => b.lastUsedAt - a.lastUsedAt);
+      chatListEl.innerHTML = "";
+      chats.forEach(chat => {
+        const el = document.createElement("div");
+        el.className = "chat-item";
+        el.innerHTML = `
+          <span>${chat.name}</span>
+          <button class="menu-btn">⋮</button>
+          <div class="chat-menu">
+            <button onclick="renameChatPrompt('${chat.id}')">✏️ Zmień nazwę</button>
+            <button onclick="deleteChat('${chat.id}')">🗑️ Usuń czat</button>
+          </div>
+        `;
+        el.querySelector(".menu-btn").onclick = (e) => {
+          e.stopPropagation();
+          document.querySelectorAll(".chat-menu").forEach(m => m.style.display = "none");
+          el.querySelector(".chat-menu").style.display = "flex";
+        };
+        el.addEventListener("click", (e) => {
+          if (!e.target.classList.contains("menu-btn")) {
+            const newUrl = `${window.location.pathname}?chatID=${chat.id}`;
+            window.location.href = newUrl;
+          }
+        });
+        chatListEl.appendChild(el);
+      });
+      document.body.addEventListener("click", (e) => {
+        if (!e.target.closest(".chat-item")) {
+          document.querySelectorAll(".chat-menu").forEach(m => m.style.display = "none");
+        }
+      });
+    }
+
+    function renameChatPrompt(id) {
+      const chats = getChats();
+      const chat = chats.find(c => c.id === id);
+      const newName = prompt("Nowa nazwa czatu:", chat.name);
+      if (newName !== null) renameChat(id, newName.trim());
+    }
+
+    // --- Formatowanie kodu ---
+    function formatMessage(content) {
+      return content.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+        const escaped = code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        return `<pre><button class="copy-btn">📋</button><code class="${lang}">${escaped}</code></pre>`;
+      });
+    }
+
+    // --- Renderowanie wiadomości ---
+    function renderMessages(messages) {
+      chatEl.innerHTML = "";
+      messages.forEach(m => renderMessage(m.content, m.role));
+    }
+
+    function renderMessage(content, role) {
+      const msg = document.createElement("div");
+      msg.className = `message ${role}`;
+      msg.innerHTML = `
+        ${role === "ai" ? aiAvatar : ""}
+        <div class="bubble">${role === "ai" ? formatMessage(content) : content}</div>
+        ${role === "user" ? aiAvatar : ""}
+      `;
+      chatEl.appendChild(msg);
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
 
     function toggleTheme() {
       document.body.classList.toggle("dark");
@@ -271,23 +361,6 @@
       chat.messages = [];
       updateChat(chat);
       renderMessages(chat.messages);
-    }
-
-    function renderMessages(messages) {
-      chatEl.innerHTML = "";
-      messages.forEach(m => renderMessage(m.content, m.role));
-    }
-
-    function renderMessage(content, role) {
-      const msg = document.createElement("div");
-      msg.className = `message ${role}`;
-      msg.innerHTML = `
-        ${role === "ai" ? aiAvatar : ""}
-        <div class="bubble">${content}</div>
-        ${role === "user" ? aiAvatar : ""}
-      `;
-      chatEl.appendChild(msg);
-      chatEl.scrollTop = chatEl.scrollHeight;
     }
 
     async function sendMessage() {
@@ -316,8 +389,17 @@
       }
     }
 
-    // ------------------ INICJALIZACJA ------------------
+    // --- Obsługa przycisku kopiuj ---
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("copy-btn")) {
+        const code = e.target.nextElementSibling.innerText;
+        navigator.clipboard.writeText(code);
+        e.target.textContent = "✅";
+        setTimeout(() => (e.target.textContent = "📋"), 2000);
+      }
+    });
 
+    // --- Start ---
     document.getElementById("newChatBtn").onclick = createChat;
     renderChatList();
 
