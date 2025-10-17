@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat z AI</title>
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    :root {
+      --bg: #fff;
+      --fg: #000;
+      --bubble-ai: #f1f1f1;
+      --bubble-user: #d1e7dd;
+    }
+    body.dark {
+      --bg: #1a1a1a;
+      --fg: #fff;
+      --bubble-ai: #2a2a2a;
+      --bubble-user: #3a3a3a;
+    }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* PANEL BOCZNY */
+    .sidebar {
+      width: 260px;
+      background: var(--bubble-ai);
+      border-right: 1px solid #555;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar header {
+      padding: 10px;
+      display: flex;
+      gap: 8px;
+    }
+    .sidebar button {
+      flex: 1;
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+    .chat-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .chat-item {
+      padding: 10px;
+      border-bottom: 1px solid #3333;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-item:hover {
+      background: rgba(0,0,0,0.1);
+    }
+    .chat-item span {
+      flex: 1;
+      margin-right: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chat-item .delete-btn {
+      background: none;
+      border: none;
+      color: red;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* GŁÓWNY CZAT */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: var(--bubble-ai);
+    }
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .message {
+      display: flex;
+      gap: 10px;
+      max-width: 80%;
+    }
+    .message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .bubble {
+      background: var(--bubble-ai);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .message.user .bubble {
+      background: var(--bubble-user);
+    }
+    .input-area {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      background: var(--bg);
+    }
+    textarea {
+      flex: 1;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background: var(--bubble-ai);
+      color: var(--fg);
+      resize: none;
+      height: 50px;
+    }
+    button.send {
+      margin-left: 8px;
+      background: #4caf50;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="sidebar">
+    <header>
+      <button id="newChatBtn">Nowy</button>
+      <button id="searchChatBtn">🔍</button>
+    </header>
+    <div class="chat-list" id="chatList"></div>
+  </div>
+
+  <div class="main">
+    <div class="toolbar">
+      <button onclick="toggleTheme()">🌗 Tryb</button>
+      <button onclick="clearChat()">🗑️ Wyczyść</button>
+    </div>
+    <div id="chat" class="chat-container"></div>
+    <div class="input-area">
+      <textarea id="input" placeholder="Napisz coś..."></textarea>
+      <button class="send" onclick="sendMessage()">Wyślij</button>
+    </div>
+  </div>
+
+  <script>
+    const chatEl = document.getElementById("chat");
+    const input = document.getElementById("input");
+    const chatListEl = document.getElementById("chatList");
+
+    const aiAvatar = `<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" width="32" height="32"/>`;
+
+    // ------------------ SYSTEM CZATÓW ------------------
+
+    function getChats() {
+      return JSON.parse(localStorage.getItem("chats") || "[]");
+    }
+
+    function saveChats(chats) {
+      localStorage.setItem("chats", JSON.stringify(chats));
+    }
+
+    function createChat() {
+      const id = crypto.randomUUID();
+      const chat = {
+        id,
+        name: "Nowy czat",
+        createdAt: Date.now(),
+        lastUsedAt: Date.now(),
+        messages: [],
+      };
+      const chats = getChats();
+      chats.unshift(chat);
+      saveChats(chats);
+      window.location.href = `/chat/${id}`;
+    }
+
+    function getCurrentChatId() {
+      const path = window.location.pathname;
+      const match = path.match(/\/chat\/(.+)/);
+      return match ? match[1] : null;
+    }
+
+    function getCurrentChat() {
+      const id = getCurrentChatId();
+      const chats = getChats();
+      return chats.find(c => c.id === id);
+    }
+
+    function updateChat(chat) {
+      const chats = getChats();
+      const idx = chats.findIndex(c => c.id === chat.id);
+      if (idx >= 0) {
+        chats[idx] = chat;
+        chats[idx].lastUsedAt = Date.now();
+        saveChats(chats);
+      }
+    }
+
+    function deleteChat(id) {
+      const chats = getChats().filter(c => c.id !== id);
+      saveChats(chats);
+      if (getCurrentChatId() === id) {
+        window.location.href = "/";
+      } else {
+        renderChatList();
+      }
+    }
+
+    function renderChatList() {
+      const chats = getChats().sort((a,b) => b.lastUsedAt - a.lastUsedAt);
+      chatListEl.innerHTML = "";
+      chats.forEach(chat => {
+        const el = document.createElement("div");
+        el.className = "chat-item";
+        el.innerHTML = `
+          <span contenteditable="true" onblur="renameChat('${chat.id}', this.textContent)">${chat.name}</span>
+          <button class="delete-btn" onclick="deleteChat('${chat.id}')">🗑️</button>
+        `;
+        el.addEventListener("click", (e) => {
+          if (!e.target.classList.contains("delete-btn")) {
+            window.location.href = "/chat/" + chat.id;
+          }
+        });
+        chatListEl.appendChild(el);
+      });
+    }
+
+    function renameChat(id, newName) {
+      const chats = getChats();
+      const chat = chats.find(c => c.id === id);
+      if (chat) {
+        chat.name = newName || "Bez nazwy";
+        saveChats(chats);
+      }
+    }
+
+    // ------------------ OBSŁUGA CZATU ------------------
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    function clearChat() {
+      const chat = getCurrentChat();
+      if (!chat) return;
+      chat.messages = [];
+      updateChat(chat);
+      renderMessages(chat.messages);
+    }
+
+    function renderMessages(messages) {
+      chatEl.innerHTML = "";
+      messages.forEach(m => renderMessage(m.content, m.role));
+    }
+
+    function renderMessage(content, role) {
+      const msg = document.createElement("div");
+      msg.className = `message ${role}`;
+      msg.innerHTML = `
+        ${role === "ai" ? aiAvatar : ""}
+        <div class="bubble">${content}</div>
+        ${role === "user" ? aiAvatar : ""}
+      `;
+      chatEl.appendChild(msg);
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+
+      const chat = getCurrentChat();
+      if (!chat) return alert("Brak wybranego czatu!");
+
+      renderMessage(text, "user");
+      chat.messages.push({ role: "user", content: text });
+      updateChat(chat);
+
+      renderMessage(`<div class="typing"><span>...</span></div>`, "ai");
+
+      try {
+        const result = await puter.ai.chat(chat.messages, { model: "gpt-4o-mini" });
+        const answer = result.message?.content || "Brak odpowiedzi.";
+        chat.messages.push({ role: "assistant", content: answer });
+        updateChat(chat);
+        renderMessages(chat.messages);
+      } catch (err) {
+        console.error(err);
+        renderMessage("Błąd AI.", "ai");
+      }
+    }
+
+    // ------------------ INICJALIZACJA ------------------
+
+    document.getElementById("newChatBtn").onclick = createChat;
+    renderChatList();
+
+    const currentChat = getCurrentChat();
+    if (currentChat) renderMessages(currentChat.messages);
+  </script>
+</body>
+</html>
