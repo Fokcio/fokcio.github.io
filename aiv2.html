@@ -234,175 +234,202 @@
   </div>
 
   <script>
-    const chatContainer = document.getElementById('chat');
-    const chatListEl = document.getElementById('chatList');
-    const chatTitle = document.getElementById('chatTitle');
-    const input = document.getElementById('input');
+  const chatContainer = document.getElementById('chat');
+  const chatListEl = document.getElementById('chatList');
+  const chatTitle = document.getElementById('chatTitle');
+  const input = document.getElementById('input');
 
-    const getChats = () => JSON.parse(localStorage.getItem('chats') || '{}');
-    const saveChats = (data) => localStorage.setItem('chats', JSON.stringify(data));
+  const getChats = () => JSON.parse(localStorage.getItem('chats') || '{}');
+  const saveChats = (data) => localStorage.setItem('chats', JSON.stringify(data));
 
-    function generateID() {
-      return 'chat-' + Math.random().toString(36).substr(2, 9);
-    }
+  function generateID() {
+    return 'chat-' + Math.random().toString(36).substr(2, 9);
+  }
 
-    let chats = getChats();
-    const params = new URLSearchParams(window.location.search);
-    let chatID = params.get('chatID');
+  let chats = getChats();
+  const params = new URLSearchParams(window.location.search);
+  let chatID = params.get('chatID');
 
-    if (!chatID || !chats[chatID]) {
-      chatID = generateID();
-      chats[chatID] = {
-        name: 'Nowy czat',
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        messages: []
+  // --- Tworzymy nowy czat, jeśli nie ma ID w URL lub nie istnieje ---
+  if (!chatID || !chats[chatID]) {
+    chatID = generateID();
+    chats[chatID] = {
+      name: 'Nowy czat',
+      created: new Date().toISOString(),
+      updated: new Date().toISOString(),
+      messages: []
+    };
+    saveChats(chats);
+    window.history.replaceState({}, '', `?chatID=${chatID}`);
+  }
+
+  let currentChat = chats[chatID];
+
+  // --- Render listy czatów ---
+  function renderChatList(filter = '') {
+    chats = getChats(); // zawsze pobieraj aktualne dane
+    chatListEl.innerHTML = '';
+    const entries = Object.entries(chats).sort((a, b) => new Date(b[1].updated) - new Date(a[1].updated));
+
+    for (const [id, chat] of entries) {
+      if (filter && !chat.name.toLowerCase().includes(filter.toLowerCase())) continue;
+
+      const item = document.createElement('div');
+      item.className = 'chat-item';
+      item.innerHTML = `<div class="chat-name">${chat.name}</div>
+                        <div class="chat-date">${new Date(chat.updated).toLocaleString()}</div>`;
+
+      const menu = document.createElement('div');
+      menu.className = 'chat-menu';
+      menu.innerHTML = `
+        <button onclick="renameChat('${id}')">✏️ Zmień nazwę</button>
+        <button onclick="deleteChat('${id}')">🗑️ Usuń</button>
+      `;
+      item.appendChild(menu);
+
+      item.onclick = (e) => {
+        if (e.target.tagName === 'BUTTON') return;
+        if (menu.style.display === 'flex') menu.style.display = 'none';
+        else {
+          window.location.href = `?chatID=${id}`;
+        }
       };
-      saveChats(chats);
-      window.history.replaceState({}, '', `?chatID=${chatID}`);
+
+      item.oncontextmenu = (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.chat-menu').forEach(m => m.style.display = 'none');
+        menu.style.display = 'flex';
+      };
+
+      chatListEl.appendChild(item);
     }
+  }
 
-    let currentChat = chats[chatID];
+  // --- Zmiana nazwy ---
+  window.renameChat = function (id) {
+    const newName = prompt('Nowa nazwa czatu:', chats[id].name);
+    if (!newName) return;
+    chats[id].name = newName;
+    chats[id].updated = new Date().toISOString();
+    saveChats(chats);
+    renderChatList();
+    if (id === chatID) chatTitle.textContent = chats[chatID].name;
+  };
 
-    function renderChatList(filter = '') {
-      chatListEl.innerHTML = '';
-      const entries = Object.entries(chats).sort((a, b) => new Date(b[1].updated) - new Date(a[1].updated));
-
-      for (const [id, chat] of entries) {
-        if (filter && !chat.name.toLowerCase().includes(filter.toLowerCase())) continue;
-
-        const item = document.createElement('div');
-        item.className = 'chat-item';
-        item.innerHTML = `<div class="chat-name">${chat.name}</div>
-                          <div class="chat-date">${new Date(chat.updated).toLocaleString()}</div>`;
-
-        const menu = document.createElement('div');
-        menu.className = 'chat-menu';
-        menu.innerHTML = `
-          <button onclick="renameChat('${id}')">✏️ Zmień nazwę</button>
-          <button onclick="deleteChat('${id}')">🗑️ Usuń</button>
-        `;
-        item.appendChild(menu);
-
-        item.onclick = (e) => {
-          if (e.target.tagName === 'BUTTON') return;
-          if (menu.style.display === 'flex') menu.style.display = 'none';
-          else {
-            window.location.href = `?chatID=${id}`;
-          }
-        };
-
-        item.oncontextmenu = (e) => {
-          e.preventDefault();
-          document.querySelectorAll('.chat-menu').forEach(m => m.style.display = 'none');
-          menu.style.display = 'flex';
-        };
-
-        chatListEl.appendChild(item);
-      }
-    }
-
-    function renameChat(id) {
-      const newName = prompt('Nowa nazwa czatu:', chats[id].name);
-      if (!newName) return;
-      chats[id].name = newName;
-      chats[id].updated = new Date().toISOString();
+  // --- Usuwanie czatu ---
+  window.deleteChat = function (id) {
+    if (confirm('Czy na pewno chcesz usunąć ten czat?')) {
+      delete chats[id];
       saveChats(chats);
       renderChatList();
-      chatTitle.textContent = chats[chatID].name;
-    }
-
-    function deleteChat(id) {
-      if (confirm('Czy na pewno chcesz usunąć ten czat?')) {
-        delete chats[id];
-        saveChats(chats);
-        if (id === chatID) {
-          window.location.href = '?';
+      if (id === chatID) {
+        const firstChat = Object.keys(chats)[0];
+        if (firstChat) {
+          window.location.href = `?chatID=${firstChat}`;
         } else {
-          renderChatList();
+          // brak czatów -> nowy
+          const newID = generateID();
+          chats[newID] = {
+            name: 'Nowy czat',
+            created: new Date().toISOString(),
+            updated: new Date().toISOString(),
+            messages: []
+          };
+          saveChats(chats);
+          window.location.href = `?chatID=${newID}`;
         }
       }
     }
+  };
 
-    document.getElementById('newChat').onclick = () => {
-      const id = generateID();
-      chats[id] = {
-        name: 'Nowy czat',
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        messages: []
-      };
-      saveChats(chats);
-      window.location.href = `?chatID=${id}`;
+  // --- Tworzenie nowego czatu ---
+  document.getElementById('newChat').onclick = () => {
+    const id = generateID();
+    chats[id] = {
+      name: 'Nowy czat',
+      created: new Date().toISOString(),
+      updated: new Date().toISOString(),
+      messages: []
     };
+    saveChats(chats);
+    renderChatList(); // 🔥 aktualizuj listę natychmiast
+    window.location.href = `?chatID=${id}`;
+  };
 
-    document.getElementById('searchChat').oninput = (e) => renderChatList(e.target.value);
+  // --- Szukanie czatów ---
+  document.getElementById('searchChat').oninput = (e) => renderChatList(e.target.value);
 
-    function renderMessage(content, sender) {
-      const msg = document.createElement('div');
-      msg.className = `message ${sender}`;
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble';
-      bubble.innerHTML = formatMessage(content);
-      msg.appendChild(bubble);
-      chatContainer.appendChild(msg);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
+  // --- Render wiadomości ---
+  function renderMessage(content, sender) {
+    const msg = document.createElement('div');
+    msg.className = `message ${sender}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = formatMessage(content);
+    msg.appendChild(bubble);
+    chatContainer.appendChild(msg);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
 
-    function formatMessage(content) {
-      return content.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
-        const escaped = code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        return `<pre><button class="copy-btn">📋</button><code class="language-${lang}">${escaped}</code></pre>`;
+  // --- Formatowanie kodu z przyciskiem kopiuj ---
+  function formatMessage(content) {
+    return content.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+      const escaped = code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      return `<pre><button class="copy-btn">📋</button><code class="language-${lang}">${escaped}</code></pre>`;
+    });
+  }
+
+  chatContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('copy-btn')) {
+      const code = e.target.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        e.target.textContent = '✅';
+        setTimeout(() => e.target.textContent = '📋', 2000);
       });
     }
+  });
 
-    chatContainer.addEventListener('click', e => {
-      if (e.target.classList.contains('copy-btn')) {
-        const code = e.target.nextElementSibling.innerText;
-        navigator.clipboard.writeText(code).then(() => {
-          e.target.textContent = '✅';
-          setTimeout(() => e.target.textContent = '📋', 2000);
-        });
-      }
-    });
+  // --- Odświeżanie czatu ---
+  function renderAllMessages() {
+    chatContainer.innerHTML = '';
+    currentChat = getChats()[chatID]; // 🔥 zawsze najnowsza wersja
+    currentChat.messages.forEach(m => renderMessage(m.content, m.role));
+    chatTitle.textContent = currentChat.name;
+  }
 
-    function renderAllMessages() {
-      chatContainer.innerHTML = '';
-      currentChat.messages.forEach(m => renderMessage(m.content, m.role));
-      chatTitle.textContent = currentChat.name;
-    }
+  // --- Wysyłanie wiadomości ---
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    renderMessage(text, 'user');
 
-    async function sendMessage() {
-      const text = input.value.trim();
-      if (!text) return;
-      input.value = '';
-      renderMessage(text, 'user');
+    currentChat.messages.push({ role: 'user', content: text });
+    currentChat.updated = new Date().toISOString();
+    saveChats(chats);
 
-      currentChat.messages.push({ role: 'user', content: text });
-      currentChat.updated = new Date().toISOString();
-      saveChats(chats);
+    renderMessage('<div class="typing"><span>.</span><span>.</span><span>.</span></div>', 'ai');
 
-      renderMessage('<div class="typing"><span>.</span><span>.</span><span>.</span></div>', 'ai');
+    const res = await puter.ai.chat(currentChat.messages, { model: 'gpt-4o-mini' });
+    const answer = res.message?.content || "Brak odpowiedzi od AI 😔";
 
-      const res = await puter.ai.chat(currentChat.messages, { model: 'gpt-4o-mini' });
-      const answer = res.message?.content || "Brak odpowiedzi od AI 😔";
-
-      currentChat.messages.push({ role: 'assistant', content: answer });
-      currentChat.updated = new Date().toISOString();
-      saveChats(chats);
-      renderAllMessages();
-    }
-
-    document.getElementById('sendBtn').onclick = sendMessage;
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    renderChatList();
+    currentChat.messages.push({ role: 'assistant', content: answer });
+    currentChat.updated = new Date().toISOString();
+    saveChats(chats);
     renderAllMessages();
-  </script>
+    renderChatList(); // 🔥 odśwież listę po każdej wiadomości
+  }
+
+  document.getElementById('sendBtn').onclick = sendMessage;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  renderChatList();
+  renderAllMessages();
+</script>
 </body>
 </html>
