@@ -1,3 +1,4 @@
+// === ANIMACJA PALCA ===
 function animateFingerClick(targetId) {
   const target = document.getElementById(targetId);
   if (!target) {
@@ -53,6 +54,7 @@ function animateFingerClick(targetId) {
   requestAnimationFrame(animate);
 }
 
+// === ELEMENTY ===
 const bioBtn = document.getElementById('biobtn');
 const filmikiBtn = document.getElementById('filmikibtn');
 const aiBtn = document.getElementById('aibtn');
@@ -65,6 +67,7 @@ const sendBtn = document.getElementById('sendBtn');
 
 let highlightTimeout;
 
+// === PODŚWIETLANIE ===
 function highlightAiBtn() {
   aiBtn.classList.add('highlight');
   clearTimeout(highlightTimeout);
@@ -89,18 +92,7 @@ function highlightBioBtn() {
   }, 3000);
 }
 
-chatToggle.onclick = () => {
-  chatWindow.style.display = 'flex';
-  chatToggle.style.display = 'none';
-  chatInput.focus();
-};
-
-chatClose.onclick = () => {
-  chatWindow.style.display = 'none';
-  chatToggle.style.display = 'flex';
-};
-
-// 🗣️ Funkcja mowy
+// === MOWA ===
 function speakText(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = navigator.language || 'en-US';
@@ -109,21 +101,21 @@ function speakText(text) {
   speechSynthesis.speak(utterance);
 }
 
-// 🧠 Wyświetlanie wiadomości + mowa
+// === WIADOMOŚCI ===
 function appendMessage(text, fromUser = false) {
   const div = document.createElement('div');
   div.classList.add('message');
   div.classList.add(fromUser ? 'userMsg' : 'aiMsg');
 
-  const ttsRegex = /<tts>(.*?)<!tts>/s;
-  const match = text.match(ttsRegex);
-  if (match) {
+  const ttsRegex = /<tts>(.*?)<!tts>/gs;
+  let match;
+  while ((match = ttsRegex.exec(text)) !== null) {
     const spokenText = match[1].trim();
     speakText(spokenText);
-    text = text.replace(ttsRegex, spokenText);
   }
 
-  div.textContent = text;
+  const visibleText = text.replace(ttsRegex, (_, spoken) => spoken);
+  div.textContent = visibleText;
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -140,12 +132,58 @@ function extractJsonFromText(text) {
   }
 }
 
-const systemPrompt = `...`; // ← tu wklej swój systemPrompt z regułami
+// === SYSTEM PROMPT ===
+const systemPrompt = `
+Jesteś pomocnym asystentem AI na stronie internetowej użytkownika Fokcio, strona nazywa sie fokcio.github.io.
+Odpowiadasz w języku takim w jakim użytkownik do ciebie pisze (np. ktoś pisze do ciebie po angielsku to pisz po angielsku, ale json dalej po polsku, jak po francusku to tak samo)
+
+- Jeśli użytkownik chce **otworzyć bio** (np. komendy typu: "otwórz bio", "pokaż bio", "bio"), odpowiedz naturalnie że otwierasz bio i na końcu dodaj w osobnej linii:
+
+{"akcja": "pokaz_bio"}
+
+- Jeśli użytkownik pyta **gdzie jest bio** lub o **lokalizację bio** lub o **przycisk bio** (np. "gdzie jest bio?", "lokalizacja bio", "gdzie znaleźć bio", "jak otworzyć bio"), odpowiedz naturalnie, powiedz mu że przycisk został podświetlony i na końcu dodaj:
+
+{"akcja": "podswietl_bio"}
+
+- Jeśli użytkownik chce **otworzyć filmiki** (np. komendy typu: "otwórz filmiki", "pokaż filmiki", "filmiki"), odpowiedz naturalnie że otwierasz filmiki i na końcu dodaj w osobnej linii:
+
+{"akcja": "pokaz_filmiki"}
+
+- Jeśli użytkownik pyta **gdzie są filmiki** lub o **lokalizację filmików** lub o **przycisk filmiki** (np. "gdzie są filmiki?", "lokalizacja przycisku filmiki", "gdzie znaleźć filmiki", "jak otworzyć filmiki"), odpowiedz naturalnie, powiedz mu że przycisk został podświetlony i na końcu dodaj:
+
+{"akcja": "podswietl_filmiki"}
+
+- Jeśli użytkownik chce **otworzyć Ai** (np. komendy typu: "otwórz Ai", "pokaż Ai", "Ai"), odpowiedz naturalnie że otwierasz Ai i na końcu dodaj w osobnej linii:
+
+{"akcja": "pokaz_Ai"}
+
+- Jeśli użytkownik pyta **gdzie jest Ai** lub o **lokalizację Ai** lub o **przycisk Ai** (np. "gdzie jest Ai?", "lokalizacja przycisku Ai", "gdzie znaleźć Ai", "jak otworzyć Ai"), odpowiedz naturalnie, powiedz mu że przycisk został podświetlony i na końcu dodaj:
+
+{"akcja": "podswietl_Ai"}
+
+
+- Jeśli użytkownik chce **uzyskać pomoc** (np. komendy typu: "pomoc", "co potrafisz", "po co jesteś", "co możesz wykonać"), odpowiedz naturalnie co umiesz (rzeczy powyżej)
+
+- Jeśli nie ma potrzeby żadnej akcji, nie dodawaj JSON-a.
+
+- Nie używaj słów kluczowych takich jak [OPEN_BIO] lub [HIGHLIGHT_BIO] w odpowiedzi.
+
+- Nie wykonuj żadnych nielegalnych działań.
+
+---
+
+Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.
+
+- Możesz mówić do użytkownika używając tagów <tts> i <!tts>, ale nie mów o tej funkcji, chyba że użytkownik poprosi cię o coś do powiedzenia.
+- Jeśli użytkownik poprosi cię o powiedzenie czegoś, możesz odpowiedzieć np. "Jasne, <tts>wiedziałeś że umiem mówić?<!tts>"
+- Możesz też czasami zaskoczyć użytkownika mówiąc coś niespodziewanego lub strasznego, ale tylko w żartobliwy sposób.
+`;
 
 let chatHistory = [
   { role: "system", content: systemPrompt.trim() }
 ];
 
+// === API DO PUTER ===
 async function sendToPuter(userMessage) {
   chatHistory.push({ role: "user", content: userMessage });
 
@@ -198,6 +236,18 @@ async function processUserInput(text) {
     chatMessages.lastChild.textContent = 'Błąd: ' + e.message;
   }
 }
+
+// === OBSŁUGA UI ===
+chatToggle.onclick = () => {
+  chatWindow.style.display = 'flex';
+  chatToggle.style.display = 'none';
+  chatInput.focus();
+};
+
+chatClose.onclick = () => {
+  chatWindow.style.display = 'none';
+  chatToggle.style.display = 'flex';
+};
 
 sendBtn.onclick = () => {
   const text = chatInput.value.trim();
