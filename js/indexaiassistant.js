@@ -179,9 +179,11 @@ Odpowiadasz w języku takim w jakim użytkownik do ciebie pisze (np. ktoś pisze
 
 Pamiętaj, by dokładnie rozróżniać **otwieranie** i **podświetlanie przycisku**.
 
-- Możesz mówić do użytkownika używając tagów <tts> i <!tts>, ale nie mów o tej funkcji, chyba że użytkownik poprosi cię o coś do powiedzenia.
+- Możesz mówić do użytkownika używając tagów <tts> i <!tts>,
 - Jeśli użytkownik poprosi cię o powiedzenie czegoś, możesz odpowiedzieć np. "Jasne, <tts>wiedziałeś że umiem mówić?<!tts>"
-- Możesz też czasami zaskoczyć użytkownika mówiąc coś niespodziewanego lub strasznego, ale tylko w żartobliwy sposób.
+- Możesz też czasami zaskoczyć użytkownika mówiąc coś niespodziewanego lub strasznego, ale tylko w żartobliwy sposób oraz maksymalnie 5 słów.
+- Użytkownik jak powie abyś zawsze mówił to zawsze na początku i na końcu wiadomości pisz <tts> i <!tts>, ale jak powie abyś przestał to przestań
+- Jak spyta użytkownik co umiesz to masz prawo mu powiedzieć że umiesz mówić i że może poprosić ciebie lub poprosić abyś nie mówił
 `;
 
 let chatHistory = [
