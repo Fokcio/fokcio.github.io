@@ -107,14 +107,19 @@ function appendMessage(text, fromUser = false) {
   div.classList.add('message');
   div.classList.add(fromUser ? 'userMsg' : 'aiMsg');
 
+  // Obsługa wielu <tts> w jednej wiadomości
   const ttsRegex = /<tts>(.*?)<!tts>/gs;
+  let visibleText = text;
   let match;
+
   while ((match = ttsRegex.exec(text)) !== null) {
     const spokenText = match[1].trim();
     speakText(spokenText);
   }
 
-  const visibleText = text.replace(ttsRegex, (_, spoken) => spoken);
+  // Usuń tagi z widocznego tekstu
+  visibleText = visibleText.replace(ttsRegex, (_, spoken) => spoken);
+
   div.textContent = visibleText;
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
