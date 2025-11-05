@@ -5,7 +5,7 @@ const obrazki = [
   { src: "images/Catus.png", href: "projects/catus", opisKey: 'KaruzelaOpisC', new: false },
   { src: "images/Cawagla.jpg", href: "projects/cawagla", opisKey: 'KaruzelaOpisCA', new: false },
   { src: "images/Emojimage.png", href: "projects/emojimage", opisKey: 'KaruzelaOpisEM', new: true },
-  { src: "images/inifinityimage.png", href: "projects/infinityimage", opisKey: 'KaruzelaOpisII', new: true}
+  { src: "images/infinityimage.png", href: "projects/infinityimage", opisKey: 'KaruzelaOpisII', new: true}
 ];
 
 let aktualnyObrazek = 0;
