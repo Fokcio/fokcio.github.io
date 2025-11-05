@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8" />
-<title>InfinityImage | By Fokcio</title>
+<title>Infinity Paint — Nieskończone rysowanie</title>
 <style>
   body {
     margin: 0;
@@ -38,7 +38,7 @@
 <canvas id="canvas"></canvas>
 
 <div id="ui">
-  <div><b>Infinity Image - Paint</b></div>
+  <div><b>Infinity Paint</b></div>
   <div class="label">LMB — draw / erase</div>
   <div class="label">Scroll — zoom</div>
   <div class="label">RMB — move</div>
@@ -52,6 +52,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// --- Resize ---
 function resize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -59,21 +60,24 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
+// --- Kamera ---
 let camX = 0, camY = 0, camScale = 1;
 let mode = "draw"; // draw / erase
 
+// --- Rysowanie ---
 let lines = []; // {x1,y1,x2,y2, erase:boolean}
 let drawing = false;
-let lastX=0, lastY=0;
+let lastX = 0, lastY = 0;
 
+// --- Przesuwanie kamery ---
 let panning = false;
-let panStartX=0, panStartY=0;
-let camStartX=0, camStartY=0;
+let panStartX = 0, panStartY = 0;
+let camStartX = 0, camStartY = 0;
 
-function screenToWorld(x,y){
+function screenToWorld(x, y) {
   return {
-    x:(x - canvas.width/2)/camScale + camX,
-    y:(y - canvas.height/2)/camScale + camY
+    x: (x - canvas.width/2)/camScale + camX,
+    y: (y - canvas.height/2)/camScale + camY
   };
 }
 
@@ -102,7 +106,7 @@ canvas.addEventListener("mouseup", e=>{
 
 canvas.addEventListener("mousemove", e=>{
   if(drawing){
-    const p = screenToWorld(e.clientX,e.clientY);
+    const p = screenToWorld(e.clientX, e.clientY);
     lines.push({x1:lastX,y1:lastY,x2:p.x,y2:p.y, erase:(mode==="erase")});
     lastX = p.x; lastY = p.y;
   }
@@ -117,19 +121,19 @@ canvas.addEventListener("mousemove", e=>{
 canvas.addEventListener("wheel", e=>{
   e.preventDefault();
   const scaleFactor = Math.exp(-e.deltaY * 0.001);
-  const before = screenToWorld(e.clientX,e.clientY);
+  const before = screenToWorld(e.clientX, e.clientY);
   camScale *= scaleFactor;
-  const after = screenToWorld(e.clientX,e.clientY);
+  const after = screenToWorld(e.clientX, e.clientY);
   camX += (before.x - after.x);
   camY += (before.y - after.y);
 },{passive:false});
 
-// 🔵 Narzędzia
+// --- Narzędzia ---
 document.getElementById("clear").onclick = ()=>{ lines=[]; };
 document.getElementById("draw").onclick = ()=> mode="draw";
 document.getElementById("erase").onclick = ()=> mode="erase";
 
-// 💾 ZAPIS DO PNG — tylko to co widać (bez pozycji camX/Y/Scale)
+// --- Zapis PNG ---
 document.getElementById("save").onclick = ()=>{
   const url = canvas.toDataURL("image/png");
   const a = document.createElement("a");
@@ -138,9 +142,7 @@ document.getElementById("save").onclick = ()=>{
   a.click();
 };
 
-// ===============================
-// 🎥 NAGRYWANIE I ODTWARZANIE TRASY
-// ===============================
+// --- Nagrywanie i odtwarzanie trasy ---
 let isRecording = false;
 let path = []; // {x,y,scale}
 let animIndex = 0;
@@ -157,7 +159,7 @@ recordBtn.onclick = () => {
   } else {
     isRecording = false;
     recordBtn.textContent = "🎥 Record Animation";
-    console.log("Zapisana trasa:", path);
+    console.log("Saved Path:", path);
   }
 };
 document.getElementById("ui").appendChild(recordBtn);
@@ -172,51 +174,105 @@ playBtn.onclick = () => {
 };
 document.getElementById("ui").appendChild(playBtn);
 
+// --- Eksport animacji do WebM ---
+const exportBtn = document.createElement("button");
+exportBtn.textContent = "📹 Export MP4";
+exportBtn.onclick = () => {
+  if (path.length < 2) return alert("Record path first!");
+  const stream = canvas.captureStream(60);
+  const recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
+  const chunks = [];
+  recorder.ondataavailable = e => { if(e.data.size>0) chunks.push(e.data); };
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'infinity_animation.webm';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  recorder.start();
 
-// ===============================
-// 🎨 RENDER — NAPRAWIONY
-// ===============================
-function draw() {
+  // Odtwórz trasę w pełnej prędkości dla nagrania
+  let tempIndex = 0;
+  animPlaying = true;
+  function recordStep() {
+    if(tempIndex < path.length - 1){
+      camX = path[tempIndex].x;
+      camY = path[tempIndex].y;
+      camScale = path[tempIndex].scale;
+      tempIndex++;
+      requestAnimationFrame(recordStep);
+    } else {
+      animPlaying = false;
+      recorder.stop();
+    }
+  }
+  recordStep();
+};
+document.getElementById("ui").appendChild(exportBtn);
+
+// --- Render ---
+let lastAnimTime = 0;
+const animFPS = 60;
+
+function draw(timestamp){
   requestAnimationFrame(draw);
 
-  // ZAPIS kamery jeśli nagrywamy
-  if (isRecording) {
-    path.push({ x: camX, y: camY, scale: camScale });
+  // Zapis kamery jeśli nagrywamy
+  if(isRecording){
+    path.push({x:camX, y:camY, scale:camScale});
   }
 
-  // ODTWARZANIE jeśli animacja aktywna
-  if (animPlaying && path.length > 1) {
-    if (animIndex < path.length) {
+  // Animacja podglądu — płynna, kontrolowane FPS
+  if(animPlaying && path.length>1){
+    if(!lastAnimTime) lastAnimTime = timestamp;
+    const dt = timestamp - lastAnimTime;
+    const frameTime = 1000/animFPS;
+
+    if(dt >= frameTime){
+      lastAnimTime = timestamp;
+      animIndex = Math.min(animIndex+1, path.length-1);
       camX = path[animIndex].x;
       camY = path[animIndex].y;
       camScale = path[animIndex].scale;
-      animIndex++;
-    } else {
-      animPlaying = false; // koniec animacji
+      if(animIndex === path.length-1) animPlaying = false;
     }
   }
 
-  // RYSOWANIE SCENY
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Czyszczenie
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // transformacje kamery
-  ctx.translate(canvas.width / 2, canvas.height / 2);
+  // Kamera
+  ctx.translate(canvas.width/2, canvas.height/2);
   ctx.scale(camScale, camScale);
-  ctx.translate(-camX, -camY);
+  ctx.translate(-camX,-camY);
 
-  // rysowanie wszystkich linii
-  for (let l of lines) {
-    ctx.beginPath();
-    ctx.lineWidth = Math.max(2 / camScale, 0.0001); // linia zawsze widoczna
-    ctx.strokeStyle = l.erase ? "#0d0d0f" : "#ffffff";
-    ctx.moveTo(l.x1, l.y1);
-    ctx.lineTo(l.x2, l.y2);
-    ctx.stroke();
-  }
+  // --- Rysowanie linii ---
+for(let l of lines){
+  ctx.beginPath();
+  ctx.lineWidth = Math.max(2/camScale, 0.0001);
+  ctx.strokeStyle = l.erase ? "#0d0d0f" : "#ffffff";
+  ctx.moveTo(l.x1,l.y1);
+  ctx.lineTo(l.x2,l.y2);
+  ctx.stroke();
 }
 
-draw();
+// --- Znak wodny ---
+ctx.save();
+ctx.setTransform(1,0,0,1,0,0); // w ekranowych koordynatach
+ctx.font = "20px sans-serif";
+ctx.fillStyle = "rgba(255,255,255,0.3)";
+ctx.textAlign = "right";
+ctx.textBaseline = "bottom";
+ctx.fillText("fokcio.github.io", canvas.width - 10, canvas.height - 10);
+ctx.restore();
+}
+
+requestAnimationFrame(draw);
 </script>
+
 </body>
 </html>
