@@ -4,7 +4,8 @@ const obrazki = [
   { src: "images/gra2.png", href: "projects/Potatogame", opisKey: 'KaruzelaOpisPG', new: false },
   { src: "images/Catus.png", href: "projects/catus", opisKey: 'KaruzelaOpisC', new: false },
   { src: "images/Cawagla.jpg", href: "projects/cawagla", opisKey: 'KaruzelaOpisCA', new: false },
-  { src: "images/Emojimage.png", href: "projects/emojimage", opisKey: 'KaruzelaOpisEM', new: true }
+  { src: "images/Emojimage.png", href: "projects/emojimage", opisKey: 'KaruzelaOpisEM', new: true },
+  { src: "images/inifinityzoom.png", href: "projects/infinityzoom", opisKey: 'KaruzelaOpisIZ', new: true}
 ];
 
 let aktualnyObrazek = 0;
