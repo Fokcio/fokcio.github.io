@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<title>Infinity Paint — Nieskończone rysowanie</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #0d0d0f;
+    font-family: sans-serif;
+    color: white;
+  }
+  #ui {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  #ui button {
+    background: #3a3aff;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px 2px;
+  }
+  #ui button:hover { background: #5555ff; }
+  .label { color: #a0a0a0; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="ui">
+  <div><b>Infinity Paint</b></div>
+  <div class="label">LMB — draw / erase</div>
+  <div class="label">Scroll — zoom</div>
+  <div class="label">RMB — move</div>
+  <button id="draw">✏️ Draw</button>
+  <button id="erase">🧽 Eraser</button>
+  <button id="clear">🗑️Clear</button>
+  <button id="save">💾 Download .PNG</button>
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+let camX = 0, camY = 0, camScale = 1;
+let mode = "draw"; // draw / erase
+
+let lines = []; // {x1,y1,x2,y2, erase:boolean}
+let drawing = false;
+let lastX=0, lastY=0;
+
+let panning = false;
+let panStartX=0, panStartY=0;
+let camStartX=0, camStartY=0;
+
+function screenToWorld(x,y){
+  return {
+    x:(x - canvas.width/2)/camScale + camX,
+    y:(y - canvas.height/2)/camScale + camY
+  };
+}
+
+canvas.oncontextmenu = e => e.preventDefault();
+
+canvas.addEventListener("mousedown", e=>{
+  if(e.button===0){
+    drawing = true;
+    const p = screenToWorld(e.clientX, e.clientY);
+    lastX = p.x;
+    lastY = p.y;
+  }
+  if(e.button===2){
+    panning = true;
+    panStartX = e.clientX;
+    panStartY = e.clientY;
+    camStartX = camX;
+    camStartY = camY;
+  }
+});
+
+canvas.addEventListener("mouseup", e=>{
+  if(e.button===0) drawing = false;
+  if(e.button===2) panning = false;
+});
+
+canvas.addEventListener("mousemove", e=>{
+  if(drawing){
+    const p = screenToWorld(e.clientX,e.clientY);
+    lines.push({x1:lastX,y1:lastY,x2:p.x,y2:p.y, erase:(mode==="erase")});
+    lastX = p.x; lastY = p.y;
+  }
+  if(panning){
+    const dx = (panStartX - e.clientX)/camScale;
+    const dy = (panStartY - e.clientY)/camScale;
+    camX = camStartX + dx;
+    camY = camStartY + dy;
+  }
+});
+
+canvas.addEventListener("wheel", e=>{
+  e.preventDefault();
+  const scaleFactor = Math.exp(-e.deltaY * 0.001);
+  const before = screenToWorld(e.clientX,e.clientY);
+  camScale *= scaleFactor;
+  const after = screenToWorld(e.clientX,e.clientY);
+  camX += (before.x - after.x);
+  camY += (before.y - after.y);
+},{passive:false});
+
+// 🔵 Narzędzia
+document.getElementById("clear").onclick = ()=>{ lines=[]; };
+document.getElementById("draw").onclick = ()=> mode="draw";
+document.getElementById("erase").onclick = ()=> mode="erase";
+
+// 💾 ZAPIS DO PNG — tylko to co widać (bez pozycji camX/Y/Scale)
+document.getElementById("save").onclick = ()=>{
+  const url = canvas.toDataURL("image/png");
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "infinity_paint.png";
+  a.click();
+};
+
+// ===============================
+// 🎥 NAGRYWANIE I ODTWARZANIE TRASY
+// ===============================
+let isRecording = false;
+let path = []; // {x,y,scale}
+let animIndex = 0;
+let animPlaying = false;
+
+const recordBtn = document.createElement("button");
+recordBtn.textContent = "🎥 Record Animation";
+recordBtn.onclick = () => {
+  if (!isRecording) {
+    path = []; // usuń starą trasę
+    isRecording = true;
+    animPlaying = false;
+    recordBtn.textContent = "⏹️ Stop";
+  } else {
+    isRecording = false;
+    recordBtn.textContent = "🎥 Record Animation";
+    console.log("Zapisana trasa:", path);
+  }
+};
+document.getElementById("ui").appendChild(recordBtn);
+
+const playBtn = document.createElement("button");
+playBtn.textContent = "▶️ Play animation";
+playBtn.onclick = () => {
+  if (path.length < 2) return alert("First Record Something!");
+  animPlaying = true;
+  isRecording = false;
+  animIndex = 0;
+};
+document.getElementById("ui").appendChild(playBtn);
+
+
+// ===============================
+// 🎨 RENDER — NAPRAWIONY
+// ===============================
+function draw() {
+  requestAnimationFrame(draw);
+
+  // ZAPIS kamery jeśli nagrywamy
+  if (isRecording) {
+    path.push({ x: camX, y: camY, scale: camScale });
+  }
+
+  // ODTWARZANIE jeśli animacja aktywna
+  if (animPlaying && path.length > 1) {
+    if (animIndex < path.length) {
+      camX = path[animIndex].x;
+      camY = path[animIndex].y;
+      camScale = path[animIndex].scale;
+      animIndex++;
+    } else {
+      animPlaying = false; // koniec animacji
+    }
+  }
+
+  // RYSOWANIE SCENY
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // transformacje kamery
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  ctx.scale(camScale, camScale);
+  ctx.translate(-camX, -camY);
+
+  // rysowanie wszystkich linii
+  for (let l of lines) {
+    ctx.beginPath();
+    ctx.lineWidth = Math.max(2 / camScale, 0.0001); // linia zawsze widoczna
+    ctx.strokeStyle = l.erase ? "#0d0d0f" : "#ffffff";
+    ctx.moveTo(l.x1, l.y1);
+    ctx.lineTo(l.x2, l.y2);
+    ctx.stroke();
+  }
+}
+
+draw();
+</script>
+</body>
+</html>
