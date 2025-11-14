@@ -42,9 +42,11 @@
   "KaruzelaOpisCA": "<b>Cawagla</b> to fałszywy wirus komputerowy napisany w <b>Pythonie</b>,<br>sprawia że użytkownik ma wrażenie że zacina się mu komputer,<br>Aby wyłączyć należy kliknąć <b>ESC</b><br><small>Aplikacja została przetestowana na Windows 11</small>",
   "KaruzelaOpisEM": "<b>EMOJIMAGE<b> to narzędzie do przekształcania obrazu na taki gdzie zamiast kolorów - są <i>emoji<i>",
   "KaruzelaOpisII": "<b>INFINITYIMAGE<b> to paint który się zoomuje w nieskączoność (polecam najpierw dużo zmniejszyć i dopiero rysować, bo się psuje przy za dużym zbliżeniu)",
+  "KaruzelaOpisSG": "<b>SoundGuessr<b> to gra polegająca na zgadywaniu dźwięków, po usłyszeniu dźwięku musisz wpisać lub kliknąć odpowiedź aby zdobyć punkty, jest 8 rund",
   
   "VideosTitle": "Filmiki"
 }
+
 
 
 
