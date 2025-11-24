@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Flagdle</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .screen {
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      width: 400px;
+      position: relative;
+    }
+    .flag {
+      width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+      filter: blur(20px);
+      transition: filter 0.3s ease;
+      border-radius: 8px;
+      pointer-events: none;
+      user-select: none;
+    }
+    input, button {
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+      border: 1px solid #444;
+      padding: 8px;
+      margin: 5px;
+      border-radius: 6px;
+    }
+    button { cursor: pointer; }
+    .message { margin-top: 10px; font-size: 14px; }
+    .mode-btn { display: block; margin: 10px auto; width: 80%; }
+    .lang-switch, #howToPlay {
+      position: absolute;
+      top: 10px;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .lang-switch {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  display: inline-block; /* zawsze widoczny */
+}
+
+    #howToPlay { left: 10px; }
+    #instructions {
+      display: none;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 13px;
+      text-align: left;
+      white-space: pre-line;
+    }
+    .easy { background: #0f1f0f; border: 2px solid #2ecc71; }
+    .hard { background: #1f1f0f; border: 2px solid #f1c40f; }
+    .expert { background: #1f0f0f; border: 2px solid #e74c3c; }
+  </style>
+</head>
+<body>
+  <!-- Menu -->
+  <div id="menu" class="screen">
+    <h2>Flagdle</h2>
+    <div class="lang-switch" onclick="toggleLang()">PL/EN</div>
+    <p>Wybierz poziom trudności:</p>
+    <button class="mode-btn" onclick="startGame('easy')">Łatwy</button>
+    <button class="mode-btn" onclick="startGame('hard')">Trudny</button>
+    <button class="mode-btn" onclick="startGame('expert')">Ekspert</button>
+    <p>Najlepsza passa: <span id="bestStreak">0</span></p>
+  </div>
+
+  <!-- Gra -->
+  <div id="game" class="screen" style="display:none;">
+    <div id="howToPlay" onclick="toggleInstructions()">How to play</div>
+    <div class="lang-switch" onclick="toggleLang()">PL/EN</div>
+    <img id="flag" class="flag" src="" alt="Flaga" draggable="false">
+    <div>
+      <input id="guess" type="text" placeholder="Podaj kraj..." />
+      <button id="checkBtn" onclick="checkGuess()">Sprawdź</button>
+    </div>
+    <p id="message" class="message"></p>
+    <p id="attempts" class="message"></p>
+    <p>Runda: <span id="round">1</span>/8</p>
+    <p>Aktualna passa: <span id="currentStreak">0</span></p>
+    <button id="backMenu" style="display:none;" onclick="backToMenu()">Powrót do menu</button>
+    <div id="instructions"></div>
+  </div>
+
+  <script>
+    // Kraje popularne (Łatwy)
+const easyCountries = {
+  "PL":["Polska","Poland"],"DE":["Niemcy","Germany"],"FR":["Francja","France"],
+  "IT":["Włochy","Italy"],"ES":["Hiszpania","Spain"],"GB":["Wielka Brytania","UK","United Kingdom","Anglia","England"],
+  "US":["Stany Zjednoczone","USA","United States","Ameryka","America"],"CA":["Kanada","Canada"],
+  "BR":["Brazylia","Brazil"],"JP":["Japonia","Japan"],"CN":["Chiny","China"],"RU":["Rosja","Russia"]
+};
+
+// Pełna lista (Trudny + Ekspert)
+const hardCountries = {
+  ...easyCountries,"PT":["Portugalia","Portugal"],"GR":["Grecja","Greece"],"NL":["Holandia","Netherlands"],
+  "BE":["Belgia","Belgium"],"CH":["Szwajcaria","Switzerland"],"SE":["Szwecja","Sweden"],"NO":["Norwegia","Norway"],
+  "FI":["Finlandia","Finland"],"CZ":["Czechy","Czech Republic"],"SK":["Słowacja","Slovakia"],"HU":["Węgry","Hungary"],
+  "UA":["Ukraina","Ukraine"],"MX":["Meksyk","Mexico"],"AR":["Argentyna","Argentina"],"CL":["Chile","Chile"],
+  "KR":["Korea Południowa","South Korea"],"IN":["Indie","India"],"VN":["Wietnam","Vietnam"],"TR":["Turcja","Turkey"],
+  "IL":["Izrael","Israel"],"EG":["Egipt","Egypt"],"ZA":["RPA","South Africa"],"AU":["Australia","Australia"],"NZ":["Nowa Zelandia","New Zealand"]
+};
+
+let countries={},blurLevel,secretCode,tries,mode,round;
+const maxTries=6,maxRounds=8;
+let currentStreak=0,bestStreak=localStorage.getItem("bestStreak")||0;
+let lang="PL";
+
+const flagElement=document.getElementById("flag");
+const messageElement=document.getElementById("message");
+const attemptsElement=document.getElementById("attempts");
+const guessInput=document.getElementById("guess");
+const checkBtn=document.getElementById("checkBtn");
+const bestStreakEl=document.getElementById("bestStreak");
+const currentStreakEl=document.getElementById("currentStreak");
+const roundEl=document.getElementById("round");
+const backMenuBtn=document.getElementById("backMenu");
+const instructionsEl=document.getElementById("instructions");
+
+bestStreakEl.textContent=bestStreak;
+
+const texts={
+  PL:{
+    start:"Zgadnij kraj po fladze!",
+    wrong:"Niepoprawnie, spróbuj ponownie!",
+    win:"Brawo! To jest ",
+    lose:"Koniec gry! Poprawna odpowiedź: ",
+    check:"Sprawdź",
+    placeholder:"Podaj kraj...",
+    attempts:"Próby",
+    round:"Runda",
+    streak:"Aktualna passa",
+    bestStreak:"Najlepsza passa",
+    menuTitle:"Flagdle",
+    menuChoose:"Wybierz poziom trudności:",
+    menuEasy:"Łatwy",
+    menuHard:"Trudny",
+    menuExpert:"Ekspert",
+    backMenu:"Powrót do menu",
+    howTo:"Jak grać:\n- Flaga jest początkowo rozmazana.\n- Wpisz nazwę kraju (po polsku lub angielsku).\n- Każda błędna próba odsłania flagę coraz bardziej.\n- Masz maksymalnie 6 prób na rundę.\n- Gra trwa 8 rund.\n- Po każdej wygranej rośnie Twoja passa.\n- Po przegranej passa się zeruje."
+  },
+  EN:{
+    start:"Guess the country by its flag!",
+    wrong:"Wrong, try again!",
+    win:"Correct! It is ",
+    lose:"Game over! The answer was ",
+    check:"Check",
+    placeholder:"Enter country...",
+    attempts:"Attempts",
+    round:"Round",
+    streak:"Current streak",
+    bestStreak:"Best streak",
+    menuTitle:"Flagdle",
+    menuChoose:"Choose difficulty:",
+    menuEasy:"Easy",
+    menuHard:"Hard",
+    menuExpert:"Expert",
+    backMenu:"Back to menu",
+    howTo:"How to play:\n- The flag starts blurred.\n- Type the country name (Polish or English).\n- Each wrong attempt makes the flag clearer.\n- You have 6 tries per round.\n- The game lasts 8 rounds.\n- Each win increases your streak.\n- Losing resets your streak."
+  }
+};
+
+function startGame(selectedMode){
+  mode=selectedMode;
+  countries=(mode==="easy")?easyCountries:hardCountries;
+  document.getElementById("menu").style.display="none";
+  const gameDiv=document.getElementById("game");
+  gameDiv.style.display="block";
+  gameDiv.className="screen "+mode; // kolorystyka
+  round=1;
+  currentStreak=0;
+  currentStreakEl.textContent=currentStreak;
+  bestStreakEl.textContent=bestStreak;
+  newRound();
+}
+
+function newRound(){
+  blurLevel=20;
+  tries=0;
+  const codes=Object.keys(countries);
+  secretCode=codes[Math.floor(Math.random()*codes.length)];
+  flagElement.src=`https://flagsapi.com/${secretCode}/flat/64.png`;
+  if(mode==="expert"){
+    flagElement.style.filter="grayscale(100%) blur(20px)";
+  }else{
+    flagElement.style.filter=`blur(${blurLevel}px)`;
+  }
+  messageElement.textContent=texts[lang].start;
+  attemptsElement.textContent=`${texts[lang].attempts}: ${tries}/${maxTries}`;
+  guessInput.value="";
+  guessInput.placeholder=texts[lang].placeholder;
+  checkBtn.textContent=texts[lang].check;
+  roundEl.textContent=round;
+  backMenuBtn.style.display="none";
+  instructionsEl.style.display="none";
+}
+
+function normalize(text){return text.trim().toLowerCase();}
+
+function checkGuess(){
+  if(tries>=maxTries)return;
+  const guess=normalize(guessInput.value);
+  tries++;
+  attemptsElement.textContent=`${texts[lang].attempts}: ${tries}/${maxTries}`;
+  const aliases=countries[secretCode].map(normalize);
+
+  if(aliases.includes(guess)){
+    messageElement.textContent=texts[lang].win+countries[secretCode][lang==="PL"?0:1];
+    flagElement.style.filter="none";
+    currentStreak++;
+    currentStreakEl.textContent=currentStreak;
+    if(currentStreak>bestStreak){
+      bestStreak=currentStreak;
+      localStorage.setItem("bestStreak",bestStreak);
+      bestStreakEl.textContent=bestStreak;
+    }
+    nextRound();
+  }else{
+    blurLevel=Math.max(0,blurLevel-5);
+    flagElement.style.filter=(mode==="expert")?`grayscale(100%) blur(${blurLevel}px)`: `blur(${blurLevel}px)`;
+    if(tries>=maxTries){
+      messageElement.textContent=texts[lang].lose+countries[secretCode][lang==="PL"?0:1];
+      flagElement.style.filter="none";
+      currentStreak=0;
+      currentStreakEl.textContent=currentStreak;
+      nextRound();
+    }else{
+      messageElement.textContent=texts[lang].wrong;
+    }
+  }
+}
+
+function nextRound(){
+  if(round<maxRounds){
+    round++;
+    setTimeout(newRound,1500);
+  }else{
+    backMenuBtn.textContent=texts[lang].backMenu;
+    backMenuBtn.style.display="inline-block";
+  }
+}
+
+function backToMenu(){
+  document.getElementById("game").style.display="none";
+  document.getElementById("menu").style.display="block";
+}
+
+function toggleLang(){
+  lang=(lang==="PL")?"EN":"PL";
+  // aktualizacja UI
+  document.querySelector("#menu h2").textContent=texts[lang].menuTitle;
+  document.querySelector("#menu p").textContent=texts[lang].menuChoose;
+  const btns=document.querySelectorAll("#menu .mode-btn");
+  btns[0].textContent=texts[lang].menuEasy;
+  btns[1].textContent=texts[lang].menuHard;
+  btns[2].textContent=texts[lang].menuExpert;
+  document.querySelector("#menu p:last-of-type").firstChild.textContent=texts[lang].bestStreak+": ";
+  messageElement.textContent=texts[lang].start;
+    guessInput.placeholder = texts[lang].placeholder;
+  checkBtn.textContent = texts[lang].check;
+  // aktualizacja etykiet w grze
+  attemptsElement.textContent = `${texts[lang].attempts}: ${tries}/${maxTries}`;
+  roundEl.textContent = round;
+  document.querySelector("#game p:nth-of-type(3)").firstChild.textContent = texts[lang].streak + ": ";
+  document.querySelector("#menu p:last-of-type").firstChild.textContent = texts[lang].bestStreak + ": ";
+  backMenuBtn.textContent = texts[lang].backMenu;
+}
+
+function toggleInstructions() {
+  if (instructionsEl.style.display === "none") {
+    instructionsEl.style.display = "block";
+    instructionsEl.textContent = texts[lang].howTo;
+  } else {
+    instructionsEl.style.display = "none";
+  }
+}
+
+// Obsługa Enter
+guessInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    checkGuess();
+  }
+});
+
+
+  </script>
+</body>
+</html>
