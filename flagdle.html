@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>Flagdle</title>
+  <title>Flagdle – zgadnij kraj</title>
   <style>
     body {
       background-color: #121212;
@@ -19,7 +19,7 @@
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      width: 400px;
+      width: 420px;
       position: relative;
     }
     .flag {
@@ -27,7 +27,7 @@
       height: auto;
       margin-bottom: 20px;
       filter: blur(20px);
-      transition: filter 0.3s ease;
+      transition: none; /* brak animacji, żeby nie migało */
       border-radius: 8px;
       pointer-events: none;
       user-select: none;
@@ -53,19 +53,7 @@
       cursor: pointer;
       font-size: 12px;
     }
-    .lang-switch {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  padding: 5px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  display: inline-block; /* zawsze widoczny */
-}
-
+    .lang-switch { right: 10px; }
     #howToPlay { left: 10px; }
     #instructions {
       display: none;
@@ -86,13 +74,15 @@
 <body>
   <!-- Menu -->
   <div id="menu" class="screen">
-    <h2>Flagdle</h2>
+    <div id="howToPlay" onclick="toggleInstructions()">How to play</div>
     <div class="lang-switch" onclick="toggleLang()">PL/EN</div>
-    <p>Wybierz poziom trudności:</p>
+    <h2 id="menuTitle">Flagdle</h2>
+    <p id="menuChoose">Wybierz poziom trudności:</p>
     <button class="mode-btn" onclick="startGame('easy')">Łatwy</button>
     <button class="mode-btn" onclick="startGame('hard')">Trudny</button>
     <button class="mode-btn" onclick="startGame('expert')">Ekspert</button>
-    <p>Najlepsza passa: <span id="bestStreak">0</span></p>
+    <p><span id="bestStreakLabel">Najlepsza passa</span>: <span id="bestStreak">0</span></p>
+    <div id="instructions"></div>
   </div>
 
   <!-- Gra -->
@@ -106,22 +96,20 @@
     </div>
     <p id="message" class="message"></p>
     <p id="attempts" class="message"></p>
-    <p>Runda: <span id="round">1</span>/8</p>
-    <p>Aktualna passa: <span id="currentStreak">0</span></p>
+    <p><span id="roundLabel">Runda</span>: <span id="round">1</span>/8</p>
+    <p><span id="streakLabel">Aktualna passa</span>: <span id="currentStreak">0</span></p>
     <button id="backMenu" style="display:none;" onclick="backToMenu()">Powrót do menu</button>
     <div id="instructions"></div>
   </div>
 
   <script>
-    // Kraje popularne (Łatwy)
+   // --- Kraje ---
 const easyCountries = {
   "PL":["Polska","Poland"],"DE":["Niemcy","Germany"],"FR":["Francja","France"],
   "IT":["Włochy","Italy"],"ES":["Hiszpania","Spain"],"GB":["Wielka Brytania","UK","United Kingdom","Anglia","England"],
   "US":["Stany Zjednoczone","USA","United States","Ameryka","America"],"CA":["Kanada","Canada"],
   "BR":["Brazylia","Brazil"],"JP":["Japonia","Japan"],"CN":["Chiny","China"],"RU":["Rosja","Russia"]
 };
-
-// Pełna lista (Trudny + Ekspert)
 const hardCountries = {
   ...easyCountries,"PT":["Portugalia","Portugal"],"GR":["Grecja","Greece"],"NL":["Holandia","Netherlands"],
   "BE":["Belgia","Belgium"],"CH":["Szwajcaria","Switzerland"],"SE":["Szwecja","Sweden"],"NO":["Norwegia","Norway"],
@@ -131,10 +119,12 @@ const hardCountries = {
   "IL":["Izrael","Israel"],"EG":["Egipt","Egypt"],"ZA":["RPA","South Africa"],"AU":["Australia","Australia"],"NZ":["Nowa Zelandia","New Zealand"]
 };
 
+// --- Zmienne ---
 let countries={},blurLevel,secretCode,tries,mode,round;
 const maxTries=6,maxRounds=8;
 let currentStreak=0,bestStreak=localStorage.getItem("bestStreak")||0;
 let lang="PL";
+let gameCountries=[]; // lista unikalnych flag na całą grę
 
 const flagElement=document.getElementById("flag");
 const messageElement=document.getElementById("message");
@@ -145,10 +135,11 @@ const bestStreakEl=document.getElementById("bestStreak");
 const currentStreakEl=document.getElementById("currentStreak");
 const roundEl=document.getElementById("round");
 const backMenuBtn=document.getElementById("backMenu");
-const instructionsEl=document.getElementById("instructions");
+const instructionsEl=document.querySelectorAll("#instructions");
 
 bestStreakEl.textContent=bestStreak;
 
+// --- Teksty ---
 const texts={
   PL:{
     start:"Zgadnij kraj po fladze!",
@@ -190,25 +181,37 @@ const texts={
   }
 };
 
+// --- Funkcje ---
+function shuffle(array){
+  let arr=array.slice();
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
 function startGame(selectedMode){
   mode=selectedMode;
   countries=(mode==="easy")?easyCountries:hardCountries;
   document.getElementById("menu").style.display="none";
   const gameDiv=document.getElementById("game");
   gameDiv.style.display="block";
-  gameDiv.className="screen "+mode; // kolorystyka
+  gameDiv.className="screen "+mode;
   round=1;
   currentStreak=0;
   currentStreakEl.textContent=currentStreak;
   bestStreakEl.textContent=bestStreak;
+  // losujemy 8 unikalnych flag
+  const codes=Object.keys(countries);
+  gameCountries=shuffle(codes).slice(0,maxRounds);
   newRound();
 }
 
 function newRound(){
   blurLevel=20;
   tries=0;
-  const codes=Object.keys(countries);
-  secretCode=codes[Math.floor(Math.random()*codes.length)];
+  secretCode=gameCountries[round-1];
   flagElement.src=`https://flagsapi.com/${secretCode}/flat/64.png`;
   if(mode==="expert"){
     flagElement.style.filter="grayscale(100%) blur(20px)";
@@ -222,7 +225,7 @@ function newRound(){
   checkBtn.textContent=texts[lang].check;
   roundEl.textContent=round;
   backMenuBtn.style.display="none";
-  instructionsEl.style.display="none";
+  instructionsEl.forEach(el=>el.style.display="none");
 }
 
 function normalize(text){return text.trim().toLowerCase();}
@@ -277,39 +280,39 @@ function backToMenu(){
 
 function toggleLang(){
   lang=(lang==="PL")?"EN":"PL";
-  // aktualizacja UI
-  document.querySelector("#menu h2").textContent=texts[lang].menuTitle;
-  document.querySelector("#menu p").textContent=texts[lang].menuChoose;
-  const btns=document.querySelectorAll("#menu .mode-btn");
+  // Menu
+  document.getElementById("menuTitle").textContent=texts[lang].menuTitle;
+  document.getElementById("menuChoose").textContent=texts[lang].menuChoose;
+    const btns=document.querySelectorAll("#menu .mode-btn");
   btns[0].textContent=texts[lang].menuEasy;
   btns[1].textContent=texts[lang].menuHard;
   btns[2].textContent=texts[lang].menuExpert;
-  document.querySelector("#menu p:last-of-type").firstChild.textContent=texts[lang].bestStreak+": ";
+  document.getElementById("bestStreakLabel").textContent=texts[lang].bestStreak;
+
+  // Gra
   messageElement.textContent=texts[lang].start;
-    guessInput.placeholder = texts[lang].placeholder;
-  checkBtn.textContent = texts[lang].check;
-  // aktualizacja etykiet w grze
-  attemptsElement.textContent = `${texts[lang].attempts}: ${tries}/${maxTries}`;
-  roundEl.textContent = round;
-  document.querySelector("#game p:nth-of-type(3)").firstChild.textContent = texts[lang].streak + ": ";
-  document.querySelector("#menu p:last-of-type").firstChild.textContent = texts[lang].bestStreak + ": ";
-  backMenuBtn.textContent = texts[lang].backMenu;
+  guessInput.placeholder=texts[lang].placeholder;
+  checkBtn.textContent=texts[lang].check;
+  attemptsElement.textContent=`${texts[lang].attempts}: ${tries}/${maxTries}`;
+  document.getElementById("roundLabel").textContent=texts[lang].round;
+  document.getElementById("streakLabel").textContent=texts[lang].streak;
+  backMenuBtn.textContent=texts[lang].backMenu;
 }
 
-function toggleInstructions() {
-  if (instructionsEl.style.display === "none") {
-    instructionsEl.style.display = "block";
-    instructionsEl.textContent = texts[lang].howTo;
-  } else {
-    instructionsEl.style.display = "none";
-  }
+function toggleInstructions(){
+  instructionsEl.forEach(el=>{
+    if(el.style.display==="none"){
+      el.style.display="block";
+      el.textContent=texts[lang].howTo;
+    }else{
+      el.style.display="none";
+    }
+  });
 }
 
 // Obsługa Enter
-guessInput.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    checkGuess();
-  }
+guessInput.addEventListener("keydown",function(e){
+  if(e.key==="Enter"){checkGuess();}
 });
 
 
