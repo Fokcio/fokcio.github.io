@@ -349,10 +349,16 @@
                     currentStreakEl.textContent = currentStreak;
                     nextRound();
                 } else {
-                    messageElement.textContent = "Niepoprawnie, spróbuj ponownie!";
-                    setTimeout(() => {
-                        messageElement.textContent = ' ';
-                    }, 1500);
+                    // Usuń poprzedni timer jeśli jeszcze działa
+if (messageTimer) clearTimeout(messageTimer);
+
+messageElement.textContent = "Niepoprawnie, spróbuj ponownie!";
+
+// Ustaw nowy timer i zapisz go
+messageTimer = setTimeout(() => {
+    messageElement.textContent = ' ';
+    messageTimer = null; // wyczyść po zakończeniu
+}, 1500);
                 }
             }
         }
