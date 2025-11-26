@@ -199,7 +199,7 @@
     <div id="game" class="screen" style="display:none;">
         <img id="flag" class="flag" src="" alt="Flaga" draggable="false">
         <div>
-            <input id="guess" list="countryOptions" type="text" placeholder="Podaj kraj..." auto-complete=off/>
+            <input id="guess" list="countryOptions" type="text" placeholder="Podaj kraj..." autocomplete="off"/>
             <select id="suggestSelect" size="5"
                 style="display:none; position:absolute; width:80%; left:50%; transform:translateX(-50%); z-index:999;"></select>
 
@@ -300,6 +300,7 @@
         }
 
         function newRound() {
+            suggestSelect.style.display = "none";
             guessInput.disabled = false;
             checkBtn.disabled = false;
             blurLevel = 20;
@@ -461,18 +462,19 @@ guessInput.addEventListener('keydown', (e) => {
             e.preventDefault();
             currentHighlight = (currentHighlight + 1) % options.length;
             options[currentHighlight].selected = true;
+            return;
         }
 
-        else if (e.key === 'ArrowUp') {
+        if (e.key === 'ArrowUp') {
             e.preventDefault();
             currentHighlight = (currentHighlight - 1 + options.length) % options.length;
             options[currentHighlight].selected = true;
+            return;
         }
 
-        else if (e.key === 'Enter') {
-            // --- TU JEST FIX ---
+        if (e.key === 'Enter') {
+            // --- FIX: jeśli coś zaznaczone, wybierz z listy ---
             if (currentHighlight >= 0) {
-                // ENTER wybiera z listy
                 e.preventDefault();
                 guessInput.value = options[currentHighlight].value;
                 suggestSelect.style.display = 'none';
@@ -480,11 +482,12 @@ guessInput.addEventListener('keydown', (e) => {
                 return;
             }
 
-            // --- NIC NIE ZAZNACZONE: ENTER DZIAŁA JAK NORMALNIE ---
+            // --- FIX: lista otwarta ale brak zaznaczenia → normalny checkGuess ---
             checkGuess();
+            return;
         }
 
-        return; // zatrzymaj obsługę
+        return; // blokuje domyślną akcję dla listy
     }
 
     // Lista zamknięta → Enter = sprawdzanie
@@ -493,7 +496,7 @@ guessInput.addEventListener('keydown', (e) => {
     }
 });
 
-// Kliknięcie myszką w listę
+// --- Kliknięcie myszką w listę ---
 suggestSelect.addEventListener('click', () => {
     if (suggestSelect.value) {
         guessInput.value = suggestSelect.value;
@@ -502,6 +505,7 @@ suggestSelect.addEventListener('click', () => {
         guessInput.focus();
     }
 });
+
 
 // Pokazuj podpowiedzi przy wpisywaniu i focusie
 guessInput.addEventListener('input', () => {
