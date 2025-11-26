@@ -373,9 +373,7 @@
             document.getElementById("menu").style.display = "block";
         }
 
-        guessInput.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") { checkGuess(); }
-        });
+        
 
         // Treść instrukcji (na stałe, bez języków)
         const howToText = `1. Wybierz poziom trudności.
@@ -403,122 +401,124 @@ Expert - Czarno-białe flagi z trybu pro
 
 
 
-        const suggestSelect = document.getElementById("suggestSelect");
+const suggestSelect = document.getElementById("suggestSelect");
 
-        let currentNameList = []; // nazwy krajów (pierwszy alias) dla aktualnego poolu
+let currentNameList = []; // lista krajów (pierwszy alias)
+let currentHighlight = -1; // indeks zaznaczonej opcji
 
-        // buduje alfabetową listę nazw dla aktualnego countries
-        function updateCountryListForSuggest() {
-            currentNameList = Object.values(countries)
-                .map(a => a[0])          // bierzemy pierwszy alias (polska nazwa)
-                .filter(Boolean)
-                .sort((a, b) => a.localeCompare(b, 'pl')); // sort PL-aware
+function updateCountryListForSuggest() {
+    currentNameList = Object.values(countries)
+        .map(a => a[0])
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, 'pl'));
 
-            // wypełniamy select
-            suggestSelect.innerHTML = "";
-            currentNameList.forEach(name => {
-                const opt = document.createElement("option");
-                opt.value = name;
-                opt.textContent = name;
-                suggestSelect.appendChild(opt);
-            });
+    suggestSelect.innerHTML = "";
+    currentNameList.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        suggestSelect.appendChild(opt);
+    });
+    adjustSuggestHeight();
+}
+
+function showSuggestSelect() {
+    const q = guessInput.value.trim().toLowerCase();
+    const matches = currentNameList.filter(n => n.toLowerCase().startsWith(q));
+
+    if (matches.length === 0) {
+        suggestSelect.style.display = 'none';
+        currentHighlight = -1;
+        return;
+    }
+
+    suggestSelect.innerHTML = "";
+    matches.forEach((name, index) => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        if (index === currentHighlight) opt.selected = true;
+        suggestSelect.appendChild(opt);
+    });
+
+    suggestSelect.style.display = 'block';
+    adjustSuggestHeight();
+}
+
+// --- OBSŁUGA STRZAŁEK i ENTER ---
+guessInput.addEventListener('keydown', (e) => {
+    const options = Array.from(suggestSelect.options);
+
+    if (suggestSelect.style.display === 'block' && options.length > 0) {
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentHighlight = (currentHighlight + 1) % options.length;
+            options[currentHighlight].selected = true;
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentHighlight = (currentHighlight - 1 + options.length) % options.length;
+            options[currentHighlight].selected = true;
+        } else if (e.key === 'Enter') {
+            if (currentHighlight >= 0) {
+                e.preventDefault(); // <-- blokuje wywołanie checkGuess()
+                guessInput.value = options[currentHighlight].value;
+                suggestSelect.style.display = 'none';
+                currentHighlight = -1;
+            }
         }
+    } else if (e.key === 'Enter') {
+        checkGuess(); // Enter działa tylko gdy lista niewidoczna
+    }
+});
 
-        // pokazywanie selectu — filtruje opcje wg tego co wpisane
-        function showSuggestSelect() {
-            const q = guessInput.value.trim().toLowerCase();
-            if (!q) {
-                // pokaż całą listę jeśli chcesz, lub ukryj
-                // suggestSelect.style.display = 'none';
-                // return;
-            }
-            // filtrujemy - ukrywamy opcje, ale select natywnie nie "ukrywa" opcji,
-            // więc rebuildujemy listę z matchami (efekt podobny do datalist).
-            const matches = currentNameList.filter(n => n.toLowerCase().startsWith(q));
-            // jeśli chcesz dopuszczać substring zamiast startsWith:
-            // const matches = currentNameList.filter(n => n.toLowerCase().includes(q));
+// Kliknięcie myszką w listę
+suggestSelect.addEventListener('click', () => {
+    if (suggestSelect.value) {
+        guessInput.value = suggestSelect.value;
+        suggestSelect.style.display = 'none';
+        currentHighlight = -1;
+        guessInput.focus();
+    }
+});
 
-            // jeśli brak matchów -> ukryj
-            if (matches.length === 0) {
-                suggestSelect.style.display = 'none';
-                return;
-            }
+// Pokazuj podpowiedzi przy wpisywaniu i focusie
+guessInput.addEventListener('input', () => {
+    currentHighlight = -1;
+    showSuggestSelect();
+});
 
-            // wypełnij select tylko matchami (max 100 żeby nie robić dramy)
-            suggestSelect.innerHTML = "";
-            matches.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                suggestSelect.appendChild(opt);
-                adjustSuggestHeight()
-            });
+guessInput.addEventListener('focus', () => {
+    currentHighlight = -1;
+    showSuggestSelect();
+});
 
-            // pokaż select
-            suggestSelect.style.display = 'block';
-            // ustaw fokus na select jeśli chcesz: suggestSelect.focus();
-        }
+// Kliknięcie poza input/select chowa listę
+document.addEventListener('click', (e) => {
+    if (e.target !== suggestSelect && e.target !== guessInput) {
+        suggestSelect.style.display = 'none';
+        currentHighlight = -1;
+    }
+});
 
-        // po kliknięciu opcji -> napln input
-        suggestSelect.addEventListener('change', () => {
-            if (suggestSelect.value) {
-                guessInput.value = suggestSelect.value;
-                suggestSelect.style.display = 'none';
-                guessInput.focus();
-                adjustSuggestHeight()
-            }
-        });
-
-        // kliknięcie dwukrotne/enter w select wybiera:
-        suggestSelect.addEventListener('dblclick', () => {
-            if (suggestSelect.value) {
-                guessInput.value = suggestSelect.value;
-                suggestSelect.style.display = 'none';
-                guessInput.focus();
-            }
-        });
-
-        // eventy input -> pokazuj sugestie
-        guessInput.addEventListener('input', showSuggestSelect);
-
-        // pokaż listę pełną na focus
-        guessInput.addEventListener('focus', () => {
-            // jeśli chcesz żeby od razu filtrował pusty string -> pokaż całość
-            showSuggestSelect();
-        });
-
-        // kliknięcie poza -> ukryj
-        document.addEventListener('click', (e) => {
-            if (e.target !== suggestSelect && e.target !== guessInput) {
-                suggestSelect.style.display = 'none';
-            }
-        });
-
-        // opcjonalnie: przy submit/Check sprawdź czy wpis istnieje w currentNameList
-        function isValidCountryInput(value) {
-            if (!value) return false;
-            return currentNameList.some(n => n.toLowerCase() === value.trim().toLowerCase());
-        }
-
-        function adjustSuggestHeight() {
-    const box = document.getElementById("suggestSelect");
+// Dostosowuje wysokość selecta
+function adjustSuggestHeight() {
+    const box = suggestSelect;
     const count = box.options.length;
-
     if (count === 0) {
         box.style.display = "none";
         return;
     }
 
-    const singleHeight = 30; // wysokość jednej opcji (idealnie pod padding 6px)
-    
+    const singleHeight = 30;
     if (count === 1) {
         box.style.maxHeight = singleHeight + "px";
     } else if (count === 2) {
         box.style.maxHeight = (singleHeight * 2) + "px";
     } else {
-        box.style.maxHeight = "100px"; // limit
+        box.style.maxHeight = "100px";
     }
 }
+
 
 
     </script>
