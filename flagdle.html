@@ -454,26 +454,42 @@ function showSuggestSelect() {
 // --- OBSŁUGA STRZAŁEK i ENTER ---
 guessInput.addEventListener('keydown', (e) => {
     const options = Array.from(suggestSelect.options);
+    const listOpen = suggestSelect.style.display === 'block' && options.length > 0;
 
-    if (suggestSelect.style.display === 'block' && options.length > 0) {
+    if (listOpen) {
         if (e.key === 'ArrowDown') {
             e.preventDefault();
             currentHighlight = (currentHighlight + 1) % options.length;
             options[currentHighlight].selected = true;
-        } else if (e.key === 'ArrowUp') {
+        }
+
+        else if (e.key === 'ArrowUp') {
             e.preventDefault();
             currentHighlight = (currentHighlight - 1 + options.length) % options.length;
             options[currentHighlight].selected = true;
-        } else if (e.key === 'Enter') {
+        }
+
+        else if (e.key === 'Enter') {
+            // --- TU JEST FIX ---
             if (currentHighlight >= 0) {
-                e.preventDefault(); // <-- blokuje wywołanie checkGuess()
+                // ENTER wybiera z listy
+                e.preventDefault();
                 guessInput.value = options[currentHighlight].value;
                 suggestSelect.style.display = 'none';
                 currentHighlight = -1;
+                return;
             }
+
+            // --- NIC NIE ZAZNACZONE: ENTER DZIAŁA JAK NORMALNIE ---
+            checkGuess();
         }
-    } else if (e.key === 'Enter') {
-        checkGuess(); // Enter działa tylko gdy lista niewidoczna
+
+        return; // zatrzymaj obsługę
+    }
+
+    // Lista zamknięta → Enter = sprawdzanie
+    if (e.key === 'Enter') {
+        checkGuess();
     }
 });
 
