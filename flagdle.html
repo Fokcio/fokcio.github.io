@@ -23,7 +23,12 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             width: 420px;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+
 
         .flag {
             width: 200px;
@@ -35,6 +40,8 @@
             border-radius: 8px;
             pointer-events: none;
             user-select: none;
+            display: block;
+            margin: 0 auto 20px auto;
         }
 
         input,
@@ -178,6 +185,56 @@
             background-color: #3a3a3a;
             color: #ffffff;
         }
+
+        @media (max-width: 600px) {
+            .screen {
+                width: 95vw;
+                padding: 15px;
+            }
+
+            .flag {
+                width: 150px;
+            }
+
+            input,
+            button,
+            select {
+                font-size: 16px;
+            }
+
+            #suggestSelect {
+                width: 90% !important;
+                left: 50% !important;
+                transform: translateX(-50%);
+            }
+        }
+
+        .mode-select {
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            width: 80%;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .mode-label {
+            margin-top: 20px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .flag-placeholder {
+            width: 200px;
+            height: 133px;
+            /* dopasowane mniej więcej do flag 3:2 */
+            background: #3a3a3a;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -185,31 +242,72 @@
     <!-- Menu -->
     <div id="menu" class="screen">
         <button id="howToPlay" onclick="toggleInstructions()">Jak grać</button>
+
         <h2 id="menuTitle">Flagdle</h2>
+
+        <p class="mode-label">Tryb gry:</p>
+        <select id="gameMode" class="mode-select" onchange="updateModeButtons()">
+            <option value="classic">Klasyczny</option>
+            <option value="paint">Paint</option>
+            <option value="blink">0.01 s</option>
+        </select>
+
         <p id="menuChoose">Wybierz poziom trudności:</p>
-        <button class="easy-btn" onclick="startGame('easy')">Łatwy</button>
-        <button class="hard-btn" onclick="startGame('hard')">Trudny</button>
-        <button class="pro-btn" onclick="startGame('pro')">Pro</button>
-        <button class="expert-btn" onclick="startGame('expert')">Expert</button>
-        <p><span id="bestStreakLabel">Najlepsza passa</span>: <span id="bestStreak">0</span></p>
+
+        <button id="easyBtn" class="easy-btn" onclick="startGame('easy')">
+            Łatwy
+        </button>
+
+        <button id="hardBtn" class="hard-btn" onclick="startGame('hard')">
+            Trudny
+        </button>
+
+        <button id="proBtn" class="pro-btn" onclick="startGame('pro')">
+            Pro
+        </button>
+
+        <button id="expertBtn" class="expert-btn" onclick="startGame('expert')">
+            Expert
+        </button>
+
         <div id="instructions"></div>
     </div>
 
     <!-- Gra -->
     <div id="game" class="screen" style="display:none;">
         <img id="flag" class="flag" src="" alt="Flaga" draggable="false">
-        <div>
-            <input id="guess" list="countryOptions" type="text" placeholder="Podaj kraj..." autocomplete="off"/>
-            <select id="suggestSelect" size="5"
-                style="display:none; position:absolute; width:80%; left:50%; transform:translateX(-50%); z-index:999;"></select>
 
-            <button id="checkBtn" onclick="checkGuess()">Sprawdź</button>
+        <div>
+            <input id="guess" list="countryOptions" type="text" placeholder="Podaj kraj..." />
+
+            <select id="suggestSelect" size="5" style="
+                display:none;
+                position:absolute;
+                width:80%;
+                left:50%;
+                transform:translateX(-50%);
+                z-index:999;
+            ">
+            </select>
+
+            <button id="checkBtn" onclick="checkGuess()">
+                Sprawdź
+            </button>
         </div>
+
         <p id="message" class="message"></p>
         <p id="attempts" class="message"></p>
-        <p><span id="roundLabel">Runda</span>: <span id="round">1</span>/8</p>
-        <p><span id="streakLabel">Aktualna passa</span>: <span id="currentStreak">0</span></p>
-        <button id="backMenu" style="display:flex;" onclick="backToMenu()">Powrót do menu</button>
+
+        <p>
+            <span id="roundLabel">Runda</span>:
+            <span id="round">1</span>/8
+        </p>
+
+        <p>Punkty: <span id="score">0</span></p>
+
+        <button id="backMenu" style="display:flex;" onclick="backToMenu()">
+            Powrót do menu
+        </button>
     </div>
 
     <script>
@@ -241,7 +339,7 @@
             "AG": ["Antigua i Barbuda", "Antigua and Barbuda"], "SC": ["Seszele", "Seychelles"], "PW": ["Palau"], "AD": ["Andora", "Andorra"],
             "LC": ["Saint Lucia"], "FM": ["Mikronezja", "Federated States of Micronesia"], "SG": ["Singapur", "Singapore"], "BH": ["Bahrajn", "Bahrain"],
             "DJ": ["Dżibuti", "Djibouti"], "MD": ["Mołdawia", "Moldova"], "GW": ["Gwinea Bissau", "Guinea-Bissau"], "GM": ["Gambia"], "AL": ["Albania"],
-            "SL": ["Sierra Leone"], "LR": ["Liberia"], "BI": ["Burundi"], "HT": ["Haiti"], "MK": ["Macedonia Północna", "North Macedonia"],
+            "SL": ["Sierra Leone"], "LR": ["Liberia"], "BI": ["Burundi"], "RWA": ["Rwanda"], "HT": ["Haiti"], "MK": ["Północna Macedonia", "North Macedonia"],
             "AZ": ["Azerbejdżan", "Azerbaijan"], "AM": ["Armenia"], "MG": ["Madagaskar", "Madagascar"], "BS": ["Bahamy", "The Bahamas"],
             "CV": ["Republika Zielonego Przylądka", "Cape Verde"], "GU": ["Guam"], "CY": ["Cypr", "Cyprus"], "LB": ["Liban", "Lebanon"],
             "SR": ["Surinam", "Suriname"], "GQ": ["Gwinea Równikowa", "Equatorial Guinea"], "NE": ["Niger"], "TD": ["Czad", "Chad"],
@@ -251,7 +349,8 @@
         // --- Zmienne ---
         let countries = {}, blurLevel, secretCode, tries, mode, round;
         const maxTries = 6, maxRounds = 8;
-        let currentStreak = 0, bestStreak = localStorage.getItem("bestStreak") || 0;
+
+        let score = 0;
         let gameCountries = [];
 
         const flagElement = document.getElementById("flag");
@@ -259,14 +358,16 @@
         const attemptsElement = document.getElementById("attempts");
         const guessInput = document.getElementById("guess");
         const checkBtn = document.getElementById("checkBtn");
-        const bestStreakEl = document.getElementById("bestStreak");
-        const currentStreakEl = document.getElementById("currentStreak");
         const roundEl = document.getElementById("round");
-        const backMenuBtn = document.getElementById("backMenu");
+        const scoreEl = document.getElementById("score");
+        const suggestSelect = document.getElementById("suggestSelect");
 
-        bestStreakEl.textContent = bestStreak;
+        let currentNameList = [];
+        let currentHighlight = -1;
+        let gameType = "classic";
+        let blinkInterval = null;
 
-        // --- Funkcje ---
+        // --- shuffle ---
         function shuffle(array) {
             let arr = array.slice();
             for (let i = arr.length - 1; i > 0; i--) {
@@ -276,90 +377,173 @@
             return arr;
         }
 
+        function normalize(text) {
+            return text.trim().toLowerCase();
+        }
+
         function startGame(selectedMode) {
+            gameType = document.getElementById("gameMode").value;
             mode = selectedMode;
-            if (mode === "pro" || mode === "expert") {
-                countries = proCountries;
+
+            if (gameType === "paint") {
+
+                if (mode === "easy") {
+                    countries = easyCountries;
+                } else if (mode === "hard") {
+                    countries = hardCountries;
+                } else {
+                    return;
+                }
+
             } else {
-                countries = (mode === "easy") ? easyCountries : hardCountries;
+
+                if (mode === "pro" || mode === "expert") {
+                    countries = proCountries;
+                } else {
+                    countries = (mode === "easy")
+                        ? easyCountries
+                        : hardCountries;
+                }
+
             }
+
             updateCountryListForSuggest();
 
             document.getElementById("menu").style.display = "none";
-            const gameDiv = document.getElementById("game");
-            gameDiv.style.display = "block";
-            gameDiv.className = "screen " + mode;
+            document.getElementById("game").style.display = "block";
+
             round = 1;
-            currentStreak = 0;
-            currentStreakEl.textContent = currentStreak;
-            bestStreakEl.textContent = bestStreak;
+            score = 0;
+            scoreEl.textContent = score;
 
             const codes = Object.keys(countries);
             gameCountries = shuffle(codes).slice(0, maxRounds);
+
             newRound();
         }
 
+        function updateModeButtons() {
+            const paint = document.getElementById("gameMode").value === "paint";
+
+            document.getElementById("proBtn").style.display =
+                paint ? "none" : "block";
+
+            document.getElementById("expertBtn").style.display =
+                paint ? "none" : "block";
+
+            document.getElementById("hardBtn").textContent =
+                paint ? "Normal" : "Trudny";
+        }
+
         function newRound() {
-            suggestSelect.style.display = "none";
+            secretCode = gameCountries[round - 1];
             guessInput.disabled = false;
             checkBtn.disabled = false;
-            blurLevel = 20;
+            flagElement.onload = null;
+flagElement.style.opacity = "1";
+            
+
+            if (gameType === "blink") {
+                flagElement.style.display = "block";
+                flagElement.style.filter = "none";
+                
+
+                startBlinkMode();
+            }
+
+            if (gameType === "paint") {
+                blurLevel = 8;
+            } else {
+                blurLevel = 20;
+            }
+
             tries = 0;
-            secretCode = gameCountries[round - 1];
-            flagElement.src = `https://flagsapi.com/${secretCode}/flat/64.png`;
+            
+            // reset placeholder / flag
+            flagElement.style.display = "block";
+
+            if (gameType === "paint") {
+                flagElement.src = `https://raw.githubusercontent.com/Fokcio/flagdle-paint-flags/main/${secretCode}.png`;
+            } else {
+                flagElement.src = `https://flagsapi.com/${secretCode}/flat/64.png`;
+            }
+
             if (mode === "expert") {
                 flagElement.style.filter = "grayscale(100%) blur(20px)";
             } else {
                 flagElement.style.filter = `blur(${blurLevel}px)`;
             }
-            messageElement.textContent = "Zgadnij kraj po fladze!";
+
+            messageElement.textContent = "Zgadnij kraj!";
             attemptsElement.textContent = `Próby: ${tries}/${maxTries}`;
             guessInput.value = "";
-            guessInput.placeholder = "Podaj kraj...";
-            checkBtn.textContent = "Sprawdź";
             roundEl.textContent = round;
+
+            if (gameType === "blink") {
+    flagElement.onload = () => {
+        blinkOnce();
+    };
+}
         }
 
-        function normalize(text) { return text.trim().toLowerCase(); }
-
         function checkGuess() {
+            const raw = guessInput.value.trim();
+            const guess = normalize(raw);
+
+            if (!guess) return;
+
+            const allAliases = Object.values(countries)
+                .flat()
+                .map(normalize);
+
+            if (!allAliases.includes(guess)) {
+                messageElement.textContent = "Ten kraj nie jest w tym trybie.";
+                messageElement.style.color = "#ff4d4d";
+                return;
+            }
+
+        
+
             if (tries >= maxTries) return;
-            const guess = normalize(guessInput.value);
             tries++;
+
             attemptsElement.textContent = `Próby: ${tries}/${maxTries}`;
+
             const aliases = countries[secretCode].map(normalize);
 
             if (aliases.includes(guess)) {
-                messageElement.textContent = "Brawo! To jest " + countries[secretCode][0];
+                messageElement.textContent = "Dobrze!";
                 flagElement.style.filter = "none";
-                currentStreak++;
-                currentStreakEl.textContent = currentStreak;
-                if (currentStreak > bestStreak) {
-                    bestStreak = currentStreak;
-                    localStorage.setItem("bestStreak", bestStreak);
-                    bestStreakEl.textContent = bestStreak;
-                }
+
+                // system punktów zależny od prób
+                const pointsTable = [100, 80, 60, 40, 20, 10];
+                const earned = pointsTable[Math.min(tries - 1, 5)];
+
+                score += earned;
+                scoreEl.textContent = score;
+
+                messageElement.textContent = `Dobrze! +${earned} pkt`;
+
                 nextRound();
             } else {
                 blurLevel = Math.max(0, blurLevel - 5);
-                flagElement.style.filter = (mode === "expert") ? `grayscale(100%) blur(${blurLevel}px)` : `blur(${blurLevel}px)`;
+                flagElement.style.filter =
+                    (mode === "expert")
+                        ? `grayscale(100%) blur(${blurLevel}px)`
+                        : `blur(${blurLevel}px)`;
+
                 if (tries >= maxTries) {
-                    messageElement.textContent = "Źle! Poprawna odpowiedź: " + countries[secretCode][0];
+                    messageElement.textContent =
+                        "Koniec prób! Poprawna odpowiedź: " + countries[secretCode][0];
+
                     flagElement.style.filter = "none";
-                    currentStreak = 0;
-                    currentStreakEl.textContent = currentStreak;
+
+                    score = Math.max(0, score - 3);
+                    scoreEl.textContent = score;
+
                     nextRound();
                 } else {
-                    // Usuń poprzedni timer jeśli jeszcze działa
-if (messageTimer) clearTimeout(messageTimer);
-
-messageElement.textContent = "Niepoprawnie, spróbuj ponownie!";
-
-// Ustaw nowy timer i zapisz go
-messageTimer = setTimeout(() => {
-    messageElement.textContent = ' ';
-    messageTimer = null; // wyczyść po zakończeniu
-}, 1500);
+                    messageElement.textContent = "Źle, próbuj dalej!";
                 }
             }
         }
@@ -367,9 +551,8 @@ messageTimer = setTimeout(() => {
         function nextRound() {
             if (round < maxRounds) {
                 round++;
-                setTimeout(newRound, 1500);
+                setTimeout(newRound, 1200);
             } else {
-                backMenuBtn.disabled = false;
                 guessInput.disabled = true;
                 checkBtn.disabled = true;
             }
@@ -380,9 +563,20 @@ messageTimer = setTimeout(() => {
             document.getElementById("menu").style.display = "block";
         }
 
-        
+        function updateCountryListForSuggest() {
+            currentNameList = Object.values(countries)
+                .map(a => a[0])
+                .sort((a, b) => a.localeCompare(b, 'pl'));
 
-        // Treść instrukcji (na stałe, bez języków)
+            suggestSelect.innerHTML = "";
+            currentNameList.forEach(name => {
+                const opt = document.createElement("option");
+                opt.value = name;
+                opt.textContent = name;
+                suggestSelect.appendChild(opt);
+            });
+        }
+
         const howToText = `1. Wybierz poziom trudności.
 2. Zobacz zamazaną flagę i wpisz poprawną nazwę kraju.
 3. Jeśli się pomylisz, flaga się trochę odsłania oraz spróbuj ponownie.
@@ -405,148 +599,133 @@ Expert - Czarno-białe flagi z trybu pro
             }
         }
 
+        function updateCountryListForSuggest() {
+            currentNameList = Object.values(countries)
+                .map(a => a[0])
+                .filter(Boolean)
+                .sort((a, b) => a.localeCompare(b, 'pl'));
 
-
-
-const suggestSelect = document.getElementById("suggestSelect");
-
-let currentNameList = []; // lista krajów (pierwszy alias)
-let currentHighlight = -1; // indeks zaznaczonej opcji
-
-function updateCountryListForSuggest() {
-    currentNameList = Object.values(countries)
-        .map(a => a[0])
-        .filter(Boolean)
-        .sort((a, b) => a.localeCompare(b, 'pl'));
-
-    suggestSelect.innerHTML = "";
-    currentNameList.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.textContent = name;
-        suggestSelect.appendChild(opt);
-    });
-    adjustSuggestHeight();
-}
-
-function showSuggestSelect() {
-    const q = guessInput.value.trim().toLowerCase();
-    const matches = currentNameList.filter(n => n.toLowerCase().startsWith(q));
-
-    if (matches.length === 0) {
-        suggestSelect.style.display = 'none';
-        currentHighlight = -1;
-        return;
-    }
-
-    suggestSelect.innerHTML = "";
-    matches.forEach((name, index) => {
-        const opt = document.createElement('option');
-        opt.value = name;
-        opt.textContent = name;
-        if (index === currentHighlight) opt.selected = true;
-        suggestSelect.appendChild(opt);
-    });
-
-    suggestSelect.style.display = 'block';
-    adjustSuggestHeight();
-}
-
-// --- OBSŁUGA STRZAŁEK i ENTER ---
-guessInput.addEventListener('keydown', (e) => {
-    const options = Array.from(suggestSelect.options);
-    const listOpen = suggestSelect.style.display === 'block' && options.length > 0;
-
-    if (listOpen) {
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            currentHighlight = (currentHighlight + 1) % options.length;
-            options[currentHighlight].selected = true;
-            return;
+            suggestSelect.innerHTML = "";
+            currentNameList.forEach(name => {
+                const opt = document.createElement("option");
+                opt.value = name;
+                opt.textContent = name;
+                suggestSelect.appendChild(opt);
+            });
+            adjustSuggestHeight();
         }
 
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            currentHighlight = (currentHighlight - 1 + options.length) % options.length;
-            options[currentHighlight].selected = true;
-            return;
-        }
+        function showSuggestSelect() {
+            const q = guessInput.value.trim().toLowerCase();
+            const matches = currentNameList.filter(n => n.toLowerCase().startsWith(q));
 
-        if (e.key === 'Enter') {
-            // --- FIX: jeśli coś zaznaczone, wybierz z listy ---
-            if (currentHighlight >= 0) {
-                e.preventDefault();
-                guessInput.value = options[currentHighlight].value;
+            if (matches.length === 0) {
+                suggestSelect.innerHTML = "";
                 suggestSelect.style.display = 'none';
                 currentHighlight = -1;
                 return;
             }
 
-            // --- FIX: lista otwarta ale brak zaznaczenia → normalny checkGuess ---
-            checkGuess();
-            return;
+            suggestSelect.innerHTML = "";
+            matches.forEach((name, index) => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                if (index === currentHighlight) opt.selected = true;
+                suggestSelect.appendChild(opt);
+            });
+
+            suggestSelect.style.display = 'block';
+            adjustSuggestHeight();
         }
 
-        return; // blokuje domyślną akcję dla listy
-    }
+        // --- OBSŁUGA STRZAŁEK i ENTER ---
+        guessInput.addEventListener('keydown', (e) => {
+            const options = Array.from(suggestSelect.options);
 
-    // Lista zamknięta → Enter = sprawdzanie
-    if (e.key === 'Enter') {
-        checkGuess();
-    }
-});
+            if (suggestSelect.style.display === 'block' && options.length > 0) {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    currentHighlight = (currentHighlight + 1) % options.length;
+                    options[currentHighlight].selected = true;
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    currentHighlight = (currentHighlight - 1 + options.length) % options.length;
+                    options[currentHighlight].selected = true;
+                } else if (e.key === 'Enter') {
+                    if (currentHighlight >= 0) {
+                        e.preventDefault(); // <-- blokuje wywołanie checkGuess()
+                        guessInput.value = options[currentHighlight].value;
+                        suggestSelect.style.display = 'none';
+                        currentHighlight = -1;
+                    }
+                }
+            } else if (e.key === 'Enter') {
+                checkGuess(); // Enter działa tylko gdy lista niewidoczna
+            }
+        });
 
-// --- Kliknięcie myszką w listę ---
-suggestSelect.addEventListener('click', () => {
-    if (suggestSelect.value) {
-        guessInput.value = suggestSelect.value;
-        suggestSelect.style.display = 'none';
-        currentHighlight = -1;
-        guessInput.focus();
-    }
-});
+        // Kliknięcie myszką w listę
+        suggestSelect.addEventListener('click', () => {
+            if (suggestSelect.value) {
+                guessInput.value = suggestSelect.value;
+                suggestSelect.style.display = 'none';
+                currentHighlight = -1;
+                guessInput.focus();
+            }
+        });
 
+        // Pokazuj podpowiedzi przy wpisywaniu i focusie
+        guessInput.addEventListener('input', () => {
+            currentHighlight = -1;
+            showSuggestSelect();
+        });
 
-// Pokazuj podpowiedzi przy wpisywaniu i focusie
-guessInput.addEventListener('input', () => {
-    currentHighlight = -1;
-    showSuggestSelect();
-});
+        guessInput.addEventListener('focus', () => {
+            currentHighlight = -1;
+            showSuggestSelect();
+        });
 
-guessInput.addEventListener('focus', () => {
-    currentHighlight = -1;
-    showSuggestSelect();
-});
+        // Kliknięcie poza input/select chowa listę
+        document.addEventListener('click', (e) => {
+            if (e.target !== suggestSelect && e.target !== guessInput) {
+                suggestSelect.style.display = 'none';
+                currentHighlight = -1;
+            }
+        });
 
-// Kliknięcie poza input/select chowa listę
-document.addEventListener('click', (e) => {
-    if (e.target !== suggestSelect && e.target !== guessInput) {
-        suggestSelect.style.display = 'none';
-        currentHighlight = -1;
-    }
-});
+        // Dostosowuje wysokość selecta
+        function adjustSuggestHeight() {
+            const box = suggestSelect;
+            const count = box.options.length;
+            if (count === 0) {
+                box.style.display = "none";
+                return;
+            }
 
-// Dostosowuje wysokość selecta
-function adjustSuggestHeight() {
-    const box = suggestSelect;
-    const count = box.options.length;
-    if (count === 0) {
-        box.style.display = "none";
-        return;
-    }
+            const singleHeight = 30;
+            if (count === 1) {
+                box.style.maxHeight = singleHeight + "px";
+            } else if (count === 2) {
+                box.style.maxHeight = (singleHeight * 2) + "px";
+            } else {
+                box.style.maxHeight = "100px";
+            }
+        }
 
-    const singleHeight = 30;
-    if (count === 1) {
-        box.style.maxHeight = singleHeight + "px";
-    } else if (count === 2) {
-        box.style.maxHeight = (singleHeight * 2) + "px";
-    } else {
-        box.style.maxHeight = "100px";
-    }
+        updateModeButtons();
+
+        function blinkOnce() {
+    flagElement.style.opacity = "1";
+
+    setTimeout(() => {
+        flagElement.style.opacity = "0";
+    }, 80); // możesz dać 50–120ms
 }
 
-
-
+function stopBlinkMode() {
+    flagElement.style.opacity = "1";
+}
     </script>
 </body>
 
