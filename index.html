@@ -8,35 +8,27 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/images/profil.png" type="image/png">
     
-    <!-- Dodatkowe style dla PixelBlast -->
+    <!-- Dodatkowe style dla PixelBlast - NIE ZMIENIAMY TWOICH STYLÓW -->
     <style>
-        /* Kontener PixelBlast jako tło */
         #pixel-blast-container {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none; /* Pozwala klikać w elementy nad nim */
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
         
-        /* Nadpisanie dla particle.js - wyłączamy go */
+        /* Wyłączamy particle.js */
         #particles-js {
             display: none !important;
-        }
-        
-        /* Upewnij się, że wszystkie elementy są nad tłem */
-        main, #buttons, #chatToggle, #chatWindow, #karuzela, h2, #langSwitcher, #gifOverlay {
-            position: relative;
-            z-index: 1;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- KONTENER PIXELBLAST - NOWE TŁO -->
+    <!-- KONTENER PIXELBLAST - TŁO -->
     <div id="pixel-blast-container"></div>
 
     <div id="chatToggle" title="Assistant">💬</div>
@@ -95,7 +87,7 @@
 
     <div id="particles-js"></div>
 
-    <!-- Import map dla Three.js i postprocessing -->
+    <!-- Import map dla Three.js -->
     <script type="importmap">
     {
         "imports": {
@@ -113,10 +105,10 @@
         import { Effect, EffectComposer, EffectPass, RenderPass } from 'postprocessing';
 
         // ========================================
-        // KONFIGURACJA PixelBlast
+        // KONFIGURACJA PixelBlast (tak samo jak w React)
         // ========================================
         const config = {
-            variant: 'circle',        // 'square', 'circle', 'triangle', 'diamond'
+            variant: 'circle',
             pixelSize: 4,
             color: '#B497CF',
             antialias: true,
@@ -139,7 +131,7 @@
         };
 
         // ========================================
-        // KOD PIXELBLAST (przekonwertowany z React na czysty JS)
+        // KOD PIXELBLAST - DOKŁADNIE TAKI SAM JAK W REACT
         // ========================================
 
         const SHAPE_MAP = {
@@ -323,7 +315,10 @@
 
         const MAX_CLICKS = 10;
 
-        // Funkcje pomocnicze
+        // ========================================
+        // FUNKCJE POMOCNICZE (dokładnie takie same jak w React)
+        // ========================================
+
         function createTouchTexture() {
             const size = 64;
             const canvas = document.createElement('canvas');
@@ -442,235 +437,281 @@
         }
 
         // ========================================
-        // INICJALIZACJA
+        // GŁÓWNA FUNKCJA INICJALIZACJI
+        // ========================================
+
+        function initPixelBlast(container, config) {
+            const {
+                variant = 'circle',
+                pixelSize = 4,
+                color = '#B497CF',
+                antialias = true,
+                patternScale = 2,
+                patternDensity = 0.8,
+                liquid = true,
+                liquidStrength = 0.15,
+                liquidRadius = 1,
+                pixelSizeJitter = 0,
+                enableRipples = true,
+                rippleIntensityScale = 1.2,
+                rippleThickness = 0.1,
+                rippleSpeed = 0.3,
+                liquidWobbleSpeed = 4.5,
+                autoPauseOffscreen = true,
+                speed = 0.5,
+                transparent = true,
+                edgeFade = 0.3,
+                noiseAmount = 0
+            } = config;
+
+            // Tworzenie renderera
+            const canvas = document.createElement('canvas');
+            const renderer = new THREE.WebGLRenderer({
+                canvas,
+                antialias,
+                alpha: true,
+                powerPreference: 'high-performance'
+            });
+            renderer.domElement.style.width = '100%';
+            renderer.domElement.style.height = '100%';
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            container.appendChild(renderer.domElement);
+            if (transparent) renderer.setClearAlpha(0);
+            else renderer.setClearColor(0x000000, 1);
+
+            // Uniformy
+            const uniforms = {
+                uResolution: { value: new THREE.Vector2(0, 0) },
+                uTime: { value: 0 },
+                uColor: { value: new THREE.Color(color) },
+                uClickPos: {
+                    value: Array.from({ length: MAX_CLICKS }, () => new THREE.Vector2(-1, -1))
+                },
+                uClickTimes: { value: new Float32Array(MAX_CLICKS) },
+                uShapeType: { value: SHAPE_MAP[variant] ?? 0 },
+                uPixelSize: { value: pixelSize * renderer.getPixelRatio() },
+                uScale: { value: patternScale },
+                uDensity: { value: patternDensity },
+                uPixelJitter: { value: pixelSizeJitter },
+                uEnableRipples: { value: enableRipples ? 1 : 0 },
+                uRippleSpeed: { value: rippleSpeed },
+                uRippleThickness: { value: rippleThickness },
+                uRippleIntensity: { value: rippleIntensityScale },
+                uEdgeFade: { value: edgeFade }
+            };
+
+            // Scena, kamera, materiał
+            const scene = new THREE.Scene();
+            const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            const material = new THREE.ShaderMaterial({
+                vertexShader: VERTEX_SRC,
+                fragmentShader: FRAGMENT_SRC,
+                uniforms,
+                transparent: true,
+                depthTest: false,
+                depthWrite: false,
+                glslVersion: THREE.GLSL3
+            });
+            const quadGeom = new THREE.PlaneGeometry(2, 2);
+            const quad = new THREE.Mesh(quadGeom, material);
+            scene.add(quad);
+
+            const clock = new THREE.Clock();
+            let clickIx = 0;
+            let isVisible = true;
+
+            // Resize
+            const setSize = () => {
+                const w = container.clientWidth || 1;
+                const h = container.clientHeight || 1;
+                renderer.setSize(w, h, false);
+                uniforms.uResolution.value.set(renderer.domElement.width, renderer.domElement.height);
+                if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
+                uniforms.uPixelSize.value = pixelSize * renderer.getPixelRatio();
+            };
+
+            setSize();
+            const ro = new ResizeObserver(setSize);
+            ro.observe(container);
+
+            // Losowy offset czasu
+            const randomFloat = () => {
+                if (typeof window !== 'undefined' && window.crypto?.getRandomValues) {
+                    const u32 = new Uint32Array(1);
+                    window.crypto.getRandomValues(u32);
+                    return u32[0] / 0xffffffff;
+                }
+                return Math.random();
+            };
+            const timeOffset = randomFloat() * 1000;
+
+            // Composer i efekty
+            let composer = null;
+            let touch = null;
+            let liquidEffect = null;
+
+            if (liquid) {
+                touch = createTouchTexture();
+                touch.radiusScale = liquidRadius;
+                composer = new EffectComposer(renderer);
+                const renderPass = new RenderPass(scene, camera);
+                liquidEffect = createLiquidEffect(touch.texture, {
+                    strength: liquidStrength,
+                    freq: liquidWobbleSpeed
+                });
+                const effectPass = new EffectPass(camera, liquidEffect);
+                effectPass.renderToScreen = true;
+                composer.addPass(renderPass);
+                composer.addPass(effectPass);
+            }
+
+            if (noiseAmount > 0) {
+                if (!composer) {
+                    composer = new EffectComposer(renderer);
+                    composer.addPass(new RenderPass(scene, camera));
+                }
+                const noiseEffect = new Effect(
+                    'NoiseEffect',
+                    `uniform float uTime; uniform float uAmount; float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453);} void mainUv(inout vec2 uv){} void mainImage(const in vec4 inputColor,const in vec2 uv,out vec4 outputColor){ float n=hash(floor(uv*vec2(1920.0,1080.0))+floor(uTime*60.0)); float g=(n-0.5)*uAmount; outputColor=inputColor+vec4(vec3(g),0.0);} `,
+                    {
+                        uniforms: new Map([
+                            ['uTime', new THREE.Uniform(0)],
+                            ['uAmount', new THREE.Uniform(noiseAmount)]
+                        ])
+                    }
+                );
+                const noisePass = new EffectPass(camera, noiseEffect);
+                noisePass.renderToScreen = true;
+                if (composer && composer.passes.length > 0) composer.passes.forEach(p => (p.renderToScreen = false));
+                composer.addPass(noisePass);
+            }
+
+            if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
+
+            // Eventy myszy
+            const mapToPixels = e => {
+                const rect = renderer.domElement.getBoundingClientRect();
+                const scaleX = renderer.domElement.width / rect.width;
+                const scaleY = renderer.domElement.height / rect.height;
+                const fx = (e.clientX - rect.left) * scaleX;
+                const fy = (rect.height - (e.clientY - rect.top)) * scaleY;
+                return { fx, fy, w: renderer.domElement.width, h: renderer.domElement.height };
+            };
+
+            const onPointerDown = e => {
+                const { fx, fy } = mapToPixels(e);
+                uniforms.uClickPos.value[clickIx].set(fx, fy);
+                uniforms.uClickTimes.value[clickIx] = uniforms.uTime.value;
+                clickIx = (clickIx + 1) % MAX_CLICKS;
+            };
+
+            const onPointerMove = e => {
+                if (!touch) return;
+                const { fx, fy, w, h } = mapToPixels(e);
+                touch.addTouch({ x: fx / w, y: fy / h });
+            };
+
+            renderer.domElement.addEventListener('pointerdown', onPointerDown, { passive: true });
+            renderer.domElement.addEventListener('pointermove', onPointerMove, { passive: true });
+
+            // Visibility API
+            document.addEventListener('visibilitychange', () => {
+                isVisible = !document.hidden;
+            });
+
+            // Animacja
+            let raf = 0;
+            const animate = () => {
+                if (autoPauseOffscreen && !isVisible) {
+                    raf = requestAnimationFrame(animate);
+                    return;
+                }
+                uniforms.uTime.value = timeOffset + clock.getElapsedTime() * speed;
+                if (liquidEffect) liquidEffect.uniforms.get('uTime').value = uniforms.uTime.value;
+
+                if (composer) {
+                    if (touch) touch.update();
+                    composer.passes.forEach(p => {
+                        const effs = p.effects;
+                        if (effs) {
+                            effs.forEach(eff => {
+                                const u = eff.uniforms?.get('uTime');
+                                if (u) u.value = uniforms.uTime.value;
+                            });
+                        }
+                    });
+                    composer.render();
+                } else {
+                    renderer.render(scene, camera);
+                }
+                raf = requestAnimationFrame(animate);
+            };
+
+            raf = requestAnimationFrame(animate);
+
+            // Zwracamy obiekt z referencjami do czyszczenia
+            return {
+                renderer,
+                scene,
+                camera,
+                material,
+                clock,
+                uniforms,
+                resizeObserver: ro,
+                raf,
+                quad,
+                timeOffset,
+                composer,
+                touch,
+                liquidEffect,
+                dispose: () => {
+                    cancelAnimationFrame(raf);
+                    ro.disconnect();
+                    renderer.dispose();
+                    if (composer) composer.dispose();
+                    material.dispose();
+                    quadGeom.dispose();
+                }
+            };
+        }
+
+        // ========================================
+        // URUCHOMIENIE
         // ========================================
 
         const container = document.getElementById('pixel-blast-container');
-        if (!container) return;
-
-        const {
-            variant, pixelSize, color, antialias, patternScale, patternDensity,
-            liquid, liquidStrength, liquidRadius, pixelSizeJitter, enableRipples,
-            rippleIntensityScale, rippleThickness, rippleSpeed, liquidWobbleSpeed,
-            autoPauseOffscreen, speed, transparent, edgeFade, noiseAmount
-        } = config;
-
-        // Tworzenie renderera
-        const canvas = document.createElement('canvas');
-        const renderer = new THREE.WebGLRenderer({
-            canvas,
-            antialias,
-            alpha: true,
-            powerPreference: 'high-performance'
-        });
-        renderer.domElement.style.width = '100%';
-        renderer.domElement.style.height = '100%';
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        container.appendChild(renderer.domElement);
-        if (transparent) renderer.setClearAlpha(0);
-        else renderer.setClearColor(0x000000, 1);
-
-        // Uniformy
-        const uniforms = {
-            uResolution: { value: new THREE.Vector2(0, 0) },
-            uTime: { value: 0 },
-            uColor: { value: new THREE.Color(color) },
-            uClickPos: {
-                value: Array.from({ length: MAX_CLICKS }, () => new THREE.Vector2(-1, -1))
-            },
-            uClickTimes: { value: new Float32Array(MAX_CLICKS) },
-            uShapeType: { value: SHAPE_MAP[variant] ?? 0 },
-            uPixelSize: { value: pixelSize * renderer.getPixelRatio() },
-            uScale: { value: patternScale },
-            uDensity: { value: patternDensity },
-            uPixelJitter: { value: pixelSizeJitter },
-            uEnableRipples: { value: enableRipples ? 1 : 0 },
-            uRippleSpeed: { value: rippleSpeed },
-            uRippleThickness: { value: rippleThickness },
-            uRippleIntensity: { value: rippleIntensityScale },
-            uEdgeFade: { value: edgeFade }
-        };
-
-        // Scena, kamera, materiał
-        const scene = new THREE.Scene();
-        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        const material = new THREE.ShaderMaterial({
-            vertexShader: VERTEX_SRC,
-            fragmentShader: FRAGMENT_SRC,
-            uniforms,
-            transparent: true,
-            depthTest: false,
-            depthWrite: false,
-            glslVersion: THREE.GLSL3
-        });
-        const quadGeom = new THREE.PlaneGeometry(2, 2);
-        const quad = new THREE.Mesh(quadGeom, material);
-        scene.add(quad);
-
-        const clock = new THREE.Clock();
-
-        // Resize
-        const setSize = () => {
-            const w = container.clientWidth || 1;
-            const h = container.clientHeight || 1;
-            renderer.setSize(w, h, false);
-            uniforms.uResolution.value.set(renderer.domElement.width, renderer.domElement.height);
-            if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
-            uniforms.uPixelSize.value = pixelSize * renderer.getPixelRatio();
-        };
-
-        setSize();
-        const ro = new ResizeObserver(setSize);
-        ro.observe(container);
-
-        // Losowy offset czasu
-        const randomFloat = () => {
-            if (typeof window !== 'undefined' && window.crypto?.getRandomValues) {
-                const u32 = new Uint32Array(1);
-                window.crypto.getRandomValues(u32);
-                return u32[0] / 0xffffffff;
-            }
-            return Math.random();
-        };
-        const timeOffset = randomFloat() * 1000;
-
-        // Composer i efekty
-        let composer = null;
-        let touch = null;
-        let liquidEffect = null;
-
-        if (liquid) {
-            touch = createTouchTexture();
-            touch.radiusScale = liquidRadius;
-            composer = new EffectComposer(renderer);
-            const renderPass = new RenderPass(scene, camera);
-            liquidEffect = createLiquidEffect(touch.texture, {
-                strength: liquidStrength,
-                freq: liquidWobbleSpeed
-            });
-            const effectPass = new EffectPass(camera, liquidEffect);
-            effectPass.renderToScreen = true;
-            composer.addPass(renderPass);
-            composer.addPass(effectPass);
-        }
-
-        if (noiseAmount > 0) {
-            if (!composer) {
-                composer = new EffectComposer(renderer);
-                composer.addPass(new RenderPass(scene, camera));
-            }
-            const noiseEffect = new Effect(
-                'NoiseEffect',
-                `uniform float uTime; uniform float uAmount; float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453);} void mainUv(inout vec2 uv){} void mainImage(const in vec4 inputColor,const in vec2 uv,out vec4 outputColor){ float n=hash(floor(uv*vec2(1920.0,1080.0))+floor(uTime*60.0)); float g=(n-0.5)*uAmount; outputColor=inputColor+vec4(vec3(g),0.0);} `,
-                {
-                    uniforms: new Map([
-                        ['uTime', new THREE.Uniform(0)],
-                        ['uAmount', new THREE.Uniform(noiseAmount)]
-                    ])
-                }
-            );
-            const noisePass = new EffectPass(camera, noiseEffect);
-            noisePass.renderToScreen = true;
-            if (composer && composer.passes.length > 0) composer.passes.forEach(p => (p.renderToScreen = false));
-            composer.addPass(noisePass);
-        }
-
-        if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
-
-        // Eventy myszy
-        const mapToPixels = e => {
-            const rect = renderer.domElement.getBoundingClientRect();
-            const scaleX = renderer.domElement.width / rect.width;
-            const scaleY = renderer.domElement.height / rect.height;
-            const fx = (e.clientX - rect.left) * scaleX;
-            const fy = (rect.height - (e.clientY - rect.top)) * scaleY;
-            return { fx, fy, w: renderer.domElement.width, h: renderer.domElement.height };
-        };
-
-        let clickIx = 0;
-        let isVisible = true;
-
-        const onPointerDown = e => {
-            const { fx, fy } = mapToPixels(e);
-            uniforms.uClickPos.value[clickIx].set(fx, fy);
-            uniforms.uClickTimes.value[clickIx] = uniforms.uTime.value;
-            clickIx = (clickIx + 1) % MAX_CLICKS;
-        };
-
-        const onPointerMove = e => {
-            if (!touch) return;
-            const { fx, fy, w, h } = mapToPixels(e);
-            touch.addTouch({ x: fx / w, y: fy / h });
-        };
-
-        renderer.domElement.addEventListener('pointerdown', onPointerDown, { passive: true });
-        renderer.domElement.addEventListener('pointermove', onPointerMove, { passive: true });
-
-        // Visiblity API
-        document.addEventListener('visibilitychange', () => {
-            isVisible = !document.hidden;
-        });
-
-        // Animacja
-        let raf = 0;
-        const animate = () => {
-            if (autoPauseOffscreen && !isVisible) {
-                raf = requestAnimationFrame(animate);
-                return;
-            }
-            uniforms.uTime.value = timeOffset + clock.getElapsedTime() * speed;
-            if (liquidEffect) liquidEffect.uniforms.get('uTime').value = uniforms.uTime.value;
-
-            if (composer) {
-                if (touch) touch.update();
-                composer.passes.forEach(p => {
-                    const effs = p.effects;
-                    if (effs) {
-                        effs.forEach(eff => {
-                            const u = eff.uniforms?.get('uTime');
-                            if (u) u.value = uniforms.uTime.value;
-                        });
-                    }
+        if (container) {
+            try {
+                const pixelBlast = initPixelBlast(container, config);
+                console.log('✅ PixelBlast działa!');
+                
+                // Czyszczenie przy odświeżeniu
+                window.addEventListener('beforeunload', () => {
+                    if (pixelBlast) pixelBlast.dispose();
                 });
-                composer.render();
-            } else {
-                renderer.render(scene, camera);
+            } catch (error) {
+                console.error('❌ Błąd inicjalizacji PixelBlast:', error);
             }
-            raf = requestAnimationFrame(animate);
-        };
-
-        raf = requestAnimationFrame(animate);
-
-        // Czyszczenie przy odświeżeniu strony
-        window.addEventListener('beforeunload', () => {
-            cancelAnimationFrame(raf);
-            ro.disconnect();
-            renderer.dispose();
-        });
-
-        console.log('✅ PixelBlast działa jako tło!');
+        } else {
+            console.error('❌ Nie znaleziono kontenera #pixel-blast-container');
+        }
     </script>
 
     <!-- ========================================== -->
-    <!-- TWOJE ISTNIEJĄCE SKRYPTY                   -->
+    <!-- TWOJE ISTNIEJĄCE SKRYPTY                  -->
     <!-- ========================================== -->
 
-    <!-- JS z plików strony -->
     <script src="/js/winbox.bundle.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/nowosc.js"></script>
     <script src="/js/indexaiassistant.js"></script>
     <script src="/js/karuzela.js"></script>
 
-    <!-- Biblioteki JS z URL -->
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
-    <!-- Funkcjonalność Particle.js - WYŁĄCZONA (zastąpiona przez PixelBlast) -->
+    <!-- Wyłączamy particle.js -->
     <script>
-        // particlesJS.load('particles-js', 'particles.json', function() {
-        //     console.log('particles.js config loaded');
-        // });
         console.log('❌ Particle.js wyłączone - używamy PixelBlast');
     </script>
 
