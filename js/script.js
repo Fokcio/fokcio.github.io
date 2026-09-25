@@ -1,60 +1,23 @@
-let translations = {};
-let currentLang = 'pl';
-let napisy = [];
+let napisy = [
+  "Cześć, jestem Fokcio",
+  "To jest moja strona :D",
+  "Cześć, jestem Fokcio",
+  "To jest moja strona :D",
+  "Cześć, jestem Fokcio",
+  "To jest moja strona :D",
+  "Dalej to czytasz?",
+  "Czekasz na easteregga?",
+  "umm rozumiem..",
+  "wpisz kotel lub zamiaucz...",
+  "meow...",
+  "meow...",
+];
 let napisElement = document.getElementById("napis");
 let indexNapisu = 0;
 const chars = "~`!@#$%^&*(){}[]|:;\"<>?/.,"; 
 let zmienNapisInterval = null;
 
-const switcher = document.getElementById('langSwitcher');
-
-// Pobierz język z URL
-const params = new URLSearchParams(window.location.search);
-const langFromUrl = params.get('lang');
-if (langFromUrl) currentLang = langFromUrl;
-
-// Ustaw <select> zgodnie z URL
-switcher.value = currentLang;
-
-// Zmieniamy język i aktualizujemy URL
-switcher.addEventListener('change', async (e) => {
-  currentLang = e.target.value;
-  const newUrl = new URL(window.location.href);
-  newUrl.searchParams.set('lang', currentLang);
-  window.history.replaceState({}, '', newUrl);
-  await loadLanguage(currentLang);
-});
-
-async function loadLanguage(lang) {
-  const res = await fetch(`lang/${lang}.json`);
-  translations = await res.json();
-  updateTextContent();
-  updateNapisy();
-}
-
-function updateTextContent() {
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (translations[key]) el.textContent = translations[key];
-  });
-}
-
 function updateNapisy() {
-  napisy = [
-    translations['Napis1'],
-    translations['Napis2'],
-    translations['Napis1'],
-    translations['Napis2'],
-    translations['Napis1'],
-    translations['Napis2'],
-    translations['Napis3'],
-    translations['Napis4'],
-    translations['Napis5'],
-    translations['Napis6'],
-    "meow...",
-    "meow...",
-  ];
-
   indexNapisu = 0;
   if (zmienNapisInterval) clearInterval(zmienNapisInterval);
   zmienNapisInterval = setInterval(zmienNapis, 3000);
@@ -82,8 +45,8 @@ function zmienNapis() {
   }, 500);
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadLanguage(currentLang);
+document.addEventListener('DOMContentLoaded', () => {
+  updateNapisy();
 });
 
 
@@ -117,6 +80,8 @@ let pageVisibility = true;
 
 function startTitleAnimation() {
   titleInterval = setInterval(() => {
+    // AI mogło ustawić własny tytuł (akcja "tytul") - wtedy nie nadpisujemy go
+    if (window.__fokcioTytulStop) return;
     if (pageVisibility) {
       document.title = tytuly[index];
       index = (index + 1) % tytuly.length;
@@ -127,10 +92,10 @@ function startTitleAnimation() {
 document.addEventListener('visibilitychange', function () {
   if (document.hidden) {
     pageVisibility = false;
-    document.title = 'Wróć do kotka :D';
+    if (!window.__fokcioTytulStop) document.title = 'Wróć do kotka :D';
   } else {
     pageVisibility = true;
-    document.title = tytuly[index];
+    if (!window.__fokcioTytulStop) document.title = tytuly[index];
     gifOverlay.style.display = 'flex';
     setTimeout(() => { gifOverlay.style.display = 'none'; }, 2120);
   }
@@ -181,9 +146,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 // WinBoxy
-document.getElementById('biobtn').onclick = () => { new WinBox("Bio", { url: "/bio.html?lang=" + currentLang }); };
-document.getElementById('filmikibtn').onclick = () => { new WinBox("Videos", { url: "/video.html?lang=" + currentLang }); };
-document.getElementById('aibtn').onclick = () => { new WinBox("AI", { url: "/ai.html?lang=" + currentLang }); };
+document.getElementById('filmikibtn').onclick = () => { new WinBox("Filmiki", { url: "/video.html" }); };
 
 
 (function(){

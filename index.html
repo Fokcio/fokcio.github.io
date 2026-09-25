@@ -1,13 +1,110 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;700&display=swap" rel="stylesheet">
     <title>Fokcio</title>
     <meta charset="UTF-8">
+    <!-- Bez tego telefony mierzą wirtualny viewport (~980px) i wysokość ekranu wychodzi błędna -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/images/profil.png" type="image/png">
     
+    <!-- ===== NOWY KURSOR AI (style samodzielne, niezależne od cache/style.css) ===== -->
+    <style id="ai-cursor-style">
+        html.ai-cursor-none,
+        html.ai-cursor-none * {
+            cursor: none !important;
+        }
+
+        .ai-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            z-index: 2147483000;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .ai-cursor-shake { position: absolute; top: 0; left: 0; display: block; }
+
+        .ai-cursor-arrow {
+            display: block;
+            width: 22px;
+            height: 26px;
+            transform-origin: 0 0;
+            transition: transform .12s ease, opacity .12s ease, filter .2s ease;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .75)) drop-shadow(0 0 7px rgba(160, 92, 255, .65));
+        }
+
+        .ai-cursor-kreska {
+            position: absolute;
+            top: -9px;
+            left: -1px;
+            width: 3px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 1px;
+            opacity: 0;
+            transition: opacity .15s ease;
+        }
+
+        .ai-cursor--text .ai-cursor-kreska { opacity: 1; }
+        .ai-cursor--text .ai-cursor-arrow { opacity: 0; }
+        .ai-cursor--pointer .ai-cursor-arrow {
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .75)) drop-shadow(0 0 12px rgba(200, 150, 255, 1));
+        }
+        .ai-cursor--press .ai-cursor-arrow { transform: scale(.82); }
+        .ai-cursor--press .ai-cursor-kreska { transform: scaleY(.8); }
+
+        .ai-hand {
+            position: absolute;
+            top: 9px;
+            left: 11px;
+            font-size: 26px;
+            line-height: 1;
+            opacity: 0;
+            transform: scale(.2) rotate(-45deg);
+            transform-origin: 0 0;
+            transition: opacity .16s ease, transform .24s cubic-bezier(.34, 1.56, .64, 1);
+            pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .6));
+        }
+
+        .ai-cursor--held .ai-hand { opacity: 1; transform: scale(1) rotate(-10deg); }
+        .ai-cursor--held .ai-cursor-arrow {
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .75)) drop-shadow(0 0 13px rgba(180, 110, 255, 1));
+        }
+
+        .ai-cursor--szarpie .ai-cursor-shake { animation: aiCursorShake .32s ease-in-out; }
+
+        @keyframes aiCursorShake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 2px) rotate(-5deg); }
+            40% { transform: translate(3px, -2px) rotate(5deg); }
+            60% { transform: translate(-2px, -2px) rotate(-4deg); }
+            80% { transform: translate(2px, 1px) rotate(3deg); }
+        }
+
+        .ai-click-ripple {
+            position: fixed;
+            width: 14px;
+            height: 14px;
+            margin: -7px 0 0 -7px;
+            border: 2px solid #b06bff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2147483000;
+            animation: aiClickRipple .6s ease-out forwards;
+        }
+
+        @keyframes aiClickRipple {
+            0% { opacity: .95; transform: scale(.4); box-shadow: 0 0 0 0 rgba(160, 92, 255, .7); }
+            100% { opacity: 0; transform: scale(2.4); box-shadow: 0 0 0 16px rgba(160, 92, 255, 0); }
+        }
+    </style>
     <!-- Dodatkowe style dla PixelBlast - NIE ZMIENIAMY TWOICH STYLÓW -->
     <style>
         #pixel-blast-container {
@@ -41,44 +138,144 @@
         <div id="chatMessages" aria-live="polite"></div>
         <div id="chatInputArea">
             <input id="chatInput" type="text" placeholder="..." autocomplete="off" />
-            <button id="sendBtn" data-i18n="SendBtnAi">Wyślij</button>
+            <button id="sendBtn">Wyślij</button>
         </div>
     </div>
 
-    <main>
-        <div id="napis" class="show"></div>
-    </main>
+    <!-- ===================================================== -->
+    <!-- STRONA GLOWNA (JEDEN EKRAN): HERO + BIO              -->
+    <!-- ===================================================== -->
+    <div id="glowna" class="glowna">
 
-    <div id="buttons">
-        <button id="biobtn" class="custom-btn btn-16" data-i18n="bio">Bio</button>
-        <button id="filmikibtn" class="custom-btn btn-16" data-i18n="filmiki">Filmiki</button>
-        <button id="aibtn" class="custom-btn btn-16" data-i18n="Ai">AI</button>
-        <button onclick="location.href='/texts/marchewka'">Marchewka</button>
+    <!-- EKRAN 1: TYTUŁ + PRZYCISKI -->
+    <section id="hero" class="hero">
+        <main>
+            <div id="napis" class="show"></div>
+        </main>
+
+        <div id="buttons">
+            <button id="filmikibtn" class="custom-btn btn-16">Filmiki</button>
+            <button id="marchewkabtn" onclick="location.href='/texts/marchewka'">Marchewka</button>
+        </div>
+    </section>
+
+    <!-- SEKCJA BIO -->
+    <section id="bio" class="bio-container" aria-labelledby="bioName">
+        <div class="bio-header">
+            <img src="/images/profil.png" alt="Profilowe Fokcio" class="bio-image">
+            <h1 id="bioName" class="bio-name">Fokcio</h1>
+            <p class="bio-description">Siemka, jestem Fokcio, lubie programowac sam oraz z AI <3, lubie grac w minecrafta </p>
+        </div>
+
+        <div class="bio-links">
+            <h2>Linki</h2>
+            <ul>
+                <li>
+                    <a class="bio-link" href="https://github.com/fokcio" target="_blank" rel="noopener noreferrer">
+                        <svg class="bio-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                            <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+                        </svg>
+                        <span>Github</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="bio-link" href="https://on.soundcloud.com/bhYVc1NTiTksgZ4WhR" target="_blank" rel="noopener noreferrer">
+                        <svg class="bio-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+                        </svg>
+                        <span>SoundCloud</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
     </div>
+    <!-- ================ KONIEC STRONY GLOWNEJ ================ -->
 
-    <select id="langSwitcher">
-        <option value="pl">Polski</option>
-        <option value="en">English</option>
-    </select>
 
-    <h2 data-i18n="ProjektyTekst">Moje Projekty</h2>
+    <!-- EKRAN 2: LISTA PROJEKTÓW (pełny ekran + własne przewijanie) -->
+    <section id="projekty" class="projekty" aria-label="Moje projekty">
+        <h2 class="projekty-tytul">Moje Projekty</h2>
 
-    
-<div id="karuzela">
-    <button id="prev">&#8592;</button>
-    <a id="obrazekLink" href="/PilkaNaRownowazni">
-        <div class="karuzelaCard">
-            <img id="obrazek" src="/images/gra1.png" alt="Karuzela" />
-            <div id="karuzelaOpis">
-                Gra wykonana przez AI, polega na<br>
-                Utrzymaniu piłki na platformie<br>
-                używając przycisków na stronie lub<br>
-                strzałek na klawiaturze
+        <article class="projekt">
+            <div class="projekt-opis">
+                <h3>Piłka na równoważni</h3>
+                <p>Gra wykonana przez AI. Polega na utrzymaniu piłki na platformie — przyciskami na stronie lub strzałkami na klawiaturze.</p>
+                <a class="projekt-link" href="/projects/PilkaNaRownowazni">Zobacz projekt →</a>
             </div>
-        </div>
-    </a>
-    <button id="next">&#8594;</button>
-</div>
+            <div class="projekt-obraz-box">
+                <img class="projekt-obraz" src="/images/gra1.png" alt="Piłka na równoważni">
+            </div>
+        </article>
+
+        <article class="projekt">
+            <div class="projekt-opis">
+                <h3>Potato Game</h3>
+                <p>Zostań ziemniakiem, zbuduj świat, ukończ parkour i spróbuj się nie ugotować.</p>
+                <a class="projekt-link" href="/projects/Potatogame">Zobacz projekt →</a>
+            </div>
+            <div class="projekt-obraz-box">
+                <img class="projekt-obraz" src="/images/gra2.png" alt="Potato Game">
+            </div>
+        </article>
+
+        <article class="projekt">
+            <div class="projekt-opis">
+                <h3>Catus</h3>
+                <p>Fałszywy wirus komputerowy napisany w Pythonie. Gra muzykę i wyświetla losowe koty. Wyłączenie: klawisz ESC. (Przetestowany na Windows 11)</p>
+                <a class="projekt-link" href="/projects/catus">Zobacz projekt →</a>
+            </div>
+            <div class="projekt-obraz-box">
+                <img class="projekt-obraz" src="/images/Catus.png" alt="Catus">
+            </div>
+        </article>
+        <article class="projekt">
+            <div class="projekt-opis">
+                <h3>Cawagla</h3>
+                <p>Fałszywy wirus komputerowy napisany w Pythonie. Sprawia wrażenie, że komputer się zacina. Wyłączenie: klawisz ESC. (Przetestowany na Windows 11)</p>
+                <a class="projekt-link" href="/projects/cawagla">Zobacz projekt →</a>
+            </div>
+            <div class="projekt-obraz-box">
+                <img class="projekt-obraz" src="/images/Cawagla.jpg" alt="Cawagla">
+            </div>
+        </article>
+
+        <article class="projekt">
+            <div class="projekt-opis">
+                <h3>EMOJIMAGE</h3>
+                <p>Narzędzie do przekształcania obrazu na taki, w którym zamiast kolorów są emoji.</p>
+                <a class="projekt-link" href="/projects/emojimage">Zobacz projekt →</a>
+            </div>
+            <div class="projekt-obraz-box">
+                <img class="projekt-obraz" src="/images/Emojimage.png" alt="EMOJIMAGE">
+            </div>
+        </article>
+
+        <article class="projekt">
+            <div class="projekt-opis">
+                <h3>INFINITYIMAGE</h3>
+                <p>Paint, który zoomuje się w nieskończoność. Najpierw mocno pomniejsz, a dopiero potem rysuj — przy zbyt dużym zbliżeniu obraz się psuje.</p>
+                <a class="projekt-link" href="/projects/infinityimage">Zobacz projekt →</a>
+            </div>
+            <div class="projekt-obraz-box">
+                <img class="projekt-obraz" src="/images/infinityimage.png" alt="INFINITYIMAGE">
+            </div>
+        </article>
+
+        <article class="projekt">
+            <div class="projekt-opis">
+                <h3>SoundGuessr</h3>
+                <p>Gra polegająca na zgadywaniu dźwięków. Po usłyszeniu dźwięku wpisujesz lub klikasz odpowiedź, żeby zdobyć punkty — jest 8 rund.</p>
+                <a class="projekt-link" href="https://soundguessr.github.io" target="_blank" rel="noopener noreferrer">Zobacz projekt →</a>
+            </div>
+            <div class="projekt-obraz-box">
+                <img class="projekt-obraz" src="/images/SoundGuessr.png" alt="SoundGuessr">
+                <nowosc></nowosc>
+            </div>
+        </article>
+
+    </section>
 
 
     <div id="gifOverlay">
@@ -704,10 +901,11 @@
     <script src="/js/winbox.bundle.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/nowosc.js"></script>
+    <script src="/js/aiakcje.js"></script>
+    <script type="module" src="/js/fokcio-localai.js"></script>
     <script src="/js/indexaiassistant.js"></script>
-    <script src="/js/karuzela.js"></script>
+    <script src="/js/projekty.js"></script>
 
-    <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <!-- Wyłączamy particle.js -->
