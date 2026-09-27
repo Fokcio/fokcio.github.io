@@ -1,0 +1,3900 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ile to kosztuje?</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --red: #e30613;
+    --red-dark: #b9000d;
+
+    --yellow: #ffd800;
+
+    --blue: #0050aa;
+    --blue-dark: #003b7a;
+    --lidl-yellow: #fff000;
+
+    --zabka-green: #006320;
+    --zabka-green-dark: #004d18;
+    --zabka-light: #e9f5ec;
+
+    --bg: #f3f3f1;
+
+    --theme-surface: #ffd800;
+    --theme-surface-light: #ffe866;
+    --theme-game-bg: #eee3a3;
+    --theme-text: #151515;
+
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --green-border: #86efac;
+
+    --wrong: #dc2626;
+    --wrong-light: #fee2e2;
+    --wrong-border: #fca5a5;
+
+    --text: #151515;
+    --muted: #777;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    background:
+        radial-gradient(
+            circle at 20% 0%,
+            white 0,
+            transparent 35%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    overflow-x: hidden;
+
+    transition: background .25s ease;
+}
+
+/* ============================= */
+/* MOTYW LIDLA */
+/* ============================= */
+
+body.lidl-theme {
+    --theme-surface: #e3edf8;
+    --theme-surface-light: #f1f6fc;
+    --theme-game-bg: #d9e4f1;
+    --theme-text: #111827;
+}
+
+/* ============================= */
+/* MOTYW ŻABKI */
+/* ============================= */
+
+body.zabka-theme {
+    --theme-surface: #ffffff;
+    --theme-surface-light: #f4faf5;
+    --theme-game-bg: #edf6ef;
+    --theme-text: #151515;
+}
+
+body.game-open {
+    background:
+        radial-gradient(
+            circle at 20% 0%,
+            rgba(255,255,255,.35) 0,
+            transparent 35%
+        ),
+        var(--theme-game-bg);
+}
+
+button {
+    font-family: inherit;
+}
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+header {
+    width: 100%;
+    height: 70px;
+
+    background: var(--red);
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        0
+        max(18px, env(safe-area-inset-right))
+        0
+        max(18px, env(safe-area-inset-left));
+
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, .18);
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    transition:
+        background .25s ease;
+}
+
+body.lidl-theme header {
+    background: var(--blue);
+}
+
+body.zabka-theme header {
+    background: var(--zabka-green);
+}
+
+body.menu-open header {
+    display: none;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: clamp(17px, 2vw, 23px);
+    font-weight: 1000;
+    white-space: nowrap;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+
+    border-radius: 50%;
+
+    background: var(--yellow);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    display: block;
+}
+
+/* LIDL */
+body.lidl-theme .logo-icon {
+    background: #2250A9;
+}
+
+body.lidl-theme .logo-icon img {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+}
+
+/* ŻABKA */
+body.zabka-theme .logo-icon {
+    background: white;
+    border-radius: 10px;
+}
+
+body.zabka-theme .logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.score-box {
+    background: rgba(0, 0, 0, .18);
+
+    padding: 9px 15px;
+
+    border-radius: 12px;
+
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+/* ============================= */
+/* SCREENS */
+/* ============================= */
+
+.screen {
+    display: none;
+    width: 100%;
+
+    min-height:
+        calc(100vh - 70px);
+
+    min-height:
+        calc(100dvh - 70px);
+}
+
+.screen.active {
+    display: block;
+}
+
+body.menu-open .screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* ============================= */
+/* MENU */
+/* ============================= */
+
+.menu {
+    width:
+        min(
+            900px,
+            calc(100% - 32px)
+        );
+
+    min-height:
+        calc(100vh - 70px);
+
+    min-height:
+        calc(100dvh - 70px);
+
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        40px
+        0
+        50px;
+}
+
+body.menu-open .menu {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.menu-box {
+    width: 100%;
+
+    text-align: center;
+
+    background: white;
+
+    border-radius: 30px;
+
+    padding:
+        clamp(25px, 5vw, 50px);
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, .12);
+}
+
+.menu-small {
+    color: var(--red);
+
+    font-size:
+        clamp(
+            11px,
+            1.5vw,
+            13px
+        );
+
+    font-weight: 1000;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 10px;
+
+    transition: color .25s ease;
+}
+
+body.lidl-theme .menu-small {
+    color: var(--blue);
+}
+
+body.zabka-theme .menu-small {
+    color: var(--zabka-green);
+}
+
+.menu-title {
+    font-size:
+        clamp(
+            42px,
+            10vw,
+            100px
+        );
+
+    line-height: .88;
+
+    letter-spacing:
+        clamp(
+            -6px,
+            -.5vw,
+            -2px
+        );
+
+    font-weight: 1000;
+}
+
+.store-card img {
+    margin-bottom: 20px;
+    margin: 0 15px;
+}
+
+.menu-subtitle {
+    color: var(--muted);
+
+    font-size:
+        clamp(
+            14px,
+            2vw,
+            18px
+        );
+
+    margin-top: 18px;
+
+    line-height: 1.4;
+}
+
+.store-title {
+    margin-top: 42px;
+    margin-bottom: 15px;
+
+    font-size: 16px;
+    font-weight: 1000;
+}
+
+.store-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 15px;
+
+    max-width: 900px;
+
+    margin: auto;
+}
+
+.store-card {
+    position: relative;
+
+    border: 3px solid transparent;
+
+    border-radius: 24px;
+
+    background: white;
+
+    padding: 25px;
+
+    min-height: 180px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, .08);
+
+    transition:
+        transform .16s ease,
+        box-shadow .16s ease,
+        border-color .16s ease;
+}
+
+.store-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, .13);
+}
+
+.store-card.selected {
+    border-color: var(--red);
+}
+
+.store-card.lidl-card.selected {
+    border-color: var(--blue);
+}
+
+.store-card.zabka-card.selected {
+    border-color: var(--zabka-green);
+}
+
+.store-card.disabled {
+    opacity: .45;
+    cursor: not-allowed;
+    background: white;
+}
+
+.store-logo {
+    width: 75px;
+    height: 75px;
+
+    border-radius: 50%;
+
+    background: var(--yellow);
+
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.store-logo.lidl-logo {
+    background: #2250A9;
+}
+
+.store-logo.zabka-logo {
+    background: white;
+    border-radius: 14px;
+}
+
+.store-logo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+.store-logo.lidl-logo img {
+    width: 68%;
+    height: 68%;
+
+    object-fit: contain;
+}
+
+.store-logo.zabka-logo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.store-name {
+    margin-top: 12px;
+
+    font-size: 22px;
+    font-weight: 1000;
+}
+
+.store-status {
+    margin-top: 5px;
+
+    color: #888;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.start-button {
+    margin-top: 25px;
+
+    width:
+        min(
+            420px,
+            100%
+        );
+}
+
+/* ============================= */
+/* BUTTONS */
+/* ============================= */
+
+button {
+    border: 0;
+
+    border-radius: 14px;
+
+    padding:
+        15px
+        23px;
+
+    font-size: 15px;
+
+    font-weight: 1000;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s,
+        box-shadow .15s,
+        background .25s;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.check {
+    background: var(--red);
+    color: white;
+
+    box-shadow:
+        0 5px 0 var(--red-dark);
+}
+
+body.lidl-theme .check {
+    background: var(--blue);
+
+    box-shadow:
+        0 5px 0 var(--blue-dark);
+}
+
+body.zabka-theme .check {
+    background: var(--zabka-green);
+
+    box-shadow:
+        0 5px 0 var(--zabka-green-dark);
+}
+
+body.lidl-theme .secondary:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+body.zabka-theme .secondary:hover {
+    border-color: var(--zabka-green);
+    color: var(--zabka-green);
+}
+
+.secondary {
+    background: white;
+
+    color: #222;
+
+    border: 1px solid #ddd;
+}
+
+/* ============================= */
+/* GAME */
+/* ============================= */
+
+main {
+    width:
+        min(
+            1150px,
+            calc(100% - 32px)
+        );
+
+    margin:
+        clamp(20px, 3vw, 35px)
+        auto
+        50px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.small-title {
+    color: var(--red);
+
+    font-size: 13px;
+
+    font-weight: 1000;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 8px;
+}
+
+body.lidl-theme .small-title {
+    color: var(--blue);
+}
+
+body.zabka-theme .small-title {
+    color: var(--zabka-green);
+}
+
+h1 {
+    font-size:
+        clamp(
+            38px,
+            7vw,
+            72px
+        );
+
+    line-height: .95;
+
+    letter-spacing:
+        clamp(
+            -4px,
+            -.35vw,
+            -2px
+        );
+
+    font-weight: 1000;
+}
+
+.hero p {
+    color: #666;
+
+    margin-top: 13px;
+
+    font-size:
+        clamp(
+            14px,
+            2vw,
+            17px
+        );
+
+    line-height: 1.4;
+}
+
+/* ============================= */
+/* INSTRUCTION */
+/* ============================= */
+
+.instruction {
+    background: #171717;
+    color: white;
+
+    padding:
+        16px
+        22px;
+
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    text-align: center;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, .12);
+
+    line-height: 1.4;
+}
+
+.instruction strong {
+    color: var(--yellow);
+}
+
+body.lidl-theme .instruction strong {
+    color: var(--lidl-yellow);
+}
+
+body.zabka-theme .instruction strong {
+    color: #7ee29b;
+}
+
+/* ============================= */
+/* PRODUCTS */
+/* ============================= */
+
+.products {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        clamp(
+            8px,
+            1.4vw,
+            15px
+        );
+
+    width: 100%;
+}
+
+/* ============================= */
+/* CARD */
+/* ============================= */
+
+.card {
+    position: relative;
+
+    background: var(--theme-surface);
+
+    border:
+        3px solid transparent;
+
+    border-radius:
+        clamp(
+            15px,
+            2vw,
+            21px
+        );
+
+    padding:
+        clamp(
+            9px,
+            1.3vw,
+            14px
+        );
+
+    min-width: 0;
+
+    min-height:
+        clamp(
+            260px,
+            27vw,
+            350px
+        );
+
+    cursor: grab;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    touch-action: none;
+
+    box-shadow:
+        0 7px 20px
+        rgba(0, 0, 0, .08);
+
+    overflow: hidden;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        opacity .18s ease;
+
+    will-change: transform;
+}
+
+.card:hover {
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(0, 0, 0, .13);
+}
+
+.card.dragging {
+    position: relative;
+
+    z-index: 100;
+
+    opacity: .92;
+
+    transform:
+        translateY(-10px)
+        scale(1.035)
+        rotate(1deg);
+
+    box-shadow:
+        0 22px 45px
+        rgba(0, 0, 0, .22);
+
+    cursor: grabbing;
+}
+
+.card.dragging .drag-text {
+    opacity: 0;
+}
+
+/* ============================= */
+/* DRAG PLACEHOLDER */
+/* ============================= */
+
+.drag-placeholder {
+    border:
+        3px dashed #bba900;
+
+    border-radius:
+        clamp(
+            15px,
+            2vw,
+            21px
+        );
+
+    background:
+        rgba(255, 255, 255, .35);
+
+    min-height:
+        clamp(
+            260px,
+            27vw,
+            350px
+        );
+
+    transition:
+        height .18s ease,
+        transform .18s ease,
+        opacity .18s ease;
+
+    pointer-events: none;
+
+    position: relative;
+}
+
+body.lidl-theme .drag-placeholder {
+    border-color: var(--red);
+}
+
+body.zabka-theme .drag-placeholder {
+    border-color: var(--zabka-green);
+}
+
+.drag-placeholder::after {
+    content: "UPUŚĆ TUTAJ";
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #8c8000;
+
+    font-size: 12px;
+
+    font-weight: 1000;
+
+    letter-spacing: 1px;
+}
+
+body.lidl-theme .drag-placeholder::after {
+    color: var(--blue-dark);
+}
+
+body.zabka-theme .drag-placeholder::after {
+    color: var(--zabka-green-dark);
+}
+
+.dragging-mobile {
+    cursor: grabbing !important;
+}
+
+/* ============================= */
+/* PRODUCT CONTENT */
+/* ============================= */
+
+.product-image {
+    width: 100%;
+
+    height:
+        clamp(
+            110px,
+            14vw,
+            160px
+        );
+
+    background: #FFFFFF;
+
+    border-radius:
+        clamp(
+            12px,
+            1.5vw,
+            16px
+        );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 14px;
+
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+    pointer-events: none;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+}
+
+.product-name {
+    font-size:
+        clamp(
+            14px,
+            1.5vw,
+            17px
+        );
+
+    font-weight: 1000;
+
+    line-height: 1.15;
+
+    overflow-wrap: anywhere;
+}
+
+.product-size {
+    color: #666;
+
+    font-size:
+        clamp(
+            11px,
+            1.2vw,
+            13px
+        );
+
+    margin-top: 5px;
+}
+
+.drag-text {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom:
+        clamp(
+            12px,
+            2vw,
+            18px
+        );
+
+    width: 100%;
+
+    text-align: center;
+
+    color: #806f00;
+
+    font-size:
+        clamp(
+            9px,
+            1vw,
+            11px
+        );
+
+    font-weight: 900;
+
+    pointer-events: none;
+
+    transition:
+        opacity .15s ease;
+}
+
+body.lidl-theme .drag-text {
+    color: var(--blue-dark);
+}
+
+body.zabka-theme .drag-text {
+    color: var(--zabka-green-dark);
+}
+
+/* ============================= */
+/* RESULT CARDS */
+/* ============================= */
+
+.result-card {
+    position: relative;
+
+    border-radius:
+        clamp(
+            15px,
+            2vw,
+            21px
+        );
+
+    padding:
+        clamp(
+            9px,
+            1.3vw,
+            14px
+        );
+
+    min-width: 0;
+
+    min-height:
+        clamp(
+            260px,
+            27vw,
+            350px
+        );
+
+    border: 3px solid;
+
+    box-shadow:
+        0 7px 20px
+        rgba(0, 0, 0, .07);
+
+    overflow: hidden;
+
+    animation:
+        resultCardIn .28s ease both;
+}
+
+.result-card.correct {
+    background:
+        var(--green-light);
+
+    border-color:
+        var(--green-border);
+}
+
+.result-card.wrong {
+    background:
+        var(--wrong-light);
+
+    border-color:
+        var(--wrong-border);
+}
+
+@keyframes resultCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-status-badge {
+    position: absolute;
+
+    top: 11px;
+    right: 11px;
+
+    padding:
+        7px 10px;
+
+    border-radius: 999px;
+
+    background:
+        var(--theme-surface);
+
+    font-size: 11px;
+
+    font-weight: 1000;
+
+    z-index: 3;
+}
+
+.result-card.correct .result-status-badge {
+    color: var(--green);
+}
+
+.result-card.wrong .result-status-badge {
+    color: var(--wrong);
+}
+
+.result-image {
+    height:
+        clamp(
+            110px,
+            14vw,
+            160px
+        );
+
+    background:
+        rgba(255, 255, 255, .65);
+
+    border-radius:
+        clamp(
+            12px,
+            1.5vw,
+            16px
+        );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 14px;
+
+    overflow: hidden;
+}
+
+.result-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+    pointer-events: none;
+
+    user-select: none;
+}
+
+.result-name {
+    font-size:
+        clamp(
+            14px,
+            1.5vw,
+            17px
+        );
+
+    font-weight: 1000;
+
+    line-height: 1.15;
+
+    overflow-wrap: anywhere;
+}
+
+.result-size {
+    color: #666;
+
+    font-size:
+        clamp(
+            11px,
+            1.2vw,
+            13px
+        );
+
+    margin-top: 5px;
+}
+
+.result-price {
+    margin-top: 13px;
+
+    font-size:
+        clamp(
+            17px,
+            2vw,
+            20px
+        );
+
+    font-weight: 1000;
+}
+
+.should-be {
+    margin-top: 13px;
+
+    padding:
+        10px 11px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, .78);
+
+    font-size: 12px;
+
+    line-height: 1.25;
+}
+
+.should-be strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: var(--wrong);
+}
+
+.should-be-product {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.should-be-product img {
+    width: 38px;
+    height: 38px;
+
+    object-fit: contain;
+
+    background: white;
+
+    border-radius: 7px;
+
+    flex-shrink: 0;
+}
+
+.correct-answer {
+    margin-top: 13px;
+
+    padding:
+        10px 11px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, .78);
+
+    color: var(--green);
+
+    font-size: 12px;
+
+    font-weight: 1000;
+}
+
+/* ============================= */
+/* ACTIONS */
+/* ============================= */
+
+.actions {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.actions button {
+    min-width: 180px;
+}
+
+/* ============================= */
+/* RESULT INFO */
+/* ============================= */
+
+.round-result {
+    margin-top: 20px;
+
+    padding:
+        18px 20px;
+
+    background:
+        var(--theme-surface);
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, .08);
+
+    animation:
+        resultIn .3s ease;
+}
+
+@keyframes resultIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-big {
+    font-size:
+        clamp(
+            25px,
+            5vw,
+            38px
+        );
+
+    font-weight: 1000;
+}
+
+.result-small {
+    color: #666;
+
+    margin-top: 7px;
+
+    font-size: 14px;
+}
+
+.result-points {
+    display: inline-block;
+
+    margin-top: 13px;
+
+    padding:
+        9px 15px;
+
+    background: #171717;
+
+    color: white;
+
+    border-radius: 12px;
+
+    font-weight: 1000;
+}
+
+/* ============================= */
+/* FINAL SCREEN */
+/* ============================= */
+
+.final-screen {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 5000;
+
+    background:
+        rgba(238, 227, 163, .96);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+body.lidl-theme .final-screen {
+    background:
+        rgba(215, 226, 239, .96);
+}
+
+body.zabka-theme .final-screen {
+    background:
+        rgba(232, 245, 236, .96);
+}
+
+.final-screen.show {
+    display: flex;
+
+    animation:
+        finalIn .25s ease;
+}
+
+@keyframes finalIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.final-box {
+    width:
+        min(
+            650px,
+            100%
+        );
+
+    background:
+        var(--theme-surface);
+
+    border-radius: 28px;
+
+    padding:
+        clamp(
+            25px,
+            5vw,
+            50px
+        );
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 80px
+        rgba(0, 0, 0, .18);
+}
+
+.final-icon {
+    font-size: 60px;
+}
+
+.final-title {
+    margin-top: 10px;
+
+    font-size:
+        clamp(
+            35px,
+            8vw,
+            65px
+        );
+
+    line-height: .95;
+
+    font-weight: 1000;
+}
+
+.final-score {
+    margin-top: 20px;
+
+    font-size:
+        clamp(
+            30px,
+            6vw,
+            48px
+        );
+
+    font-weight: 1000;
+
+    color: var(--red);
+}
+
+body.lidl-theme .final-score {
+    color: var(--blue);
+}
+
+body.zabka-theme .final-score {
+    color: var(--zabka-green);
+}
+
+.final-max {
+    margin-top: 5px;
+
+    color: #666;
+
+    font-size: 14px;
+}
+
+.final-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.final-buttons button {
+    min-width: 210px;
+
+    margin-top: 0 !important;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 1000px) {
+    .products {
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(0, 1fr)
+            );
+    }
+}
+
+@media (max-width: 800px) {
+    .products {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+    main {
+        width:
+            calc(100% - 24px);
+    }
+
+    .store-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    header {
+        height: 62px;
+    }
+
+    .screen {
+        min-height:
+            calc(100vh - 62px);
+
+        min-height:
+            calc(100dvh - 62px);
+    }
+
+    .logo-icon {
+        width: 34px;
+        height: 34px;
+
+        flex-basis: 34px;
+    }
+
+    body.lidl-theme .logo-icon img {
+        width: 72%;
+        height: 72%;
+    }
+
+    .score-box {
+        padding:
+            7px 10px;
+
+        font-size: 13px;
+    }
+
+    .store-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .products {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .card,
+    .result-card,
+    .drag-placeholder {
+        min-height: 230px;
+    }
+
+    .product-image,
+    .result-image {
+        height: 105px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .logo {
+        font-size: 16px;
+    }
+
+    .logo-icon {
+        width: 31px;
+        height: 31px;
+
+        flex-basis: 31px;
+    }
+
+    body.lidl-theme .logo-icon img {
+        width: 70%;
+        height: 70%;
+    }
+
+    .score-box {
+        font-size: 12px;
+    }
+
+    main {
+        width:
+            calc(100% - 12px);
+
+        margin-top: 16px;
+    }
+
+    .hero {
+        margin-bottom: 17px;
+    }
+
+    .instruction {
+        padding:
+            13px 10px;
+
+        border-radius: 15px;
+
+        font-size: 12px;
+    }
+
+    .products {
+        grid-template-columns: 1fr;
+    }
+
+    .card,
+    .result-card,
+    .drag-placeholder {
+        min-height: 125px;
+    }
+
+    .card {
+        display: grid;
+
+        grid-template-columns:
+            105px
+            minmax(0, 1fr);
+
+        align-items: center;
+
+        gap: 10px;
+
+        padding: 9px;
+    }
+
+    .product-image {
+        height: 105px;
+
+        margin: 0;
+    }
+
+    .product-name {
+        font-size: 15px;
+    }
+
+    .product-size {
+        font-size: 11px;
+    }
+
+    .drag-text {
+        bottom: 7px;
+
+        font-size: 8px;
+    }
+
+    .drag-placeholder {
+        height: 125px;
+    }
+
+    .drag-placeholder::after {
+        font-size: 10px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions button {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+    .final-box {
+        border-radius: 22px;
+    }
+
+    .final-buttons {
+        flex-direction: column;
+    }
+
+    .final-buttons button {
+        width: 100%;
+
+        min-width: 0;
+    }
+}
+
+@media (max-width: 350px) {
+    .logo {
+        font-size: 14px;
+    }
+
+    .logo-icon {
+        width: 28px;
+        height: 28px;
+
+        flex-basis: 28px;
+    }
+
+    body.lidl-theme .logo-icon img {
+        width: 68%;
+        height: 68%;
+    }
+
+    .score-box {
+        padding:
+            6px 8px;
+
+        font-size: 11px;
+    }
+
+    .card {
+        grid-template-columns:
+            90px
+            minmax(0, 1fr);
+    }
+
+    .product-image {
+        height: 90px;
+    }
+
+    .product-name {
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body class="menu-open">
+
+<header>
+    <div class="logo">
+
+        <div class="logo-icon">
+
+            <img
+                id="headerLogo"
+                src="../images/logobiedronka.webp"
+                alt="Biedronka"
+            >
+
+        </div>
+
+        <span id="headerStoreName">
+            BIEDRONKA
+        </span>
+
+    </div>
+
+    <div class="score-box">
+        🏆
+        <span id="score">0</span>
+        pkt
+    </div>
+</header>
+
+
+<!-- ============================= -->
+<!-- MENU -->
+<!-- ============================= -->
+
+<section
+    id="menuScreen"
+    class="screen active"
+>
+    <div class="menu">
+
+        <div class="menu-box">
+
+            <div class="menu-small">
+                WITAJ W GRZE
+            </div>
+
+            <div class="menu-title">
+                ILE TO<br>KOSZTUJE?
+            </div>
+
+            <div class="menu-subtitle">
+                Ułóż produkty od najtańszego do najdroższego.
+            </div>
+
+            <div class="store-title">
+                WYBIERZ SKLEP
+            </div>
+
+
+            <div class="store-grid">
+
+                <!-- BIEDRONKA -->
+
+                <div
+                    class="store-card selected"
+                    id="biedronkaCard"
+                >
+
+                    <div class="store-logo">
+
+                        <img
+                            src="../images/logobiedronka.webp"
+                            alt="Biedronka"
+                        >
+
+                    </div>
+
+                    <div class="store-name">
+                        Biedronka
+                    </div>
+
+                    <div class="store-status">
+                        GOTOWE DO GRY
+                    </div>
+
+                </div>
+
+
+                <!-- LIDL -->
+
+                <div
+                    class="store-card lidl-card"
+                    id="lidlCard"
+                >
+
+                    <div class="store-logo lidl-logo">
+
+                        <img
+                            src="../images/logolidl.png"
+                            alt="Lidl"
+                        >
+
+                    </div>
+
+                    <div class="store-name">
+                        Lidl
+                    </div>
+
+                    <div class="store-status">
+                        GOTOWE DO GRY
+                    </div>
+
+                </div>
+
+
+                <!-- ŻABKA -->
+
+                <div
+                    class="store-card zabka-card"
+                    id="zabkaCard"
+                >
+
+                    <div class="store-logo zabka-logo">
+
+                        <img
+                            src="../images/zabkalogo.jpg"
+                            alt="Żabka"
+                        >
+
+                    </div>
+
+                    <div class="store-name">
+                        Żabka
+                    </div>
+
+                    <div class="store-status">
+                        GOTOWE DO GRY
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="check start-button"
+                id="startButton"
+            >
+                ROZPOCZNIJ GRĘ →
+            </button>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ============================= -->
+<!-- GRA -->
+<!-- ============================= -->
+
+<section
+    id="gameScreen"
+    class="screen"
+>
+
+<main>
+
+    <section class="hero">
+
+        <div class="small-title">
+
+            RUNDA
+            <span id="round">1</span>
+
+        </div>
+
+        <h1>
+            ILE TO<br>KOSZTUJE?
+        </h1>
+
+        <p>
+            Ułóż produkty od najtańszego do najdroższego.
+        </p>
+
+    </section>
+
+
+    <div class="instruction">
+
+        ☝️
+
+        <span>
+
+            Przeciągaj produkty:
+
+            <strong>
+                NAJTAŃSZY → NAJDROŻSZY
+            </strong>
+
+        </span>
+
+    </div>
+
+
+    <div
+        class="products"
+        id="products"
+    ></div>
+
+
+    <div
+        class="actions"
+        id="gameActions"
+    >
+
+        <button
+            class="check"
+            id="checkButton"
+        >
+            SPRAWDŹ 💰
+        </button>
+
+        <button
+            class="secondary"
+            id="endButton"
+        >
+            ZAKOŃCZ GRĘ
+        </button>
+
+    </div>
+
+
+    <div
+        class="round-result"
+        id="roundResult"
+        style="display:none"
+    >
+
+        <div
+            class="result-big"
+            id="roundResultTitle"
+        ></div>
+
+        <div
+            class="result-small"
+            id="roundResultText"
+        ></div>
+
+        <div
+            class="result-points"
+            id="roundPoints"
+        ></div>
+
+    </div>
+
+
+    <div
+        class="actions"
+        id="nextActions"
+        style="display:none"
+    >
+
+        <button
+            class="check"
+            id="nextButton"
+        >
+            NASTĘPNA RUNDA →
+        </button>
+
+    </div>
+
+</main>
+
+</section>
+
+
+<!-- ============================= -->
+<!-- KONIEC -->
+<!-- ============================= -->
+
+<div
+    class="final-screen"
+    id="finalScreen"
+>
+
+    <div class="final-box">
+
+        <div class="final-icon">
+            🏆
+        </div>
+
+        <div class="final-title">
+            KONIEC GRY
+        </div>
+
+        <div
+            class="final-score"
+            id="finalScore"
+        >
+            0 pkt
+        </div>
+
+        <div class="final-max">
+            Wynik końcowy
+        </div>
+
+        <div class="final-buttons">
+
+            <button
+                class="check"
+                id="finalReplayButton"
+            >
+                ZAGRAJ JESZCZE RAZ
+            </button>
+
+            <button
+                class="secondary"
+                id="finalMenuButton"
+            >
+                POWRÓT DO MENU
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ================================= */
+/* PRODUKTY BIEDRONKA */
+/* ================================= */
+
+const BIEDRONKA_PRODUCTS = [
+
+    {
+        id: 1,
+        name: "Kotlin Ketchup łagodny",
+        size: "450 g",
+        image: "../images/products/biedronka/KotlinKetchupLagodny.jpg",
+        price: 6.45
+    },
+
+    {
+        id: 2,
+        name: "Barilla Makaron spaghetti",
+        size: "1000 g",
+        image: "../images/products/biedronka/BarillaMakaronSpaghett.jpg",
+        price: 11.49
+    },
+
+    {
+        id: 3,
+        name: "E. Wedel Czekolada gorzka 64%",
+        size: "90 g",
+        image: "../images/products/biedronka/E.WedelCzekoladagorzka64.jpg",
+        price: 9.99
+    },
+
+    {
+        id: 4,
+        name: "Mleczna Dolina Mleko UHT 1,5% bez laktozy",
+        size: "1 l",
+        image: "../images/products/biedronka/MlecznaDolinaMlekoUHT1,5bezlaktozy.jpg",
+        price: 3.49
+    },
+
+    {
+        id: 5,
+        name: "Mlekovita Masło Polskie ekstra 82%",
+        size: "200 g",
+        image: "../images/products/biedronka/MlekovitaMasłoPolskieekstra82.jpg",
+        price: 5.99
+    },
+
+    {
+        id: 6,
+        name: "Nutella Krem z orzechami laskowymi i kakao",
+        size: "350 g",
+        image: "../images/products/biedronka/NutellaKremzorzechamilaskowymiikakao.jpg",
+        price: 18.99
+    },
+
+    {
+        id: 7,
+        name: "Grapefruit czerwony",
+        size: "ok. 380 g",
+        image: "../images/products/biedronka/Grapefruitczerwony.jpg",
+        price: 2.66
+    },
+
+    {
+        id: 8,
+        name: "Nałęczowianka Naturalna woda mineralna",
+        size: "1,5 l",
+        image: "../images/products/biedronka/NałęczowiankaNaturalnawodamineralna.jpg",
+        price: 2.90
+    },
+
+    {
+        id: 9,
+        name: "Hortex Mieszanka 7-składnikowa",
+        size: "750 g",
+        image: "../images/products/biedronka/HortexMieszanka7-składnikowa.jpg",
+        price: 9.99
+    },
+
+    {
+        id: 10,
+        name: "Almette Puszysty serek twarogowy śmietankowy",
+        size: "150 g",
+        image: "../images/products/biedronka/AlmettePuszystyserektwarogowyśmietankowy.jpg",
+        price: 6.49
+    },
+
+    {
+        id: 11,
+        name: "Sierpc Królewski Ser żółty plastry",
+        size: "135 g",
+        image: "../images/products/biedronka/SierpcKrólewskiSerżółtyplastry.jpg",
+        price: 6.49
+    },
+
+    {
+        id: 12,
+        name: "Nestlé Nesquik Zbożowe kuleczki czekoladowe",
+        size: "375 g",
+        image: "../images/products/biedronka/NestléNesquikZbożowekuleczkiczekoladowe.jpg",
+        price: 11.29
+    }
+
+];
+
+
+/* ================================= */
+/* PRODUKTY LIDL */
+/* ================================= */
+
+const LIDL_PRODUCTS = [
+
+    {
+        id: 1,
+        name: "Nałęczowianka Woda Mineralna",
+        size: "",
+        image: "../images/products/lidl/NałęczowiankaWodaMineralna.webp",
+        price: 2.89
+    },
+
+    {
+        id: 2,
+        name: "ŁOWICZ Mleko łowickie, UHT 3,2%",
+        size: "",
+        image: "../images/products/lidl/ŁOWICZMlekołowickie,UHT3,2.webp",
+        price: 3.99
+    },
+
+    {
+        id: 3,
+        name: "PILOS Gouda holenderska w plastrach",
+        size: "",
+        image: "../images/products/lidl/PILOSGoudaholenderskawplastrach.webp",
+        price: 9.99
+    },
+
+    {
+        id: 4,
+        name: "PIKOK PURE Parówki z szynki, XXL",
+        size: "",
+        image: "../images/products/lidl/PIKOKPUREParówkizszynki,XXL.webp",
+        price: 13.59
+    },
+
+    {
+        id: 5,
+        name: "PILOS Masło ekstra 83%",
+        size: "",
+        image: "../images/products/lidl/PILOSMasłoekstra83.webp",
+        price: 4.99
+    },
+
+    {
+        id: 6,
+        name: "E.WEDEL Ptasie Mleczko",
+        size: "",
+        image: "../images/products/lidl/E.WEDELPtasieMleczko.webp",
+        price: 18.49
+    },
+
+    {
+        id: 7,
+        name: "Polskie maliny",
+        size: "",
+        image: "../images/products/lidl/Polskiemaliny.webp",
+        price: 8.99
+    },
+
+    {
+        id: 8,
+        name: "PARKSIDE Szlifierka do szlifowania na mokro lub sucho, 250 W",
+        size: "",
+        image: "../images/products/lidl/PARKSIDESzlifierkadoszlifowanianamokrolubsucho,250W.webp",
+        price: 209
+    },
+
+    {
+        id: 9,
+        name: "LIVARNO Termoplastyczna deska sedesowa wolno opadająca",
+        size: "",
+        image: "../images/products/lidl/LIVARNOTermoplastycznadeskasedesowawolnoopadająca.webp",
+        price: 59.99
+    },
+
+    {
+        id: 10,
+        name: "Jojo drewniane",
+        size: "",
+        image: "../images/products/lidl/Jojodrewniane.webp",
+        price: 4.99
+    },
+
+    {
+        id: 11,
+        name: "SILVERCREST Stacja parowa SDSB 2400 B1",
+        size: "",
+        image: "../images/products/lidl/SILVERCRESTStacjaparowaSDSB2400B1.webp",
+        price: 349
+    }
+
+];
+
+
+/* ================================= */
+/* PRODUKTY ŻABKA */
+/* ================================= */
+
+const ZABKA_PRODUCTS = [
+
+    {
+        id: 1,
+        name: "Chrupbox stripsy",
+        size: "",
+        image: "../images/products/zabka/Chrupboxstripsy.png",
+        price: 11.99
+    },
+
+    {
+        id: 2,
+        name: "Zapiekanka z kurczakiem i serem",
+        size: "",
+        image: "../images/products/zabka/Zapiekankazkurczakiemiserem.png",
+        price: 10.99
+    },
+
+    {
+        id: 3,
+        name: "Frytki",
+        size: "",
+        image: "../images/products/zabka/Frytki.png",
+        price: 7.99
+    },
+
+    {
+        id: 4,
+        name: "Fileciki rybne",
+        size: "",
+        image: "../images/products/zabka/Filecikirybne.png",
+        price: 11.99
+    },
+
+    {
+        id: 5,
+        name: "Pizza Tex-Mex",
+        size: "",
+        image: "../images/products/zabka/PizzaTex-Mex.png",
+        price: 20.99
+    },
+
+    {
+        id: 6,
+        name: "Mini Pancakes MAX z sosem karmelowym E. Wedel",
+        size: "",
+        image: "../images/products/zabka/MiniPancakesMAXzsosemkarmelowymE.Wedel.png",
+        price: 13.99
+    },
+
+    {
+        id: 7,
+        name: "Hot Dog MAX",
+        size: "",
+        image: "../images/products/zabka/HotDogMAX.png",
+        price: 8.99
+    },
+
+    {
+        id: 8,
+        name: "Panini z kurczakiem",
+        size: "",
+        image: "../images/products/zabka/Paninizkurczakiem.png",
+        price: 11.99
+    },
+
+    {
+        id: 9,
+        name: "Chrupczak classic",
+        size: "",
+        image: "../images/products/zabka/Chrupczakclassic.png",
+        price: 9.99
+    },
+
+    {
+        id: 10,
+        name: "Kebab Rollo z wołowiną i frytkami",
+        size: "",
+        image: "../images/products/zabka/KebabRollozwołowinąifrytkami.png",
+        price: 14.99
+    },
+
+    {
+        id: 11,
+        name: "Tost z szynką i serem",
+        size: "",
+        image: "../images/products/zabka/Tostzszynkąiserem.png",
+        price: 8.99
+    }
+
+];
+
+
+/* ================================= */
+/* WYBRANY SKLEP */
+/* ================================= */
+
+let selectedStore = "biedronka";
+let PRODUCTS = BIEDRONKA_PRODUCTS;
+
+
+/* ================================= */
+/* STAN */
+/* ================================= */
+
+let currentProducts = [];
+let score = 0;
+let round = 1;
+
+const MAX_ROUNDS = 6;
+
+let finished = false;
+
+
+/* ================================= */
+/* PUNKTY */
+/* ================================= */
+
+const ROUND_MAX_POINTS = [
+    800,
+    1000,
+    1200,
+    1400,
+    1600,
+    2000
+];
+
+
+/* ================================= */
+/* DRAG */
+/* ================================= */
+
+let drag = null;
+let placeholder = null;
+
+let dragStartX = 0;
+let dragStartY = 0;
+
+let isDragging = false;
+
+
+/* ================================= */
+/* FAVICON */
+/* ================================= */
+
+const BIEDRONKA_FAVICON =
+    "https://static.biedronka.pl/img/favicon.ico?v=1106123";
+
+function setGameFavicon() {
+
+    if (selectedStore !== "biedronka") {
+        removeGameFavicon();
+        return;
+    }
+
+    let favicon =
+        document.getElementById(
+            "gameFavicon"
+        );
+
+    if (!favicon) {
+
+        favicon =
+            document.createElement(
+                "link"
+            );
+
+        favicon.id =
+            "gameFavicon";
+
+        favicon.rel =
+            "icon";
+
+        document.head.appendChild(
+            favicon
+        );
+    }
+
+    favicon.href =
+        BIEDRONKA_FAVICON;
+}
+
+
+function removeGameFavicon() {
+
+    const favicon =
+        document.getElementById(
+            "gameFavicon"
+        );
+
+    if (favicon) {
+        favicon.remove();
+    }
+}
+
+
+/* ================================= */
+/* ELEMENTY */
+/* ================================= */
+
+const menuScreen =
+    document.getElementById(
+        "menuScreen"
+    );
+
+const gameScreen =
+    document.getElementById(
+        "gameScreen"
+    );
+
+const productsElement =
+    document.getElementById(
+        "products"
+    );
+
+const scoreElement =
+    document.getElementById(
+        "score"
+    );
+
+const roundElement =
+    document.getElementById(
+        "round"
+    );
+
+const gameActions =
+    document.getElementById(
+        "gameActions"
+    );
+
+const checkButton =
+    document.getElementById(
+        "checkButton"
+    );
+
+const endButton =
+    document.getElementById(
+        "endButton"
+    );
+
+const nextActions =
+    document.getElementById(
+        "nextActions"
+    );
+
+const nextButton =
+    document.getElementById(
+        "nextButton"
+    );
+
+const roundResult =
+    document.getElementById(
+        "roundResult"
+    );
+
+const roundResultTitle =
+    document.getElementById(
+        "roundResultTitle"
+    );
+
+const roundResultText =
+    document.getElementById(
+        "roundResultText"
+    );
+
+const roundPoints =
+    document.getElementById(
+        "roundPoints"
+    );
+
+const finalScreen =
+    document.getElementById(
+        "finalScreen"
+    );
+
+const finalScore =
+    document.getElementById(
+        "finalScore"
+    );
+
+const finalReplayButton =
+    document.getElementById(
+        "finalReplayButton"
+    );
+
+const finalMenuButton =
+    document.getElementById(
+        "finalMenuButton"
+    );
+
+const biedronkaCard =
+    document.getElementById(
+        "biedronkaCard"
+    );
+
+const lidlCard =
+    document.getElementById(
+        "lidlCard"
+    );
+
+const zabkaCard =
+    document.getElementById(
+        "zabkaCard"
+    );
+
+const headerLogo =
+    document.getElementById(
+        "headerLogo"
+    );
+
+const headerStoreName =
+    document.getElementById(
+        "headerStoreName"
+    );
+
+
+/* ================================= */
+/* WYBÓR SKLEPU */
+/* ================================= */
+
+function selectStore(store) {
+
+    selectedStore = store;
+
+    document.body.classList.remove(
+        "lidl-theme",
+        "zabka-theme"
+    );
+
+    biedronkaCard.classList.remove(
+        "selected"
+    );
+
+    lidlCard.classList.remove(
+        "selected"
+    );
+
+    zabkaCard.classList.remove(
+        "selected"
+    );
+
+
+    if (store === "lidl") {
+
+        PRODUCTS = LIDL_PRODUCTS;
+
+        document.body.classList.add(
+            "lidl-theme"
+        );
+
+        lidlCard.classList.add(
+            "selected"
+        );
+
+        headerLogo.src =
+            "../images/logolidl.png";
+
+        headerLogo.alt =
+            "Lidl";
+
+        headerStoreName.textContent =
+            "LIDL";
+
+    } else if (store === "zabka") {
+
+        PRODUCTS = ZABKA_PRODUCTS;
+
+        document.body.classList.add(
+            "zabka-theme"
+        );
+
+        zabkaCard.classList.add(
+            "selected"
+        );
+
+        headerLogo.src =
+            "../images/zabkalogo.jpg";
+
+        headerLogo.alt =
+            "Żabka";
+
+        headerStoreName.textContent =
+            "ŻABKA";
+
+    } else {
+
+        PRODUCTS = BIEDRONKA_PRODUCTS;
+
+        biedronkaCard.classList.add(
+            "selected"
+        );
+
+        headerLogo.src =
+            "../images/logobiedronka.webp";
+
+        headerLogo.alt =
+            "Biedronka";
+
+        headerStoreName.textContent =
+            "BIEDRONKA";
+    }
+}
+
+
+/* ================================= */
+/* SHUFFLE */
+/* ================================= */
+
+function shuffle(array) {
+
+    const result = [...array];
+
+    for (
+        let i = result.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+        [
+            result[i],
+            result[j]
+        ] = [
+            result[j],
+            result[i]
+        ];
+    }
+
+    return result;
+}
+
+
+/* ================================= */
+/* START */
+/* ================================= */
+
+function startGame() {
+
+    setGameFavicon();
+
+    document.body.classList.add(
+        "game-open"
+    );
+
+    score = 0;
+    round = 1;
+    finished = false;
+
+    scoreElement.textContent =
+        "0";
+
+    finalScreen.classList.remove(
+        "show"
+    );
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+    menuScreen.classList.remove(
+        "active"
+    );
+
+    gameScreen.classList.add(
+        "active"
+    );
+
+    newRound(true);
+}
+
+
+/* ================================= */
+/* NOWA RUNDA */
+/* ================================= */
+
+function newRound(firstRound = false) {
+
+    cancelDrag();
+
+    finished = false;
+
+    roundResult.style.display =
+        "none";
+
+    nextActions.style.display =
+        "none";
+
+    gameActions.style.display =
+        "flex";
+
+    roundElement.textContent =
+        round;
+
+    const amount = 5;
+
+    currentProducts =
+        shuffle(PRODUCTS)
+        .slice(0, amount);
+
+    renderProducts();
+
+    requestAnimationFrame(() => {
+
+        setTimeout(() => {
+
+            window.scrollTo({
+                top:
+                    document.documentElement
+                        .scrollHeight,
+
+                behavior: "smooth"
+            });
+
+        }, 80);
+
+    });
+}
+
+
+/* ================================= */
+/* RENDER */
+/* ================================= */
+
+function renderProducts() {
+
+    productsElement.innerHTML =
+        "";
+
+    const shuffled =
+        shuffle(currentProducts);
+
+    shuffled.forEach(
+        product => {
+
+            const card =
+                createProductCard(
+                    product
+                );
+
+            productsElement.appendChild(
+                card
+            );
+
+            attachDrag(card);
+        }
+    );
+}
+
+
+/* ================================= */
+/* KARTA */
+/* ================================= */
+
+function createProductCard(product) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+    card.className =
+        "card";
+
+    card.dataset.id =
+        product.id;
+
+    card.innerHTML = `
+
+        <div class="product-image">
+
+            <img
+                src="${product.image}"
+                alt="${product.name}"
+                draggable="false"
+            >
+
+        </div>
+
+        <div>
+
+            <div class="product-name">
+                ${product.name}
+            </div>
+
+            <div class="product-size">
+                ${product.size}
+            </div>
+
+        </div>
+
+        <div class="drag-text">
+            ⭤ PRZECIĄGNIJ
+        </div>
+    `;
+
+    return card;
+}
+
+
+/* ================================= */
+/* DRAG */
+/* ================================= */
+
+function attachDrag(card) {
+
+    card.addEventListener(
+        "pointerdown",
+        startDrag,
+        { passive: false }
+    );
+}
+
+
+function startDrag(event) {
+
+    if (finished) return;
+    if (drag) return;
+
+    if (
+        event.pointerType === "mouse" &&
+        event.button !== 0
+    ) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const card =
+        event.currentTarget;
+
+    const rect =
+        card.getBoundingClientRect();
+
+    dragStartX =
+        event.clientX;
+
+    dragStartY =
+        event.clientY;
+
+    isDragging = false;
+
+    drag = {
+        card: card,
+
+        pointerId:
+            event.pointerId,
+
+        originalRect:
+            rect
+    };
+
+    try {
+
+        card.setPointerCapture(
+            event.pointerId
+        );
+
+    } catch {}
+
+    document.addEventListener(
+        "pointermove",
+        moveDrag,
+        { passive: false }
+    );
+
+    document.addEventListener(
+        "pointerup",
+        finishDrag,
+        { passive: false }
+    );
+
+    document.addEventListener(
+        "pointercancel",
+        cancelPointerDrag,
+        { passive: false }
+    );
+}
+
+
+function activateDrag() {
+
+    if (
+        !drag ||
+        isDragging
+    ) {
+        return;
+    }
+
+    isDragging = true;
+
+    const card =
+        drag.card;
+
+    placeholder =
+        document.createElement(
+            "div"
+        );
+
+    placeholder.className =
+        "drag-placeholder";
+
+    placeholder.style.height =
+        `${card.offsetHeight}px`;
+
+    placeholder.style.minHeight =
+        "0";
+
+    productsElement.insertBefore(
+        placeholder,
+        card
+    );
+
+    card.classList.add(
+        "dragging"
+    );
+
+    card.style.width =
+        `${drag.originalRect.width}px`;
+
+    card.style.height =
+        `${drag.originalRect.height}px`;
+
+    card.style.position =
+        "fixed";
+
+    card.style.left =
+        `${drag.originalRect.left}px`;
+
+    card.style.top =
+        `${drag.originalRect.top}px`;
+
+    card.style.margin =
+        "0";
+
+    card.style.zIndex =
+        "10000";
+
+    card.style.pointerEvents =
+        "none";
+
+    document.body.classList.add(
+        "dragging-mobile"
+    );
+}
+
+
+function moveDrag(event) {
+
+    if (!drag) return;
+
+    if (
+        event.pointerId !==
+        drag.pointerId
+    ) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const distance =
+        Math.hypot(
+            event.clientX -
+                dragStartX,
+
+            event.clientY -
+                dragStartY
+        );
+
+    if (
+        !isDragging &&
+        distance < 7
+    ) {
+        return;
+    }
+
+    if (!isDragging) {
+        activateDrag();
+    }
+
+    const x =
+        event.clientX -
+        drag.originalRect.width /
+        2;
+
+    const y =
+        event.clientY -
+        drag.originalRect.height /
+        2;
+
+    drag.card.style.left =
+        `${x}px`;
+
+    drag.card.style.top =
+        `${y}px`;
+
+    updatePlaceholder(
+        event.clientX,
+        event.clientY
+    );
+}
+
+
+function updatePlaceholder(x, y) {
+
+    if (
+        !isDragging ||
+        !placeholder
+    ) {
+        return;
+    }
+
+    const cards = [
+        ...productsElement
+            .querySelectorAll(
+                ".card:not(.dragging)"
+            )
+    ];
+
+    if (!cards.length) return;
+
+    let target = null;
+
+    let closestDistance =
+        Infinity;
+
+    for (const card of cards) {
+
+        const rect =
+            card.getBoundingClientRect();
+
+        const centerX =
+            rect.left +
+            rect.width / 2;
+
+        const centerY =
+            rect.top +
+            rect.height / 2;
+
+        const distance =
+            Math.hypot(
+                x - centerX,
+                y - centerY
+            );
+
+        if (
+            distance <
+            closestDistance
+        ) {
+
+            closestDistance =
+                distance;
+
+            target = card;
+        }
+    }
+
+    if (!target) return;
+
+    const targetRect =
+        target.getBoundingClientRect();
+
+    const gridStyle =
+        getComputedStyle(
+            productsElement
+        );
+
+    const columns =
+        gridStyle
+            .gridTemplateColumns
+            .split(" ")
+            .filter(Boolean)
+            .length;
+
+    const isSingleColumn =
+        columns === 1;
+
+    let insertBefore;
+
+    if (isSingleColumn) {
+
+        insertBefore =
+            y <
+            targetRect.top +
+            targetRect.height / 2;
+
+    } else {
+
+        insertBefore =
+            x <
+            targetRect.left +
+            targetRect.width / 2;
+    }
+
+    if (insertBefore) {
+
+        if (
+            placeholder.nextSibling !==
+            target
+        ) {
+
+            productsElement.insertBefore(
+                placeholder,
+                target
+            );
+        }
+
+    } else {
+
+        if (
+            target.nextSibling !==
+            placeholder
+        ) {
+
+            productsElement.insertBefore(
+                placeholder,
+                target.nextSibling
+            );
+        }
+    }
+}
+
+
+/* ================================= */
+/* KONIEC DRAG */
+/* ================================= */
+
+function finishDrag(event) {
+
+    if (!drag) return;
+
+    if (
+        event.pointerId !==
+        drag.pointerId
+    ) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const state =
+        drag;
+
+    const moved =
+        Math.hypot(
+            event.clientX -
+                dragStartX,
+
+            event.clientY -
+                dragStartY
+        ) > 5;
+
+    if (!moved) {
+
+        cleanupDrag();
+        return;
+    }
+
+    const card =
+        state.card;
+
+    if (
+        !placeholder ||
+        !placeholder.parentNode
+    ) {
+
+        cleanupDrag();
+        return;
+    }
+
+    let target =
+        placeholder.nextElementSibling;
+
+    if (
+        !target ||
+        !target.classList.contains(
+            "card"
+        )
+    ) {
+
+        const previous =
+            placeholder.previousElementSibling;
+
+        if (
+            previous &&
+            previous.classList.contains(
+                "card"
+            )
+        ) {
+
+            productsElement.insertBefore(
+                card,
+                previous.nextElementSibling
+            );
+
+        } else {
+
+            productsElement.insertBefore(
+                card,
+                productsElement.firstChild
+            );
+        }
+
+    } else {
+
+        productsElement.insertBefore(
+            card,
+            target
+        );
+    }
+
+    cleanupDrag();
+}
+
+
+/* ================================= */
+/* CLEANUP */
+/* ================================= */
+
+function cancelPointerDrag(event) {
+
+    if (!drag) return;
+
+    if (
+        event.pointerId !==
+        drag.pointerId
+    ) {
+        return;
+    }
+
+    cleanupDrag();
+}
+
+
+function cleanupDrag() {
+
+    if (!drag) return;
+
+    const card =
+        drag.card;
+
+    card.classList.remove(
+        "dragging"
+    );
+
+    card.style.width = "";
+    card.style.height = "";
+    card.style.position = "";
+    card.style.left = "";
+    card.style.top = "";
+    card.style.margin = "";
+    card.style.zIndex = "";
+    card.style.pointerEvents = "";
+
+    if (
+        placeholder &&
+        placeholder.parentNode
+    ) {
+        placeholder.remove();
+    }
+
+    placeholder = null;
+
+    document.body.classList.remove(
+        "dragging-mobile"
+    );
+
+    document.removeEventListener(
+        "pointermove",
+        moveDrag
+    );
+
+    document.removeEventListener(
+        "pointerup",
+        finishDrag
+    );
+
+    document.removeEventListener(
+        "pointercancel",
+        cancelPointerDrag
+    );
+
+    drag = null;
+
+    isDragging = false;
+}
+
+
+function cancelDrag() {
+
+    if (!drag) return;
+
+    cleanupDrag();
+}
+
+
+/* ================================= */
+/* KOLEJNOŚĆ */
+/* ================================= */
+
+function getPlayerOrder() {
+
+    return [
+        ...productsElement
+            .querySelectorAll(
+                ".card"
+            )
+    ].map(card => {
+
+        const id =
+            Number(
+                card.dataset.id
+            );
+
+        return PRODUCTS.find(
+            product =>
+                product.id === id
+        );
+    });
+}
+
+
+/* ================================= */
+/* SPRAWDZANIE */
+/* ================================= */
+
+function checkAnswer() {
+
+    if (finished) return;
+
+    cancelDrag();
+
+    const playerOrder =
+        getPlayerOrder();
+
+    const correctOrder =
+        [...currentProducts]
+        .sort(
+            (a, b) =>
+                a.price - b.price
+        );
+
+    let correctPositions = 0;
+
+    playerOrder.forEach(
+        (product, index) => {
+
+            if (
+                product.id ===
+                correctOrder[index].id
+            ) {
+
+                correctPositions++;
+            }
+        }
+    );
+
+    const maxRoundPoints =
+        ROUND_MAX_POINTS[
+            round - 1
+        ];
+
+    const points =
+        Math.round(
+            (
+                correctPositions /
+                currentProducts.length
+            ) *
+            maxRoundPoints
+        );
+
+    score += points;
+
+    scoreElement.textContent =
+        score;
+
+    finished = true;
+
+    renderResultCards(
+        playerOrder,
+        correctOrder
+    );
+
+    gameActions.style.display =
+        "none";
+
+    roundResult.style.display =
+        "block";
+
+    roundPoints.textContent =
+        `+${points} pkt`;
+
+    if (
+        correctPositions ===
+        currentProducts.length
+    ) {
+
+        roundResultTitle.textContent =
+            "🔥 Wszystko się zgadza";
+
+        roundResultText.textContent =
+            "Idealnie ułożone.";
+
+    } else if (
+        correctPositions >=
+        Math.ceil(
+            currentProducts.length / 2
+        )
+    ) {
+
+        roundResultTitle.textContent =
+            "Całkiem nieźle";
+
+        roundResultText.textContent =
+            `${correctPositions} z ${currentProducts.length} miejsc było dobrze.`;
+
+    } else {
+
+        roundResultTitle.textContent =
+            "Tym razem nie wyszło";
+
+        roundResultText.textContent =
+            `${correctPositions} z ${currentProducts.length} miejsc było dobrze.`;
+    }
+
+    nextActions.style.display =
+        "flex";
+
+    if (
+        round >= MAX_ROUNDS
+    ) {
+
+        nextButton.textContent =
+            "ZOBACZ WYNIK →";
+
+    } else {
+
+        nextButton.textContent =
+            "NASTĘPNA RUNDA →";
+    }
+
+    requestAnimationFrame(() => {
+
+        roundResult.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+
+    });
+}
+
+
+/* ================================= */
+/* WYNIKI */
+/* ================================= */
+
+function renderResultCards(
+    playerOrder,
+    correctOrder
+) {
+
+    productsElement.innerHTML =
+        "";
+
+    playerOrder.forEach(
+        (product, index) => {
+
+            const correctProduct =
+                correctOrder[index];
+
+            const correct =
+                product.id ===
+                correctProduct.id;
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "result-card " +
+                (
+                    correct
+                        ? "correct"
+                        : "wrong"
+                );
+
+            card.innerHTML = `
+
+                <div class="result-status-badge">
+
+                    ${
+                        correct
+                            ? "✓ DOBRZE"
+                            : "✕ ŹLE"
+                    }
+
+                </div>
+
+                <div class="result-image">
+
+                    <img
+                        src="${product.image}"
+                        alt="${product.name}"
+                        draggable="false"
+                    >
+
+                </div>
+
+                <div class="result-name">
+                    ${product.name}
+                </div>
+
+                <div class="result-size">
+                    ${product.size}
+                </div>
+
+                <div class="result-price">
+                    ${formatPrice(product.price)}
+                </div>
+
+                ${
+                    correct
+
+                    ? `
+
+                        <div class="correct-answer">
+                            ✓ Ta pozycja jest poprawna
+                        </div>
+
+                    `
+
+                    : `
+
+                        <div class="should-be">
+
+                            <strong>
+                                POWINNO BYĆ:
+                            </strong>
+
+                            <div class="should-be-product">
+
+                                <img
+                                    src="${correctProduct.image}"
+                                    alt="${correctProduct.name}"
+                                    draggable="false"
+                                >
+
+                                <span>
+                                    ${correctProduct.name}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    `
+                }
+
+            `;
+
+            productsElement.appendChild(
+                card
+            );
+        }
+    );
+}
+
+
+/* ================================= */
+/* NASTĘPNA RUNDA */
+/* ================================= */
+
+function nextRound() {
+
+    if (!finished) return;
+
+    if (
+        round >= MAX_ROUNDS
+    ) {
+
+        showFinalScreen();
+
+        return;
+    }
+
+    round++;
+
+    newRound();
+}
+
+
+/* ================================= */
+/* KONIEC GRY */
+/* ================================= */
+
+function endGame() {
+
+    cancelDrag();
+
+    showFinalScreen();
+}
+
+
+function showFinalScreen() {
+
+    finalScore.textContent =
+        `${score} pkt`;
+
+    finalScreen.classList.add(
+        "show"
+    );
+}
+
+
+/* ================================= */
+/* REPLAY */
+/* ================================= */
+
+function replayGame() {
+
+    setGameFavicon();
+
+    document.body.classList.add(
+        "game-open"
+    );
+
+    finalScreen.classList.remove(
+        "show"
+    );
+
+    score = 0;
+    round = 1;
+    finished = false;
+
+    scoreElement.textContent =
+        "0";
+
+    document.body.classList.remove(
+        "menu-open"
+    );
+
+    menuScreen.classList.remove(
+        "active"
+    );
+
+    gameScreen.classList.add(
+        "active"
+    );
+
+    newRound(true);
+}
+
+
+/* ================================= */
+/* MENU */
+/* ================================= */
+
+function returnToMenu() {
+
+    cancelDrag();
+
+    removeGameFavicon();
+
+    document.body.classList.remove(
+        "game-open"
+    );
+
+    finalScreen.classList.remove(
+        "show"
+    );
+
+    gameScreen.classList.remove(
+        "active"
+    );
+
+    menuScreen.classList.add(
+        "active"
+    );
+
+    document.body.classList.add(
+        "menu-open"
+    );
+
+    score = 0;
+    round = 1;
+    finished = false;
+
+    scoreElement.textContent =
+        "0";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* ================================= */
+/* CENA */
+/* ================================= */
+
+function formatPrice(price) {
+
+    return (
+        price
+            .toFixed(2)
+            .replace(".", ",")
+        + " zł"
+    );
+}
+
+
+/* ================================= */
+/* EVENTY */
+/* ================================= */
+
+document
+    .getElementById("startButton")
+    .addEventListener(
+        "click",
+        startGame
+    );
+
+checkButton.addEventListener(
+    "click",
+    checkAnswer
+);
+
+endButton.addEventListener(
+    "click",
+    endGame
+);
+
+nextButton.addEventListener(
+    "click",
+    nextRound
+);
+
+finalReplayButton.addEventListener(
+    "click",
+    replayGame
+);
+
+finalMenuButton.addEventListener(
+    "click",
+    returnToMenu
+);
+
+
+/* WYBÓR SKLEPU */
+
+biedronkaCard.addEventListener(
+    "click",
+    () => selectStore("biedronka")
+);
+
+lidlCard.addEventListener(
+    "click",
+    () => selectStore("lidl")
+);
+
+zabkaCard.addEventListener(
+    "click",
+    () => selectStore("zabka")
+);
+
+
+/* ================================= */
+/* WYŁĄCZENIE NATYWNEGO DRAG */
+/* ================================= */
+
+document.addEventListener(
+    "dragstart",
+    event => {
+
+        if (
+            event.target.closest(
+                ".card"
+            )
+        ) {
+
+            event.preventDefault();
+        }
+    }
+);
+
+
+/* ================================= */
+/* START */
+/* ================================= */
+
+selectStore("biedronka");
+
+scoreElement.textContent = "0";
+
+removeGameFavicon();
+
+</script>
+
+</body>
+</html>
