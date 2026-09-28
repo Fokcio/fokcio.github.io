@@ -11,13 +11,13 @@
 (function (global) {
   'use strict';
 
-  const KLUCZ_STORAGE = 'fokcio.ai.moc.v1';
+  const KLUCZ_STORAGE = 'nietymek.ai.moc.v1';
   const MAX_ZYCIE = 900;   // ile znaków wyniku wraca do modelu AI
   const MAX_PLIK = 12000;  // ile znaków pliku wraca do modelu AI
 
   // Stany strony (!save / !load / !list) oraz dziennik zmian AI
-  const KLUCZ_STANY = 'fokcio.ai.stany.v1';
-  const KLUCZ_DZIENNIK = 'fokcio.ai.dziennik.v1';
+  const KLUCZ_STANY = 'nietymek.ai.stany.v1';
+  const KLUCZ_DZIENNIK = 'nietymek.ai.dziennik.v1';
   const MAX_STANOW = 12;            // ile stanow trzymamy w przegladarce
   const MAX_STAN_ZNAKOW = 120000;   // twardy limit jednego stanu (zeby nie bylo GB)
   const MAX_DZIENNIK = 80;          // ile ostatnich zmian pamietamy
@@ -339,7 +339,7 @@
     // Tytuł karty przeglądarki (zatrzymuje animowany tytuł z script.js, żeby się trzymał)
     tytul: (a) => {
       const tresc = String(a.tekst || a.tresc || '');
-      global.__fokcioTytulStop = true; // script.js przestaje nadpisywać tytuł
+      global.__nietymekTytulStop = true; // script.js przestaje nadpisywać tytuł
       try { clearInterval(titleInterval); } catch (e) { /* animacja tytułu działa dalej - flaga ją zatrzyma */ }
       document.title = tresc;
       return { tytul: tresc };
@@ -764,7 +764,7 @@
     ['klik', 'klika w element - domyślnie kradzionym kursorem AI', { cel: 'filmiki' }],
     ['winbox', 'otwiera okno WinBox (adres url albo własny html)', { tytul: 'Moje okno', html: '<p>Treść</p>' }],
     ['nawigacja', 'przechodzi na inną stronę lub projekt', { url: '/projects/catus' }],
-    ['tytul', 'zmienia tytuł karty przeglądarki', { tekst: 'Fokcio <3' }],
+    ['tytul', 'zmienia tytuł karty przeglądarki', { tekst: 'nietymek <3' }],
     ['favicon', 'zmienia ikonę strony', { url: '/images/profil.png' }],
     ['motyw', 'zmienia kolory i czcionkę całej strony', { tlo: '#111111', akcent: '#ff00ff', czcionka: 'Arial' }],
     ['pokaz', 'czyta stronę: html, tekst, atrybuty, styl, computed, ramka, sciezka', { selektor: '#hero' }],
