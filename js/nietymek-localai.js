@@ -1,6 +1,6 @@
 // ==========================================================
-// js/fokcio-localai.js - LOKALNY SILNIK AI (Transformers.js)
-// Silnik generacji wzięty z dostarczonego kodu Fokcio AI:
+// js/nietymek-localai.js - LOKALNY SILNIK AI (Transformers.js)
+// Silnik generacji wzięty z dostarczonego kodu nietymek AI:
 //   import { pipeline, TextStreamer } from ".../@huggingface/transformers@4.0.0"
 //   MODEL sunxanadu/Qwen3-1.7B-ONNX-web, webgpu/q4f16,
 //   temperature 0.7, top_p 0.8, do_sample, repetition_penalty 1.05,
@@ -108,9 +108,9 @@ async function sprawdzMozliwosci() {
         } catch (e) {}
       }
     }
-  } catch (e) { console.warn('[FokcioLocalAI] nie udalo sie sprawdzic WebGPU:', e && e.message); }
+  } catch (e) { console.warn('[nietymekLocalAI] nie udalo sie sprawdzic WebGPU:', e && e.message); }
   mozliwosci = wynik;
-  console.log('[FokcioLocalAI] WebGPU:', wynik.gpu ? 'tak' : 'nie', '| fp16:', wynik.f16 ? 'tak' : 'nie');
+  console.log('[nietymekLocalAI] WebGPU:', wynik.gpu ? 'tak' : 'nie', '| fp16:', wynik.f16 ? 'tak' : 'nie');
   return wynik;
 }
 
@@ -169,7 +169,7 @@ async function wczytajKonfiguracje(konf) {
   loadProgress = 100;
   usunStatus();
   ustawPlaceholder('Napisz wiadomość...');
-  console.log('[FokcioLocalAI] gotowe, tryb:', konf.opis);
+  console.log('[nietymekLocalAI] gotowe, tryb:', konf.opis);
   return generator;
 }
 
@@ -187,7 +187,7 @@ async function ladujModel() {
     } catch (e) {
       ostatniBlad = e;
       zepsuteKonfiguracje[konf.id] = true;
-      console.warn('[FokcioLocalAI] nie udalo sie wczytac ' + konf.opis + ':', e && e.message);
+      console.warn('[nietymekLocalAI] nie udalo sie wczytac ' + konf.opis + ':', e && e.message);
     }
   }
 
@@ -263,7 +263,7 @@ function przytnijWejscie(messages) {
   return wynik.length ? wynik : [{ role: 'user', content: 'Czesc!' }];
 }
 
-// Jedno wywolanie modelu (te same parametry co w oryginalnym kodzie Fokcio AI)
+// Jedno wywolanie modelu (te same parametry co w oryginalnym kodzie nietymek AI)
 async function generuj(wejscie, opts) {
   const maxTokens = opts.max_new_tokens || MAX_ODPOWIEDZI;
   const onToken = (typeof opts.onToken === 'function') ? opts.onToken : null;
@@ -329,7 +329,7 @@ async function chat(messages, opts) {
       trwaGenerowanie = false;
       ostatniBlad = e;
       const komunikat = String((e && e.message) || e);
-      console.warn('[FokcioLocalAI] ' + konf.opis + ' padl przy generowaniu:', komunikat);
+      console.warn('[nietymekLocalAI] ' + konf.opis + ' padl przy generowaniu:', komunikat);
 
       // Ta konfiguracja jest zepsuta w tej sesji - nie meczymy jej wiecej
       zepsuteKonfiguracje[konf.id] = true;
@@ -372,7 +372,7 @@ async function ustawTryb(tryb) {
 }
 
 try {
-  window.FokcioLocalAI = {
+  window.nietymekLocalAI = {
     chat: chat,
     ready: ladujModel,
     MODEL: MODEL,
