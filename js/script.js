@@ -1,9 +1,9 @@
 let napisy = [
-  "Cześć, jestem Fokcio",
+  "Cześć, jestem NieTymek",
   "To jest moja strona :D",
-  "Cześć, jestem Fokcio",
+  "Cześć, jestem NieTymek",
   "To jest moja strona :D",
-  "Cześć, jestem Fokcio",
+  "Cześć, jestem NieTymek",
   "To jest moja strona :D",
   "Dalej to czytasz?",
   "Czekasz na easteregga?",
@@ -73,7 +73,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // Animacja tytułu
-let tytuly = ["Fokcio","Fokci","Fokc","Fok","Fo","F","Fo","Fok","Fokc","Fokci","Fokcio"];
+let tytuly = ["NieTymek","Fokci","Fokc","Fok","Fo","F","Fo","Fok","Fokc","Fokci","NieTymek"];
 let index = 0;
 let titleInterval;
 let pageVisibility = true;
@@ -81,7 +81,7 @@ let pageVisibility = true;
 function startTitleAnimation() {
   titleInterval = setInterval(() => {
     // AI mogło ustawić własny tytuł (akcja "tytul") - wtedy nie nadpisujemy go
-    if (window.__fokcioTytulStop) return;
+    if (window.__NieTymekTytulStop) return;
     if (pageVisibility) {
       document.title = tytuly[index];
       index = (index + 1) % tytuly.length;
@@ -92,10 +92,10 @@ function startTitleAnimation() {
 document.addEventListener('visibilitychange', function () {
   if (document.hidden) {
     pageVisibility = false;
-    if (!window.__fokcioTytulStop) document.title = 'Wróć do kotka :D';
+    if (!window.__NieTymekTytulStop) document.title = 'Wróć do kotka :D';
   } else {
     pageVisibility = true;
-    if (!window.__fokcioTytulStop) document.title = tytuly[index];
+    if (!window.__NieTymekTytulStop) document.title = tytuly[index];
     gifOverlay.style.display = 'flex';
     setTimeout(() => { gifOverlay.style.display = 'none'; }, 2120);
   }
