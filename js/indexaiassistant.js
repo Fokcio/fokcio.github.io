@@ -758,7 +758,7 @@ const filmikiBtn = document.getElementById('filmikibtn');
       : '(silnik mocy wczytuje się - za chwilę będzie dostępny)';
 
     return [
-      'Jesteś asystentem AI na stronie fokcio.github.io i masz PEŁNĄ kontrolę nad tą stroną.',
+      'Jesteś asystentem AI na stronie nietymek.github.io i masz PEŁNĄ kontrolę nad tą stroną.',
       'Odpowiadasz w języku, w którym pisze użytkownik (JSON zawsze po polsku).',
       '',
       'ZASADY:',
@@ -829,12 +829,12 @@ const filmikiBtn = document.getElementById('filmikibtn');
 
     try {
       let i = 0;
-      while (!window.FokcioLocalAI && i < 200) {
+      while (!window.nietymekLocalAI && i < 200) {
         await new Promise(r => setTimeout(r, 100));
         i++;
       }
-      if (!window.FokcioLocalAI) throw new Error('lokalne AI nie załadowane');
-      const assistantReply = await window.FokcioLocalAI.chat(chatHistory, {
+      if (!window.nietymekLocalAI) throw new Error('lokalne AI nie załadowane');
+      const assistantReply = await window.nietymekLocalAI.chat(chatHistory, {
         max_new_tokens: 384,
         onToken: (typeof onToken === 'function') ? onToken : null
       });
@@ -897,7 +897,7 @@ const filmikiBtn = document.getElementById('filmikibtn');
     // Ratunek, gdy karta graficzna rzuca bledem OrtRun/GPUBuffer - lokalne AI
     // potrafi samo przelaczyc sie na lzejszy tryb, a tymi komendami wymusisz go recznie.
     if (/^!(ai|cpu|gpu|tryb)\b/.test(komenda)) {
-      const lokalne = window.FokcioLocalAI;
+      const lokalne = window.nietymekLocalAI;
       if (!lokalne) { appendMessage('Lokalne AI jeszcze się nie wczytało - daj mu chwilę.'); return true; }
 
       const czesci = komenda.split(/\s+/);
